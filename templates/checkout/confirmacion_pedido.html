@@ -1,192 +1,183 @@
 {% extends 'base.html' %}
 {% load static %}
 
-{% block title %}Confirmación de Pedido{% endblock %}
+{% block title %}Pedido Confirmado{% endblock %}
 
 {% block content %}
-<div class="container my-5">
-    <div class="row justify-content-center">
-        <div class="col-md-8">
-            <!-- Confirmación exitosa -->
-            <div class="alert alert-success alert-dismissible fade show" role="alert">
-                <div class="text-center mb-3">
-                    <h4 class="alert-heading">
-                        <i class="fas fa-check-circle"></i> ¡Pedido Confirmado!
-                    </h4>
+<div class="checkout-container">
+    <div class="checkout-header">
+        <h1>Pedido Confirmado</h1>
+    </div>
+
+    <div class="checkout-content" style="display: block; max-width: 800px; margin: 0 auto;">
+        <!-- Confirmación exitosa -->
+        <div class="checkout-card" style="border-color: var(--color-success);">
+            <div class="checkout-card-body" style="text-align: center; padding: var(--spacing-2xl);">
+                <div class="confirmacion-icono">
+                    <svg width="64" height="64" viewBox="0 0 24 24" fill="none" stroke="var(--color-success)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                        <path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"></path>
+                        <polyline points="22 4 12 14.01 9 11.01"></polyline>
+                    </svg>
                 </div>
-                <p class="mb-0">
-                    Tu pedido ha sido procesado correctamente. Te enviaremos un correo con los detalles de tu compra.
+                <h2 style="color: var(--color-success); margin-top: var(--spacing-lg);">¡Pedido Confirmado!</h2>
+                <p style="color: var(--color-text-light); margin-top: var(--spacing-sm);">
+                    Tu pedido ha sido procesado correctamente. 
+                    En breve seras contactado por WhatsApp.
                 </p>
             </div>
+        </div>
 
-            <!-- Número de pedido -->
-            <div class="card mb-4 border-success">
-                <div class="card-body text-center">
-                    <h6 class="text-muted">Número de Pedido</h6>
-                    <h3 class="text-success">{{ pedido.id_pedido }}</h3>
-                    <p class="text-muted small">Guardá este número para hacer seguimiento de tu pedido</p>
-                </div>
+        <!-- Productos del pedido -->
+        <div class="checkout-card" style="margin-top: var(--spacing-lg);">
+            <div class="checkout-card-header">
+                <h5>Detalle de tu Compra</h5>
             </div>
-
-            <!-- Información del pedido -->
-            <div class="row mb-4">
-                <div class="col-md-6">
-                    <div class="card">
-                        <div class="card-header bg-light">
-                            <h5 class="mb-0">Estado del Pedido</h5>
-                        </div>
-                        <div class="card-body">
-                            <div class="d-flex align-items-center mb-3">
-                                <span class="badge badge-info" style="padding: 8px 12px;">{{ pedido.get_estado_display }}</span>
-                            </div>
-                            <p class="text-muted small">Tu pedido está siendo procesado. Pronto recibirás un correo de confirmación de envío.</p>
-                        </div>
-                    </div>
-                </div>
-                <div class="col-md-6">
-                    <div class="card">
-                        <div class="card-header bg-light">
-                            <h5 class="mb-0">Estado del Pago</h5>
-                        </div>
-                        <div class="card-body">
-                            <div class="d-flex align-items-center mb-3">
-                                <span class="badge badge-success" style="padding: 8px 12px;">{{ pago.get_estado_display }}</span>
-                            </div>
-                            <p class="small">
-                                <strong>Método:</strong> {{ pago.get_metodo_pago_display }}<br>
-                                <strong>Monto:</strong> ${{ pago.monto|floatformat:2 }}
-                            </p>
-                        </div>
-                    </div>
-                </div>
-            </div>
-
-            <!-- Productos del pedido -->
-            <div class="card mb-4">
-                <div class="card-header bg-light">
-                    <h5 class="mb-0">Detalle de tu Compra</h5>
-                </div>
-                <div class="card-body">
-                    <table class="table table-hover">
-                        <thead>
-                            <tr>
-                                <th>Producto</th>
-                                <th class="text-center">Cantidad</th>
-                                <th class="text-right">Precio</th>
-                                <th class="text-right">Subtotal</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            {% for linea in lineas %}
-                                <tr>
-                                    <td>
-                                        <div class="d-flex align-items-center">
-                                            {% if linea.producto.imagen %}
-                                                <img src="{{ linea.producto.imagen.url }}" alt="{{ linea.producto.nombre }}" 
-                                                     style="width: 50px; height: 50px; object-fit: cover; border-radius: 4px; margin-right: 15px;">
-                                            {% else %}
-                                                <div style="width: 50px; height: 50px; background-color: #e9ecef; border-radius: 4px; margin-right: 15px;"></div>
-                                            {% endif %}
-                                            <span>{{ linea.producto.nombre }}</span>
-                                        </div>
-                                    </td>
-                                    <td class="text-center">{{ linea.cantidad }}</td>
-                                    <td class="text-right">${{ linea.precio_unitario|floatformat:2 }}</td>
-                                    <td class="text-right"><strong>${{ linea.subtotal|floatformat:2 }}</strong></td>
-                                </tr>
-                            {% endfor %}
-                        </tbody>
-                    </table>
-                </div>
-            </div>
-
-            <!-- Direcciones -->
-            <div class="row mb-4">
-                <div class="col-md-6">
-                    <div class="card">
-                        <div class="card-header bg-light">
-                            <h5 class="mb-0">Dirección de Envío</h5>
-                        </div>
-                        <div class="card-body">
-                            <p class="mb-0">
-                                <strong>{{ direccion.nombre_completo }}</strong><br>
-                                {{ direccion.direccion }} {{ direccion.numero }}<br>
-                                {% if direccion.complemento %}{{ direccion.complemento }}<br>{% endif %}
-                                {{ direccion.ciudad }}, {{ direccion.provincia }}<br>
-                                {{ direccion.codigo_postal }}, {{ direccion.pais }}<br>
-                                <strong>Teléfono:</strong> {{ direccion.telefono }}<br>
-                                <strong>Email:</strong> {{ direccion.email }}
-                            </p>
-                        </div>
-                    </div>
-                </div>
-                <div class="col-md-6">
-                    <div class="card">
-                        <div class="card-header bg-light">
-                            <h5 class="mb-0">Resumen de Compra</h5>
-                        </div>
-                        <div class="card-body">
-                            <div class="d-flex justify-content-between mb-2">
-                                <span>Subtotal:</span>
-                                <span>${{ pedido.subtotal|floatformat:2 }}</span>
-                            </div>
-                            <div class="d-flex justify-content-between mb-3">
-                                <span>Envío:</span>
-                                <span>
-                                    {% if pedido.costo_envio == 0 %}
-                                        <span class="text-success">Gratis</span>
+            <div class="checkout-card-body" style="padding: 0;">
+                <table class="checkout-products-table">
+                    <thead>
+                        <tr>
+                            <th>Producto</th>
+                            <th class="product-quantity">Cantidad</th>
+                            <th class="product-price">Precio</th>
+                            <th class="product-subtotal">Subtotal</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for linea in lineas %}
+                        <tr>
+                            <td>
+                                <div style="display: flex; align-items: center; gap: var(--spacing-md);">
+                                    {% if linea.producto.imagen %}
+                                        <img src="{{ linea.producto.imagen.url }}" alt="{{ linea.producto.nombre }}" class="product-item-image">
                                     {% else %}
-                                        ${{ pedido.costo_envio|floatformat:2 }}
+                                        <div class="product-item-placeholder"></div>
                                     {% endif %}
-                                </span>
-                            </div>
-                            <hr>
-                            <div class="d-flex justify-content-between">
-                                <strong>Total:</strong>
-                                <strong class="text-primary">${{ pedido.total|floatformat:2 }}</strong>
-                            </div>
-                        </div>
+                                    <span>{{ linea.producto.nombre }}</span>
+                                </div>
+                            </td>
+                            <td class="product-quantity" style="text-align: center;">{{ linea.cantidad }}</td>
+                            <td class="product-price">${{ linea.precio_unitario|floatformat:2 }}</td>
+                            <td class="product-subtotal">${{ linea.subtotal|floatformat:2 }}</td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
+        <!-- Dirección y resumen -->
+        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: var(--spacing-lg); margin-top: var(--spacing-lg);">
+            <div class="checkout-card">
+                <div class="checkout-card-header">
+                    <h5>Direccion de Envio</h5>
+                </div>
+                <div class="checkout-card-body">
+                    <p style="margin-bottom: var(--spacing-xs);">
+                        <strong>{{ direccion.nombre_completo }}</strong>
+                    </p>
+                    <p style="color: var(--color-text-light); font-size: var(--font-size-sm); margin-bottom: var(--spacing-xs);">
+                        {{ direccion.direccion }}
+                    </p>
+                    <p style="color: var(--color-text-light); font-size: var(--font-size-sm); margin-bottom: var(--spacing-xs);">
+                        {{ direccion.ciudad }}, {{ direccion.provincia }}
+                    </p>
+                    <p style="color: var(--color-text-light); font-size: var(--font-size-sm);">
+                        <strong>Telefono:</strong> {{ direccion.telefono }}
+                    </p>
+                </div>
+            </div>
+            <div class="checkout-card">
+                <div class="checkout-card-header">
+                    <h5>Resumen de Compra</h5>
+                </div>
+                <div class="checkout-card-body">
+                    <div class="summary-row">
+                        <span>Subtotal:</span>
+                        <span>${{ pedido.subtotal|floatformat:2 }}</span>
+                    </div>
+                    <div class="summary-row">
+                        <span>Envio:</span>
+                        <span>
+                            {% if pedido.costo_envio == 0 %}
+                            <span style="color: var(--color-success);">Gratis</span>
+                            {% else %}
+                            ${{ pedido.costo_envio|floatformat:2 }}
+                            {% endif %}
+                        </span>
+                    </div>
+                    <hr>
+                    <div class="summary-row total">
+                        <span>Total:</span>
+                        <span>${{ pedido.total|floatformat:2 }}</span>
                     </div>
                 </div>
             </div>
+        </div>
 
-            <!-- Información adicional -->
-            <div class="card mb-4 bg-light">
-                <div class="card-body">
-                    <h6 class="card-title">¿Qué sucede ahora?</h6>
-                    <ol class="mb-0">
-                        <li>Recibirás un correo de confirmación de pedido en tu inbox</li>
-                        <li>Tu pedido será preparado en nuestro almacén</li>
-                        <li>Recibirás un correo con el número de seguimiento cuando se envíe</li>
-                        <li>Podrás rastrear tu pedido en tiempo real</li>
-                    </ol>
-                </div>
-            </div>
-
-            <!-- Acciones -->
-            <div class="text-center mb-4">
-                <a href="{% url 'home:index' %}" class="btn btn-primary btn-lg">
-                    Continuar Comprando
-                </a>
-                <a href="#" class="btn btn-outline-secondary btn-lg">
-                    Ver Mis Pedidos
-                </a>
-            </div>
-
-            <!-- Soporte -->
-            <div class="alert alert-info">
-                <strong>¿Necesitas ayuda?</strong> 
-                Si tienes dudas sobre tu pedido, contacta a nuestro equipo de soporte en 
-                <strong>soporte@tienda.com</strong> o llama al <strong>+54 9 123-456-7890</strong>
-            </div>
+        <!-- Botón -->
+        <div style="text-align: center; margin-top: var(--spacing-xl);">
+            <a href="{% url 'home' %}" class="checkout-button-primary">
+                Continuar Comprando
+            </a>
         </div>
     </div>
 </div>
 
 <style>
-    .badge {
-        padding: 8px 12px;
-        font-size: 0.9em;
-    }
+.confirmacion-icono {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 80px;
+    height: 80px;
+    border-radius: 50%;
+    background-color: rgba(34, 197, 94, 0.1);
+    margin: 0 auto;
+}
+
+.summary-row {
+    display: flex;
+    justify-content: space-between;
+    padding: var(--spacing-sm) 0;
+}
+
+.summary-row.total {
+    font-weight: 700;
+    font-size: var(--font-size-lg);
+    color: var(--color-primary);
+}
+
+.checkout-products-table {
+    width: 100%;
+    border-collapse: collapse;
+}
+
+.checkout-products-table th,
+.checkout-products-table td {
+    padding: var(--spacing-md);
+    text-align: left;
+    border-bottom: 1px solid var(--color-border-light);
+}
+
+.checkout-products-table th {
+    background-color: var(--color-bg-page);
+    font-weight: 600;
+    color: var(--color-text-light);
+    font-size: var(--font-size-sm);
+}
+
+.product-item-image {
+    width: 50px;
+    height: 50px;
+    object-fit: cover;
+    border-radius: var(--radius-sm);
+}
+
+.product-item-placeholder {
+    width: 50px;
+    height: 50px;
+    background-color: var(--color-bg-page);
+    border-radius: var(--radius-sm);
+}
 </style>
 {% endblock %}

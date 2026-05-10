@@ -168,7 +168,7 @@
                                 </svg>
                             </div>
                             <div class="pago-texto">
-                                <h6>Pago Contra Reembolso</h6>
+                                <h6>Pago Contra Entrega</h6>
                                 <p class="text-muted">Pagarás el monto total cuando recibas tu pedido en la dirección indicada.</p>
                             </div>
                         </div>
@@ -178,45 +178,15 @@
 
                 <div class="checkout-card mt-4">
                     <div class="checkout-card-header">
-                        <h5>Resumen del Pedido</h5>
+                        <h5>Confirmar Datos del Pedido</h5>
                     </div>
                     <div class="checkout-card-body">
-                        <div class="resumen-item">
-                            <span>Nombre:</span>
-                            <span>{{ checkout_data.nombre }}</span>
-                        </div>
-                        <div class="resumen-item">
-                            <span>Teléfono:</span>
-                            <span>{{ checkout_data.telefono }}</span>
-                        </div>
-                        <div class="resumen-item">
-                            <span>Método de Entrega:</span>
-                            <span>
-                                {% if checkout_data.metodo_entrega == 'tienda' %}
-                                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="vertical-align: middle; margin-right: 4px;"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"></path><polyline points="9 22 9 12 15 12 15 22"></polyline></svg>Recoger en Tienda
-                                {% else %}
-                                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="vertical-align: middle; margin-right: 4px;"><rect x="1" y="3" width="15" height="13"></rect><polygon points="16 8 20 8 23 11 23 16 16 16 16 8"></polygon><circle cx="5.5" cy="18.5" r="2.5"></circle><circle cx="18.5" cy="18.5" r="2.5"></circle></svg>Mensajería
-                                {% endif %}
-                            </span>
-                        </div>
-                        {% if checkout_data.metodo_entrega == 'mensajeria' %}
-                        <div class="resumen-item">
-                            <span>Dirección:</span>
-                            <span>{{ checkout_data.direccion }}, {{ checkout_data.reparto_nombre }}, {{ checkout_data.municipio_nombre }}, {{ checkout_data.provincia_nombre }}</span>
-                        </div>
-                        {% else %}
-                        <div class="resumen-item">
-                            <span>Tienda:</span>
-                            <span>{{ tienda.direccion }}</span>
-                        </div>
-                        {% endif %}
-                        <div class="resumen-item">
-                            <span>Método de Pago:</span>
-                            <span>
-                                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="vertical-align: middle; margin-right: 4px;"><rect x="2" y="6" width="20" height="12" rx="2"></rect><circle cx="12" cy="12" r="2"></circle><path d="M6 12h.01M18 12h.01"></path></svg>Contra Reembolso
-                            </span>
-                        </div>
-                    </div>
+                        <ul class="info-confirmacion">
+                            <li>Una vez confirmado tu pedido, quedara registrado en nuestro sistema.</li>
+                            <li>Nos comunicaremos contigo por WhatsApp para acordar el pago y la entrega.</li>
+                            <li>Recibiras los detalles de tu pedido para gestionar en privado.</li>
+                        </ul>
+</div>
                 </div>
                 {% endif %}
 
@@ -247,7 +217,7 @@
                             
                             <div class="confirmacion-seccion">
                                 <h6><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="vertical-align: middle; margin-right: 6px;"><rect x="2" y="6" width="20" height="12" rx="2"></rect><circle cx="12" cy="12" r="2"></circle><path d="M6 12h.01M18 12h.01"></path></svg>Método de Pago</h6>
-                                <p><strong>Contra Reembolso</strong></p>
+                                <p><strong>Contra Entrega</strong></p>
                                 <p class="text-muted">Pagas al recibir tu pedido</p>
                             </div>
                         </div>
@@ -262,7 +232,11 @@
                     </button>
                     {% endif %}
                     
-                    {% if paso < 4 %}
+                    {% if paso == 3 %}
+                    <button type="submit" name="accion" value="siguiente" class="checkout-button-primary">
+                        Finalizar Pedido
+                    </button>
+                    {% elif paso < 4 %}
                     <button type="submit" name="accion" value="siguiente" class="checkout-button-primary">
                         Continuar →
                     </button>
@@ -642,6 +616,54 @@
 .confirmacion-seccion p {
     margin-bottom: var(--spacing-xs);
     font-size: var(--font-size-sm);
+}
+
+.info-confirmacion {
+    list-style: none;
+    padding: 0;
+    margin: 0 0 var(--spacing-lg) 0;
+}
+
+.info-confirmacion li {
+    position: relative;
+    padding-left: 28px;
+    margin-bottom: var(--spacing-md);
+    color: var(--color-text);
+    font-size: var(--font-size-sm);
+    line-height: 1.5;
+}
+
+.info-confirmacion li::before {
+    content: "";
+    position: absolute;
+    left: 0;
+    top: 6px;
+    width: 18px;
+    height: 18px;
+    background-color: var(--color-primary);
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.info-confirmacion li::after {
+    content: "";
+    position: absolute;
+    left: 9px;
+    top: 10px;
+    width: 4px;
+    height: 10px;
+    border: solid white;
+    border-width: 0 2px 2px 0;
+    transform: rotate(45deg);
+}
+
+.texto-confirmar {
+    text-align: center;
+    font-weight: 600;
+    color: var(--color-text);
+    margin: 0;
 }
 
 .telefono-input {
