@@ -1,0 +1,54 @@
+{% extends 'base.html' %}
+
+{% block title %}{{ producto.nombre }} - Tienda Online{% endblock %}
+
+{% block content %}
+<div class="detalle-container">
+    <!-- Imagen -->
+    <div class="detalle-imagen">
+        {% if producto.imagen %}
+            <img src="{{ producto.imagen.url }}" alt="{{ producto.nombre }}">
+        {% else %}
+            <div class="imagen-placeholder"></div>
+        {% endif %}
+    </div>
+
+    <!-- Info del Producto -->
+    <div class="detalle-info">
+        <h1>{{ producto.nombre }}</h1>
+        
+        {% if producto.categoria %}
+            <p class="detalle-categoria">Categoría: <strong>{{ producto.categoria.nombre }}</strong></p>
+        {% endif %}
+
+        <p class="detalle-precio">${{ producto.precio }}</p>
+
+        {% if producto.stock > 0 %}
+            <p class="stock stock--disponible">✓ En stock ({{ producto.stock }} disponibles)</p>
+        {% else %}
+            <p class="stock stock--agotado">✗ Sin stock</p>
+        {% endif %}
+
+        <!-- Descripción -->
+        <div class="detalle-descripcion">
+            <h3>Descripción</h3>
+            <p>{{ producto.descripcion|linebreaks }}</p>
+        </div>
+
+        <!-- Agregar al Carrito con Cantidad -->
+        <div class="detalle-carrito">
+            <form id="addToCartForm" action="{% url 'carrito:agregar_carrito' producto.id %}" method="get" class="form-cantidad">
+                <label for="cantidad">Cantidad:</label>
+                <input type="number" id="cantidad" name="cantidad" value="1" min="1" max="{{ producto.stock }}">
+                <button type="submit" class="btn-agregar add-to-cart" {% if producto.stock == 0 %}disabled{% endif %}>
+                    Agregar al Carrito
+                </button>
+            </form>
+        </div>
+
+        <!-- Volver -->
+        <a href="{% url 'lista_productos' %}" class="btn-volver">Volver a productos</a>
+    </div>
+</div>
+
+{% endblock %}

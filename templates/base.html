@@ -1,0 +1,102 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{% block title %}Tienda Online{% endblock %}</title>
+    <meta name="description" content="Tu tienda online de confianza">
+    <link rel="stylesheet" href="{% static 'css/main.css' %}">
+    {% block extra_css %}{% endblock %}
+</head>
+<body>
+    <nav class="navbar">
+        <div class="navbar__container">
+            <a href="{% url 'home' %}" class="navbar__logo">
+                <span class="navbar__logo-icon">E</span>
+                <span>Store</span>
+            </a>
+            
+            <div class="navbar__menu">
+                <a href="{% url 'home' %}" class="navbar__link {% if request.resolver_match.url_name == 'home' %}navbar__link--active{% endif %}">
+                    Inicio
+                </a>
+                <a href="{% url 'lista_productos' %}" class="navbar__link {% if request.resolver_match.url_name == 'lista_productos' %}navbar__link--active{% endif %}">
+                    Productos
+                </a>
+            </div>
+            
+            <a href="#" id="cartToggle" class="navbar__cart" aria-label="Carrito">
+                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <circle cx="9" cy="21" r="1"></circle>
+                    <circle cx="20" cy="21" r="1"></circle>
+                    <path d="M1 1h4l2.68 13.39a2 2 0 0 0 2 1.61h9.72a2 2 0 0 0 2-1.61L23 6H6"></path>
+                </svg>
+                <span id="cartCount" class="navbar__cart-badge">0</span>
+            </a>
+        </div>
+    </nav>
+
+    <main class="main-content" style="padding-top: calc(var(--header-height) + var(--spacing-xl));">
+        <div class="container">
+            {% block content %}{% endblock %}
+        </div>
+    </main>
+
+    <footer class="footer">
+        <div class="container">
+            <div class="footer__content">
+                <div class="footer__section">
+                    <h4 class="footer__title">Tienda Online</h4>
+                    <p class="footer__text">Tu tienda de confianza con los mejores productos.</p>
+                </div>
+                <div class="footer__section">
+                    <h4 class="footer__title">Enlaces</h4>
+                    <div class="footer__links">
+                        <a href="{% url 'home' %}" class="footer__link">Inicio</a>
+                        <a href="{% url 'lista_productos' %}" class="footer__link">Productos</a>
+                        <a href="{% url 'carrito:vista_carrito' %}" class="footer__link">Carrito</a>
+                    </div>
+                </div>
+                <div class="footer__section">
+                    <h4 class="footer__title">Contacto</h4>
+                    <p class="footer__text">Email: info@tienda.com</p>
+                </div>
+            </div>
+            <div class="footer__bottom">
+                <p class="footer__copyright">&copy; 2026 Tienda Online. Todos los derechos reservados.</p>
+            </div>
+        </div>
+    </footer>
+
+    <div id="cartOverlay" class="cart-overlay"></div>
+    <div id="cartDrawer" class="cart-drawer">
+        <div class="cart-drawer__header">
+            <h3 class="cart-drawer__title">
+                Carrito <span class="cart-drawer__count">0</span>
+            </h3>
+            <button id="cartClose" class="cart-drawer__close" aria-label="Cerrar">
+                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <line x1="18" y1="6" x2="6" y2="18"></line>
+                    <line x1="6" y1="6" x2="18" y2="18"></line>
+                </svg>
+            </button>
+        </div>
+        <div class="cart-drawer__body">
+        </div>
+        <div class="cart-drawer__footer" style="display: none;">
+            <div class="cart-drawer__total">
+                <span class="cart-drawer__total-label">Total</span>
+                <span class="cart-drawer__total-value">$0.00</span>
+            </div>
+            <div class="cart-drawer__actions">
+                <a href="{% url 'checkout:index' %}" class="btn btn--primary btn--block">Finalizar Compra</a>
+                <a href="{% url 'carrito:vista_carrito' %}" class="btn btn--secondary btn--block">Ver Carrito</a>
+            </div>
+        </div>
+    </div>
+
+    {% block extra_js %}{% endblock %}
+    <script src="{% static 'js/cart.js' %}"></script>
+</body>
+</html>
