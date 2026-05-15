@@ -1,7 +1,6 @@
 from django.db import models
 from django.contrib.auth.models import User
 from apps.products.models import Producto
-from django.utils.text import slugify
 import uuid
 
 
@@ -61,22 +60,7 @@ class Tienda(models.Model):
 
 class Pedido(models.Model):
     """Modelo para almacenar información de pedidos"""
-    
-    ESTADO_CHOICES = (
-        ('pendiente', 'Pendiente'),
-        ('procesando', 'Procesando'),
-        ('completado', 'Completado'),
-        ('cancelado', 'Cancelado'),
-        ('devuelto', 'Devuelto'),
-    )
-    
-    METODO_PAGO_CHOICES = (
-        ('tarjeta', 'Tarjeta de Crédito/Débito'),
-        ('transferencia', 'Transferencia Bancaria'),
-        ('paypal', 'PayPal'),
-        ('efectivo', 'Contra Reembolso'),
-    )
-    
+
     id_pedido = models.UUIDField(
         default=uuid.uuid4,
         editable=False,
@@ -86,17 +70,17 @@ class Pedido(models.Model):
     usuario = models.ForeignKey(
         User,
         on_delete=models.CASCADE,
-        related_name='pedidos'
+        related_name='pedidos',
+        blank=True,
+        null=True
     )
     estado = models.CharField(
         max_length=20,
-        choices=ESTADO_CHOICES,
         default='pendiente'
     )
     metodo_pago = models.CharField(
         max_length=20,
-        choices=METODO_PAGO_CHOICES,
-        default='tarjeta'
+        default='efectivo'
     )
     subtotal = models.DecimalField(
         max_digits=10,
@@ -128,13 +112,8 @@ class Pedido(models.Model):
         ]
 
     def __str__(self):
-        return f"Pedido {self.id_pedido} - {self.usuario.username}"
-
-    def calcular_total(self):
-        """Calcula el total del pedido"""
-        self.total = self.subtotal + self.costo_envio
-        return self.total
-
+        usuario_nombre = self.usuario.username if self.usuario else 'Invitado'
+        return f"Pedido {self.id_pedido} - {usuario_nombre}"
 
 class LineaPedido(models.Model):
     """Modelo para cada producto en un pedido"""
@@ -176,13 +155,7 @@ class LineaPedido(models.Model):
 
 class DireccionEnvio(models.Model):
     """Modelo para almacenar direcciones de envío"""
-    
-    TIPO_DOMICILIO_CHOICES = (
-        ('casa', 'Casa'),
-        ('oficina', 'Oficina'),
-        ('otro', 'Otro'),
-    )
-    
+
     pedido = models.OneToOneField(
         Pedido,
         on_delete=models.CASCADE,
@@ -191,62 +164,30 @@ class DireccionEnvio(models.Model):
     usuario = models.ForeignKey(
         User,
         on_delete=models.CASCADE,
-        related_name='direcciones_envio'
+        related_name='direcciones_envio',
+        blank=True,
+        null=True
     )
     nombre_completo = models.CharField(max_length=255)
     telefono = models.CharField(max_length=20)
-    email = models.EmailField()
     direccion = models.CharField(max_length=255, verbose_name='Dirección')
-    numero = models.CharField(max_length=20, verbose_name='Número/Apto')
-    complemento = models.CharField(
-        max_length=255,
-        blank=True,
-        null=True,
-        verbose_name='Complemento (referencia)'
-    )
     ciudad = models.CharField(max_length=100)
     provincia = models.CharField(max_length=100)
-    codigo_postal = models.CharField(max_length=20)
-    pais = models.CharField(max_length=100, default='Argentina')
-    tipo_domicilio = models.CharField(
-        max_length=20,
-        choices=TIPO_DOMICILIO_CHOICES,
-        default='casa'
-    )
-    es_direccion_predeterminada = models.BooleanField(default=False)
+    pais = models.CharField(max_length=100, default='Cuba')
     fecha_creacion = models.DateTimeField(auto_now_add=True)
-    fecha_actualizacion = models.DateTimeField(auto_now=True)
 
     class Meta:
         verbose_name = 'Dirección de Envío'
         verbose_name_plural = 'Direcciones de Envío'
-        ordering = ['-es_direccion_predeterminada', '-fecha_creacion']
+        ordering = ['-fecha_creacion']
 
     def __str__(self):
         return f"{self.nombre_completo} - {self.direccion}, {self.ciudad}"
 
-    def save(self, *args, **kwargs):
-        """Si se marca como predeterminada, desactiva las demás"""
-        if self.es_direccion_predeterminada:
-            DireccionEnvio.objects.filter(
-                usuario=self.usuario,
-                es_direccion_predeterminada=True
-            ).exclude(pk=self.pk).update(es_direccion_predeterminada=False)
-        super().save(*args, **kwargs)
-
 
 class Pago(models.Model):
     """Modelo para almacenar información de pagos"""
-    
-    ESTADO_PAGO_CHOICES = (
-        ('pendiente', 'Pendiente'),
-        ('procesando', 'Procesando'),
-        ('completado', 'Completado'),
-        ('fallido', 'Fallido'),
-        ('rechazado', 'Rechazado'),
-        ('reembolsado', 'Reembolsado'),
-    )
-    
+
     id_transaccion = models.UUIDField(
         default=uuid.uuid4,
         unique=True,
@@ -261,23 +202,10 @@ class Pago(models.Model):
     monto = models.DecimalField(max_digits=10, decimal_places=2)
     estado = models.CharField(
         max_length=20,
-        choices=ESTADO_PAGO_CHOICES,
         default='pendiente'
     )
     metodo_pago = models.CharField(max_length=50)
-    referencia_pago = models.CharField(
-        max_length=255,
-        blank=True,
-        null=True,
-        verbose_name='Referencia del Pago'
-    )
-    descripcion_error = models.TextField(
-        blank=True,
-        null=True,
-        verbose_name='Descripción de Error'
-    )
     fecha_creacion = models.DateTimeField(auto_now_add=True)
-    fecha_completado = models.DateTimeField(blank=True, null=True)
     fecha_actualizacion = models.DateTimeField(auto_now=True)
 
     class Meta:

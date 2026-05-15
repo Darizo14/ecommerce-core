@@ -188,9 +188,10 @@ document.addEventListener('DOMContentLoaded', () => {
 
     document.querySelectorAll('.add-to-cart').forEach(btn => {
         btn.addEventListener('click', async (e) => {
-            e.preventDefault();
-            
             let url = btn.getAttribute('href');
+            if (!url) return;
+
+            e.preventDefault();
             
             const originalText = btn.textContent;
             btn.textContent = 'Agregando...';
@@ -223,7 +224,7 @@ document.addEventListener('DOMContentLoaded', () => {
         const form = e.target;
         const btn = form.querySelector('.add-to-cart');
         const cantidad = form.querySelector('[name="cantidad"]').value;
-        let url = btn.getAttribute('href');
+        let url = form.action;
         url = `${url}?cantidad=${cantidad}`;
         
         const originalText = btn.textContent;

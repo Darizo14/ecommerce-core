@@ -72,6 +72,7 @@
                     <h5>Direccion de Envio</h5>
                 </div>
                 <div class="checkout-card-body">
+                    {% if direccion %}
                     <p style="margin-bottom: var(--spacing-xs);">
                         <strong>{{ direccion.nombre_completo }}</strong>
                     </p>
@@ -84,6 +85,9 @@
                     <p style="color: var(--color-text-light); font-size: var(--font-size-sm);">
                         <strong>Telefono:</strong> {{ direccion.telefono }}
                     </p>
+                    {% else %}
+                    <p class="text-muted">No se registró dirección de envío.</p>
+                    {% endif %}
                 </div>
             </div>
             <div class="checkout-card">

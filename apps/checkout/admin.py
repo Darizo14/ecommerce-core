@@ -42,7 +42,7 @@ class DireccionEnvioInline(admin.StackedInline):
     """Muestra dirección de envío dentro de la vista de Pedido"""
     model = DireccionEnvio
     extra = 0
-    readonly_fields = ('fecha_creacion', 'fecha_actualizacion')
+    readonly_fields = ('fecha_creacion',)
     can_delete = False
 
 
@@ -50,9 +50,9 @@ class PagoInline(admin.StackedInline):
     """Muestra información de pago dentro de la vista de Pedido"""
     model = Pago
     extra = 0
-    readonly_fields = ('id_transaccion', 'fecha_creacion', 'fecha_completado', 'fecha_actualizacion')
+    readonly_fields = ('id_transaccion', 'fecha_creacion', 'fecha_actualizacion')
     can_delete = False
-    fields = ('id_transaccion', 'monto', 'estado', 'metodo_pago', 'referencia_pago', 'fecha_creacion')
+    fields = ('id_transaccion', 'monto', 'estado', 'metodo_pago', 'fecha_creacion')
 
 
 @admin.register(Pedido)
@@ -99,19 +99,12 @@ class PedidoAdmin(admin.ModelAdmin):
     
     def estado_badge(self, obj):
         """Muestra un badge con el estado del pedido"""
-        colores = {
-            'pendiente': '#FFC107',
-            'procesando': '#17A2B8',
-            'completado': '#28A745',
-            'cancelado': '#DC3545',
-            'devuelto': '#6C757D',
-        }
-        color = colores.get(obj.estado, '#6C757D')
+        color = '#FFC107'
         return format_html(
             '<span style="background-color: {}; color: white; padding: 3px 10px; '
             'border-radius: 3px; font-weight: bold;">{}</span>',
             color,
-            obj.get_estado_display()
+            obj.estado
         )
     estado_badge.short_description = 'Estado'
     
@@ -134,31 +127,25 @@ class DireccionEnvioAdmin(admin.ModelAdmin):
         'ciudad',
         'provincia',
         'usuario',
-        'es_direccion_predeterminada',
         'fecha_creacion',
     )
-    list_filter = ('ciudad', 'provincia', 'tipo_domicilio', 'es_direccion_predeterminada')
+    list_filter = ('ciudad', 'provincia')
     search_fields = ('nombre_completo', 'usuario__username', 'ciudad')
-    readonly_fields = ('fecha_creacion', 'fecha_actualizacion', 'usuario')
+    readonly_fields = ('fecha_creacion', 'usuario')
     
     fieldsets = (
         ('Información de Contacto', {
-            'fields': ('usuario', 'nombre_completo', 'telefono', 'email')
+            'fields': ('usuario', 'nombre_completo', 'telefono')
         }),
         ('Dirección', {
             'fields': (
                 'direccion',
-                'numero',
-                'complemento',
                 ('ciudad', 'provincia'),
-                ('codigo_postal', 'pais'),
+                'pais',
             )
         }),
-        ('Preferencias', {
-            'fields': ('tipo_domicilio', 'es_direccion_predeterminada')
-        }),
         ('Información del Sistema', {
-            'fields': ('pedido', 'fecha_creacion', 'fecha_actualizacion'),
+            'fields': ('pedido', 'fecha_creacion'),
             'classes': ('collapse',)
         }),
     )
@@ -176,18 +163,17 @@ class PagoAdmin(admin.ModelAdmin):
         'id_transaccion',
         'pedido',
         'monto_formateado',
-        'estado_badge',
+        'estado',
         'metodo_pago',
         'fecha_creacion',
     )
     list_filter = ('estado', 'metodo_pago', 'fecha_creacion')
-    search_fields = ('id_transaccion', 'pedido__id_pedido', 'referencia_pago')
+    search_fields = ('id_transaccion', 'pedido__id_pedido')
     readonly_fields = (
         'id_transaccion',
         'pedido',
         'fecha_creacion',
         'fecha_actualizacion',
-        'fecha_completado',
     )
     
     fieldsets = (
@@ -195,36 +181,9 @@ class PagoAdmin(admin.ModelAdmin):
             'fields': ('id_transaccion', 'pedido', 'fecha_creacion', 'fecha_actualizacion')
         }),
         ('Detalles del Pago', {
-            'fields': ('monto', 'estado', 'metodo_pago', 'referencia_pago')
-        }),
-        ('Completación', {
-            'fields': ('fecha_completado',),
-            'classes': ('collapse',)
-        }),
-        ('Errores', {
-            'fields': ('descripcion_error',),
-            'classes': ('collapse',)
+            'fields': ('monto', 'estado', 'metodo_pago')
         }),
     )
-    
-    def estado_badge(self, obj):
-        """Muestra un badge con el estado del pago"""
-        colores = {
-            'pendiente': '#FFC107',
-            'procesando': '#17A2B8',
-            'completado': '#28A745',
-            'fallido': '#DC3545',
-            'rechazado': '#DC3545',
-            'reembolsado': '#6C757D',
-        }
-        color = colores.get(obj.estado, '#6C757D')
-        return format_html(
-            '<span style="background-color: {}; color: white; padding: 3px 10px; '
-            'border-radius: 3px; font-weight: bold;">{}</span>',
-            color,
-            obj.get_estado_display()
-        )
-    estado_badge.short_description = 'Estado'
     
     def monto_formateado(self, obj):
         """Muestra el monto formateado"""
@@ -257,8 +216,7 @@ class LineaPedidoAdmin(admin.ModelAdmin):
         return False
     
     def has_delete_permission(self, request, obj=None):
-        """No se pueden eliminar líneas de pedido"""
-        return False
+        return True
     
     def subtotal_formateado(self, obj):
         """Muestra el subtotal formateado"""
