@@ -7,6 +7,197 @@
     <title>{% block title %}Tienda Online{% endblock %}</title>
     <meta name="description" content="Tu tienda online de confianza">
     <link rel="stylesheet" href="{% static 'css/main.css' %}">
+    <style>
+        .navbar__search {
+            position: relative;
+            display: flex;
+            align-items: center;
+        }
+
+        .search-box__toggle {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border: none;
+            background: transparent;
+            padding: var(--spacing-sm);
+            cursor: pointer;
+            color: var(--color-text-light);
+            transition: color var(--transition-fast);
+        }
+
+        .search-box__toggle:hover {
+            color: var(--color-primary);
+        }
+
+        .search-box {
+            display: none;
+            align-items: center;
+            background: var(--color-bg-page);
+            border: 2px solid var(--color-border);
+            border-radius: var(--radius-full);
+            overflow: hidden;
+            transition: border-color var(--transition-fast), box-shadow var(--transition-fast);
+            flex: 1;
+        }
+
+        .navbar--search-active .search-box {
+            display: flex;
+        }
+
+        .navbar--search-active .search-box__toggle {
+            display: none;
+        }
+
+        .navbar--search-active .navbar__search {
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            display: flex;
+            align-items: center;
+            padding: 0 var(--spacing-md);
+        }
+
+        .search-box:focus-within {
+            border-color: var(--color-primary);
+            box-shadow: 0 0 0 3px var(--color-primary-light);
+        }
+
+        .search-box__input {
+            flex: 1;
+            border: none;
+            outline: none;
+            padding: var(--spacing-sm) var(--spacing-lg);
+            font-size: var(--font-size-sm);
+            background: transparent;
+            color: var(--color-text);
+            min-width: 0;
+        }
+
+        .search-box__input::placeholder {
+            color: var(--color-text-muted);
+        }
+
+        .search-box__btn {
+            border: none;
+            background: transparent;
+            padding: var(--spacing-sm) var(--spacing-md);
+            cursor: pointer;
+            color: var(--color-text-muted);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: color var(--transition-fast);
+            flex-shrink: 0;
+        }
+
+        .search-box__btn:hover {
+            color: var(--color-primary);
+        }
+
+        .search-dropdown {
+            position: absolute;
+            top: calc(100% + 4px);
+            left: 0;
+            right: 0;
+            background: var(--color-bg-card);
+            border: 1px solid var(--color-border);
+            border-radius: var(--radius-md);
+            box-shadow: var(--shadow-lg);
+            display: none;
+            z-index: 1100;
+            max-height: 400px;
+            overflow-y: auto;
+        }
+
+        .search-dropdown--visible {
+            display: block;
+        }
+
+        .search-dropdown__item {
+            display: flex;
+            align-items: center;
+            gap: var(--spacing-md);
+            padding: var(--spacing-md) var(--spacing-lg);
+            text-decoration: none;
+            color: var(--color-text);
+            transition: background-color var(--transition-fast);
+            border-bottom: 1px solid var(--color-border-light);
+        }
+
+        .search-dropdown__item:last-child {
+            border-bottom: none;
+        }
+
+        .search-dropdown__item:hover {
+            background-color: var(--color-bg-page);
+        }
+
+        .search-dropdown__name {
+            flex: 1;
+            font-size: var(--font-size-sm);
+            font-weight: 500;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            white-space: nowrap;
+        }
+
+        .search-dropdown__price {
+            font-size: var(--font-size-sm);
+            font-weight: 700;
+            color: var(--color-primary);
+            flex-shrink: 0;
+        }
+
+        .search-dropdown__empty {
+            padding: var(--spacing-xl);
+            text-align: center;
+            color: var(--color-text-muted);
+            font-size: var(--font-size-sm);
+        }
+
+        .search-dropdown__loading {
+            padding: var(--spacing-lg);
+            text-align: center;
+        }
+
+        .search-dropdown__spinner {
+            display: inline-block;
+            width: 20px;
+            height: 20px;
+            border: 2px solid var(--color-border);
+            border-top-color: var(--color-primary);
+            border-radius: 50%;
+            animation: spin 0.6s linear infinite;
+        }
+
+        @keyframes spin {
+            to { transform: rotate(360deg); }
+        }
+
+        @media (max-width: 767px) {
+            .navbar__container {
+                flex-wrap: wrap;
+            }
+
+            .navbar--search-active .navbar__container {
+                flex-wrap: nowrap;
+            }
+
+            .navbar--search-active .navbar__search {
+                position: absolute;
+                top: 0;
+                left: 0;
+                right: 0;
+                bottom: 0;
+                display: flex;
+                align-items: center;
+                padding: 0 var(--spacing-md);
+            }
+        }
+    </style>
     {% block extra_css %}{% endblock %}
 </head>
 <body>
@@ -25,15 +216,36 @@
                     Productos
                 </a>
             </div>
-            
-            <a href="#" id="cartToggle" class="navbar__cart" aria-label="Carrito">
-                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                    <circle cx="9" cy="21" r="1"></circle>
-                    <circle cx="20" cy="21" r="1"></circle>
-                    <path d="M1 1h4l2.68 13.39a2 2 0 0 0 2 1.61h9.72a2 2 0 0 0 2-1.61L23 6H6"></path>
-                </svg>
-                <span id="cartCount" class="navbar__cart-badge">0</span>
-            </a>
+
+            <div class="navbar__right">
+                <div class="navbar__search">
+                    <button type="button" id="searchToggle" class="search-box__toggle" aria-label="Abrir búsqueda">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+                            <circle cx="11" cy="11" r="8"></circle>
+                            <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
+                        </svg>
+                    </button>
+                    <div class="search-box" id="searchBox">
+                        <input type="text" id="searchInput" class="search-box__input" placeholder="Buscar productos..." autocomplete="off">
+                        <button type="button" class="search-box__btn" aria-label="Buscar">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+                                <circle cx="11" cy="11" r="8"></circle>
+                                <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
+                            </svg>
+                        </button>
+                    </div>
+                    <div id="searchResults" class="search-dropdown"></div>
+                </div>
+
+                <a href="#" id="cartToggle" class="navbar__cart" aria-label="Carrito">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                        <circle cx="9" cy="21" r="1"></circle>
+                        <circle cx="20" cy="21" r="1"></circle>
+                        <path d="M1 1h4l2.68 13.39a2 2 0 0 0 2 1.61h9.72a2 2 0 0 0 2-1.61L23 6H6"></path>
+                    </svg>
+                    <span id="cartCount" class="navbar__cart-badge">0</span>
+                </a>
+            </div>
         </div>
     </nav>
 
@@ -96,6 +308,103 @@
         </div>
     </div>
 
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const searchInput = document.getElementById('searchInput');
+            const searchResults = document.getElementById('searchResults');
+            const searchToggle = document.getElementById('searchToggle');
+            const navbar = document.querySelector('.navbar');
+            let debounceTimer;
+            let currentQuery = '';
+
+            if (!searchInput) return;
+
+            if (searchToggle) {
+                searchToggle.addEventListener('click', function() {
+                    navbar.classList.add('navbar--search-active');
+                    searchInput.focus();
+                });
+            }
+
+            document.addEventListener('keydown', function(e) {
+                if (e.key === 'Escape' && navbar.classList.contains('navbar--search-active')) {
+                    navbar.classList.remove('navbar--search-active');
+                    searchResults.classList.remove('search-dropdown--visible');
+                    searchInput.blur();
+                }
+            });
+
+            document.addEventListener('click', function(e) {
+                if (!e.target.closest('.navbar__search')) {
+                    navbar.classList.remove('navbar--search-active');
+                }
+            });
+
+            searchInput.addEventListener('input', function() {
+                const query = this.value.trim();
+                currentQuery = query;
+
+                clearTimeout(debounceTimer);
+
+                if (query.length < 2) {
+                    searchResults.classList.remove('search-dropdown--visible');
+                    searchResults.innerHTML = '';
+                    return;
+                }
+
+                searchResults.innerHTML = '<div class="search-dropdown__loading"><div class="search-dropdown__spinner"></div></div>';
+                searchResults.classList.add('search-dropdown--visible');
+
+                debounceTimer = setTimeout(function() {
+                    fetch('{% url "buscar_productos" %}?q=' + encodeURIComponent(query))
+                        .then(function(r) { return r.json(); })
+                        .then(function(data) {
+                            if (currentQuery !== searchInput.value.trim()) return;
+                            renderResults(data.results);
+                        })
+                        .catch(function() {
+                            searchResults.classList.remove('search-dropdown--visible');
+                        });
+                }, 300);
+            });
+
+            searchInput.addEventListener('focus', function() {
+                if (this.value.trim().length >= 2 && searchResults.children.length > 0) {
+                    searchResults.classList.add('search-dropdown--visible');
+                }
+            });
+
+            document.addEventListener('click', function(e) {
+                if (!e.target.closest('.navbar__search')) {
+                    searchResults.classList.remove('search-dropdown--visible');
+                }
+            });
+
+            function renderResults(results) {
+                if (results.length === 0) {
+                    searchResults.innerHTML = '<div class="search-dropdown__empty">No se encontraron productos</div>';
+                    searchResults.classList.add('search-dropdown--visible');
+                    return;
+                }
+
+                var html = '';
+                results.forEach(function(p) {
+                    html += '<a href="' + p.url + '" class="search-dropdown__item">'
+                        + '<span class="search-dropdown__name">' + escapeHtml(p.nombre) + '</span>'
+                        + '<span class="search-dropdown__price">$' + p.precio + '</span>'
+                        + '</a>';
+                });
+                searchResults.innerHTML = html;
+                searchResults.classList.add('search-dropdown--visible');
+            }
+
+            function escapeHtml(text) {
+                var div = document.createElement('div');
+                div.appendChild(document.createTextNode(text));
+                return div.innerHTML;
+            }
+        });
+    </script>
     {% block extra_js %}{% endblock %}
     <script src="{% static 'js/cart.js' %}"></script>
 </body>

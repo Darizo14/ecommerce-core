@@ -1,4 +1,5 @@
 from django.shortcuts import render, get_object_or_404
+from django.http import JsonResponse
 from .models import Producto, Categoria
 
 def lista_productos(request):                               #Muestra una lista de productos disponibles en la tienda, filtrados por su estado activo. También muestra las categorías disponibles para que los usuarios puedan filtrar los productos por categoría.
@@ -17,10 +18,28 @@ def lista_productos(request):                               #Muestra una lista d
         'categorias_seleccionadas': categorias_ids,
     })
 
-# NUEVA VISTA
 def detalle_producto(request, producto_id):
     producto = get_object_or_404(Producto, id=producto_id, activo=True)
     return render(request, 'products/detalle_producto.html', {
         'producto': producto,
     })
+
+
+def buscar_productos(request):
+    q = request.GET.get('q', '').strip()
+    if len(q) < 2:
+        return JsonResponse({'results': []})
+
+    productos = Producto.objects.filter(
+        activo=True, nombre__icontains=q
+    ).values('id', 'nombre', 'slug', 'precio')[:10]
+
+    results = [{
+        'id': p['id'],
+        'nombre': p['nombre'],
+        'precio': str(p['precio']),
+        'url': f'/productos/{p["id"]}/',
+    } for p in productos]
+
+    return JsonResponse({'results': results})
 
