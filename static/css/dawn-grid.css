@@ -1,0 +1,406 @@
+/* ===================================
+   DAWN-STYLE PRODUCT GRID
+   Shopify Dawn inspired - Clean, minimal, premium
+   =================================== */
+
+:root {
+    --dawn-color-text: #1a1a1a;
+    --dawn-color-text-muted: #6b7280;
+    --dawn-color-price: #1a1a1a;
+    --dawn-color-price-old: #9ca3af;
+    --dawn-color-btn: #1a1a1a;
+    --dawn-color-btn-text: #ffffff;
+    --dawn-color-btn-hover: #333333;
+    --dawn-overlay-bg: rgba(0, 0, 0, 0.25);
+    --dawn-overlay-bg-dark: rgba(0, 0, 0, 0.15);
+
+    --dawn-font-body: var(--font-sans);
+    --dawn-font-heading: var(--font-heading);
+}
+
+.dawn-grid {
+    display: grid;
+    grid-template-columns: repeat(5, 1fr);
+    gap: var(--spacing-xl);
+}
+
+@media (max-width: 1400px) {
+    .dawn-grid {
+        grid-template-columns: repeat(4, 1fr);
+    }
+}
+
+@media (max-width: 1100px) {
+    .dawn-grid {
+        grid-template-columns: repeat(3, 1fr);
+    }
+}
+
+@media (max-width: 768px) {
+    .dawn-grid {
+        grid-template-columns: repeat(2, 1fr);
+        gap: var(--spacing-lg);
+    }
+}
+
+@media (max-width: 480px) {
+    .dawn-grid {
+        grid-template-columns: repeat(2, 1fr);
+        gap: var(--spacing-md);
+    }
+}
+
+@media (max-width: 360px) {
+    .dawn-grid {
+        grid-template-columns: 1fr;
+    }
+}
+
+/* ===================================
+   LARGE GRID - Home page
+   =================================== */
+.dawn-grid--large {
+    grid-template-columns: repeat(4, 1fr);
+    gap: var(--spacing-2xl);
+}
+
+.dawn-grid--large .dawn-card__title {
+    font-size: 1.125rem;
+}
+
+.dawn-grid--large .dawn-card__price-current {
+    font-size: 1.125rem;
+}
+
+.dawn-grid--large .dawn-card__add-btn {
+    padding: 14px 32px;
+    font-size: 0.875rem;
+}
+
+@media (max-width: 1400px) {
+    .dawn-grid--large {
+        grid-template-columns: repeat(3, 1fr);
+    }
+}
+
+@media (max-width: 900px) {
+    .dawn-grid--large {
+        grid-template-columns: repeat(2, 1fr);
+    }
+}
+
+@media (max-width: 480px) {
+    .dawn-grid--large {
+        gap: var(--spacing-lg);
+    }
+    .dawn-grid--large .dawn-card__title {
+        font-size: 1rem;
+    }
+    .dawn-grid--large .dawn-card__price-current {
+        font-size: 1rem;
+    }
+}
+
+/* ===================================
+   MEDIUM GRID - Product listing page
+   =================================== */
+.dawn-grid--medium {
+    grid-template-columns: repeat(4, 1fr);
+    gap: var(--spacing-xl);
+}
+
+.dawn-grid--medium .dawn-card__title {
+    font-size: 1rem;
+}
+
+.dawn-grid--medium .dawn-card__price-current {
+    font-size: 1rem;
+}
+
+.dawn-grid--medium .dawn-card__add-btn {
+    padding: 12px 24px;
+    font-size: 0.8125rem;
+}
+
+@media (max-width: 1200px) {
+    .dawn-grid--medium {
+        grid-template-columns: repeat(3, 1fr);
+    }
+}
+
+@media (max-width: 768px) {
+    .dawn-grid--medium {
+        grid-template-columns: repeat(2, 1fr);
+    }
+}
+
+@media (max-width: 480px) {
+    .dawn-grid--medium .dawn-card__title {
+        font-size: 0.9375rem;
+    }
+    .dawn-grid--medium .dawn-card__price-current {
+        font-size: 0.9375rem;
+    }
+}
+
+/* ===================================
+   DAWN CARD - Main Container
+   =================================== */
+.dawn-card {
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    background: transparent;
+}
+
+.dawn-card__image-link {
+    display: block;
+    text-decoration: none;
+    color: inherit;
+}
+
+/* ===================================
+   IMAGE WRAPPER - Aspect Ratio
+   =================================== */
+.dawn-card__image-wrapper {
+    position: relative;
+    width: 100%;
+    aspect-ratio: 1 / 1;
+    overflow: hidden;
+    background-color: #f6f6f6;
+    border-radius: var(--radius-md);
+}
+
+.dawn-card__image {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    transition: transform 350ms cubic-bezier(0.25, 0.1, 0.25, 1), opacity var(--transition-fast);
+}
+
+.dawn-card:hover .dawn-card__image {
+    transform: scale(1.05);
+    opacity: 0.85;
+}
+
+/* Placeholder */
+.dawn-card__placeholder {
+    position: absolute;
+    inset: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: linear-gradient(135deg, #f0f0f0 0%, #e8e8e8 100%);
+    color: #bbb;
+}
+
+.dawn-card__placeholder svg {
+    width: 48px;
+    height: 48px;
+    opacity: 0.5;
+}
+
+/* ===================================
+   HOVER OVERLAY - Add to Cart Button
+   =================================== */
+.dawn-card__overlay {
+    position: absolute;
+    inset: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background-color: var(--dawn-overlay-bg-dark);
+    opacity: 0;
+    visibility: hidden;
+    transition: opacity var(--transition-fast), visibility var(--transition-fast);
+    z-index: 10;
+}
+
+.dawn-card:hover .dawn-card__overlay {
+    opacity: 1;
+    visibility: visible;
+}
+
+/* Add to Cart Button - Apple Store Style */
+.dawn-card__add-btn {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    padding: 12px 24px;
+    background-color: var(--dawn-color-btn);
+    color: var(--dawn-color-btn-text);
+    border: none;
+    border-radius: 8px;
+    font-family: var(--font-heading);
+    font-size: 0.8125rem;
+    font-weight: 600;
+    letter-spacing: 0.02em;
+    cursor: pointer;
+    transform: translateY(12px) scale(0.96);
+    opacity: 0;
+    transition: all 350ms cubic-bezier(0.25, 0.1, 0.25, 1);
+    white-space: nowrap;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.12);
+}
+
+.dawn-card:hover .dawn-card__add-btn {
+    transform: translateY(0) scale(1);
+    opacity: 1;
+}
+
+.dawn-card__add-btn:hover {
+    background-color: var(--dawn-color-btn-hover);
+    transform: translateY(-1px) scale(1.02);
+    box-shadow: 0 6px 20px rgba(0, 0, 0, 0.18);
+}
+
+.dawn-card__add-btn:active {
+    transform: translateY(0) scale(0.98);
+    transition-duration: 100ms;
+}
+
+/* Loading state */
+.dawn-card__add-btn.loading {
+    pointer-events: none;
+    opacity: 0.7;
+}
+
+.dawn-card__add-btn.loading::after {
+    content: '';
+    width: 14px;
+    height: 14px;
+    border: 2px solid rgba(255, 255, 255, 0.3);
+    border-top-color: white;
+    border-radius: 50%;
+    animation: spin 0.6s linear infinite;
+    margin-left: 8px;
+}
+
+@keyframes spin {
+    to { transform: rotate(360deg); }
+}
+
+/* ===================================
+   CARD INFO - Below Image
+   =================================== */
+.dawn-card__info {
+    padding: var(--spacing-md) 0;
+    text-align: left;
+}
+
+.dawn-card__category {
+    display: block;
+    font-family: var(--font-sans);
+    font-size: 0.75rem;
+    font-weight: 600;
+    color: var(--color-text-muted);
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    margin-bottom: 0.25rem;
+}
+
+.dawn-card__title {
+    font-family: var(--font-heading);
+    font-size: 0.9375rem;
+    font-weight: 600;
+    color: var(--color-text);
+    line-height: 1.4;
+    margin: 0 0 0.5rem;
+    display: -webkit-box;
+    -webkit-line-clamp: 2;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+    transition: color 150ms ease;
+}
+
+.dawn-card__title a {
+    color: inherit;
+    text-decoration: none;
+}
+
+.dawn-card__title a:hover {
+    color: #666;
+}
+
+/* ===================================
+   PRICE STYLING
+   =================================== */
+.dawn-card__price {
+    display: flex;
+    align-items: baseline;
+    gap: 0.5rem;
+    font-family: var(--font-sans);
+}
+
+.dawn-card__price-current {
+    font-size: 0.9375rem;
+    font-weight: 700;
+    color: var(--dawn-color-price);
+}
+
+.dawn-card__price-old {
+    font-size: 0.875rem;
+    color: var(--color-text-muted);
+    text-decoration: line-through;
+}
+
+/* ===================================
+   MOBILE - Always visible overlay hint
+   =================================== */
+@media (max-width: 768px) {
+    .dawn-card__overlay {
+        opacity: 1;
+        visibility: visible;
+        background-color: rgba(0, 0, 0, 0.04);
+    }
+
+    .dawn-card__add-btn {
+        transform: translateY(0);
+        opacity: 1;
+        padding: 12px 20px;
+        font-size: 0.75rem;
+    }
+}
+
+/* ===================================
+   RESPONSIVE TWEAKS
+   =================================== */
+@media (max-width: 480px) {
+    .dawn-card__info {
+        padding: 0.5rem 0;
+    }
+
+    .dawn-card__title {
+        font-size: 0.875rem;
+    }
+
+    .dawn-card__price-current {
+        font-size: 0.875rem;
+    }
+
+    .dawn-card__add-btn {
+        padding: 10px 16px;
+        font-size: 0.6875rem;
+    }
+}
+
+/* ===================================
+   UTILITY - Container
+   =================================== */
+.dawn-grid-container {
+    max-width: 1600px;
+    margin: 0 auto;
+    padding: 0 var(--spacing-xl);
+}
+
+@media (max-width: 768px) {
+    .dawn-grid-container {
+        padding: 0 var(--spacing-md);
+    }
+}
+
+@media (max-width: 480px) {
+    .dawn-grid-container {
+        padding: 0 var(--spacing-sm);
+    }
+}

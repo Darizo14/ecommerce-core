@@ -1,0 +1,58 @@
+{% load static %}
+{% comment %}
+    Product Card - Shopify Dawn Style
+    Minimal, clean, premium aesthetic with hover "Add to cart"
+{% endcomment %}
+
+<article class="dawn-card" data-product-id="{{ producto.id }}">
+    <a href="{% url 'detalle_producto' producto.id %}" class="dawn-card__image-link">
+        <div class="dawn-card__image-wrapper">
+            {% if producto.imagen %}
+                <img
+                    src="{{ producto.imagen.url }}"
+                    alt="{{ producto.nombre }}"
+                    class="dawn-card__image"
+                    loading="lazy"
+                >
+            {% else %}
+                <div class="dawn-card__placeholder">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+                        <rect x="3" y="3" width="18" height="18" rx="2" ry="2"></rect>
+                        <circle cx="8.5" cy="8.5" r="1.5"></circle>
+                        <polyline points="21 15 16 10 5 21"></polyline>
+                    </svg>
+                </div>
+            {% endif %}
+
+            <div class="dawn-card__overlay">
+                <button
+                    type="button"
+                    class="dawn-card__add-btn"
+                    data-product-id="{{ producto.id }}"
+                    aria-label="Agregar {{ producto.nombre }} al carrito"
+                >
+                    <span class="dawn-card__add-btn-text">Agregar al carrito</span>
+                </button>
+            </div>
+        </div>
+    </a>
+
+    <div class="dawn-card__info">
+        {% if producto.categoria %}
+            <span class="dawn-card__category">{{ producto.categoria.nombre }}</span>
+        {% endif %}
+
+        <h3 class="dawn-card__title">
+            <a href="{% url 'detalle_producto' producto.id %}">{{ producto.nombre }}</a>
+        </h3>
+
+        <div class="dawn-card__price">
+            {% if producto.precio_anterior and producto.precio_anterior > producto.precio %}
+                <span class="dawn-card__price-current">${{ producto.precio }}</span>
+                <span class="dawn-card__price-old">${{ producto.precio_anterior }}</span>
+            {% else %}
+                <span class="dawn-card__price-current">${{ producto.precio }}</span>
+            {% endif %}
+        </div>
+    </div>
+</article>

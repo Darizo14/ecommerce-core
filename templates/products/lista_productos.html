@@ -41,28 +41,12 @@
         </div>
 
         {% if productos %}
-            <div class="productos-grid">
-                {% for producto in productos %}
-                    <div class="producto-card">
-                        <a href="{% url 'detalle_producto' producto.id %}" class="producto-card__link">
-                            <div class="producto-imagen">
-                                {% if producto.imagen %}
-                                    <img src="{{ producto.imagen.url }}" alt="{{ producto.nombre }}">
-                                {% else %}
-                                    <div class="imagen-placeholder"></div>
-                                {% endif %}
-                            </div>
-                            <div class="producto-info">
-                                <h4 class="producto-nombre">{{ producto.nombre }}</h4>
-                                {% if producto.categoria %}
-                                    <p class="producto-categoria">{{ producto.categoria.nombre }}</p>
-                                {% endif %}
-                                <p class="producto-precio">${{ producto.precio }}</p>
-                            </div>
-                        </a>
-                        <a href="{% url 'carrito:agregar_carrito' producto.id %}" class="btn-detalles add-to-cart">Agregar al Carrito</a>
-                    </div>
-                {% endfor %}
+            <div class="dawn-grid-container">
+                <div class="dawn-grid dawn-grid--medium">
+                    {% for producto in productos %}
+                        {% include 'components/product_card.html' with producto=producto %}
+                    {% endfor %}
+                </div>
             </div>
         {% else %}
             <div class="sin-productos">

@@ -218,6 +218,39 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     });
 
+    document.querySelectorAll('.dawn-card__add-btn').forEach(btn => {
+        btn.addEventListener('click', async (e) => {
+            e.preventDefault();
+            e.stopPropagation();
+
+            const productId = btn.dataset.productId;
+            if (!productId) return;
+
+            btn.classList.add('loading');
+            const originalText = btn.querySelector('.dawn-card__add-btn-text').textContent;
+            btn.querySelector('.dawn-card__add-btn-text').textContent = 'Agregando...';
+
+            try {
+                const response = await fetch(`/carrito/agregar/${productId}/`, {
+                    headers: { 'X-Requested-With': 'XMLHttpRequest' }
+                });
+                const data = await response.json();
+
+                if (data.success) {
+                    updateCartBadge(data.cantidad_total);
+                    toast.show(data.message, 'success');
+                } else {
+                    toast.show(data.error || 'Error al agregar', 'error');
+                }
+            } catch (error) {
+                toast.show('Error de conexión', 'error');
+            } finally {
+                btn.classList.remove('loading');
+                btn.querySelector('.dawn-card__add-btn-text').textContent = originalText;
+            }
+        });
+    });
+
     document.getElementById('addToCartForm')?.addEventListener('submit', async (e) => {
         e.preventDefault();
         
