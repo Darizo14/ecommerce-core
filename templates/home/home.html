@@ -53,20 +53,14 @@
 <section class="home-productos" id="productos-destacados">
     <div class="section-header">
         <h2>Productos Destacados</h2>
-        <div class="section-arrows">
-            <button class="section-arrow section-arrow--prev" data-carousel="destacados" disabled>
-                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                    <polyline points="15 18 9 12 15 6"></polyline>
-                </svg>
-            </button>
-            <button class="section-arrow section-arrow--next" data-carousel="destacados">
-                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                    <polyline points="9 18 15 12 9 6"></polyline>
-                </svg>
-            </button>
-        </div>
+        <a href="{% url 'lista_productos' %}" class="section-link">Ver todos →</a>
     </div>
     <div class="product-carousel">
+        <button class="section-arrow section-arrow--prev" data-carousel="destacados" disabled>
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <polyline points="15 18 9 12 15 6"></polyline>
+            </svg>
+        </button>
         <div class="product-carousel__track-wrapper">
             <div class="product-carousel__track" data-carousel="destacados">
                 {% for producto in productos_destacados %}
@@ -74,6 +68,11 @@
                 {% endfor %}
             </div>
         </div>
+        <button class="section-arrow section-arrow--next" data-carousel="destacados">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <polyline points="9 18 15 12 9 6"></polyline>
+            </svg>
+        </button>
     </div>
 </section>
 {% endif %}
@@ -82,26 +81,26 @@
 <section class="home-productos" id="productos-nuevos">
     <div class="section-header">
         <h2>Nuevos Productos</h2>
-        <div class="section-arrows">
-            <button class="section-arrow section-arrow--prev" data-carousel="nuevos" disabled>
-                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                    <polyline points="15 18 9 12 15 6"></polyline>
-                </svg>
-            </button>
-            <button class="section-arrow section-arrow--next" data-carousel="nuevos">
-                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                    <polyline points="9 18 15 12 9 6"></polyline>
-                </svg>
-            </button>
-        </div>
+        <a href="{% url 'lista_productos' %}" class="section-link">Ver todos →</a>
     </div>
     <div class="product-carousel">
+        <button class="section-arrow section-arrow--prev" data-carousel="nuevos" disabled>
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <polyline points="15 18 9 12 15 6"></polyline>
+            </svg>
+        </button>
         <div class="product-carousel__track-wrapper">
             <div class="product-carousel__track" data-carousel="nuevos">
                 {% for producto in productos_nuevos %}
                     {% include 'components/product_card.html' with producto=producto %}
-            {% endfor %}
+                {% endfor %}
+            </div>
         </div>
+        <button class="section-arrow section-arrow--next" data-carousel="nuevos">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <polyline points="9 18 15 12 9 6"></polyline>
+            </svg>
+        </button>
     </div>
 </section>
 {% endif %}

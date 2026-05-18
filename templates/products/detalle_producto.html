@@ -3,52 +3,382 @@
 {% block title %}{{ producto.nombre }} - Tienda Online{% endblock %}
 
 {% block content %}
-<div class="detalle-container">
-    <!-- Imagen -->
-    <div class="detalle-imagen">
-        {% if producto.imagen %}
-            <img src="{{ producto.imagen.url }}" alt="{{ producto.nombre }}">
-        {% else %}
-            <div class="imagen-placeholder"></div>
-        {% endif %}
-    </div>
-
-    <!-- Info del Producto -->
-    <div class="detalle-info">
-        <h1>{{ producto.nombre }}</h1>
-        
+<div class="product-page">
+    <!-- Breadcrumb -->
+    <nav class="breadcrumb">
+        <a href="{% url 'home' %}">Home</a>
+        <span class="breadcrumb-separator">/</span>
+        <a href="{% url 'lista_productos' %}">Productos</a>
         {% if producto.categoria %}
-            <p class="detalle-categoria">Categoría: <strong>{{ producto.categoria.nombre }}</strong></p>
+        <span class="breadcrumb-separator">/</span>
+        <a href="{% url 'lista_productos' %}?categoria={{ producto.categoria.id }}">{{ producto.categoria.nombre }}</a>
         {% endif %}
+        <span class="breadcrumb-separator">/</span>
+        <span class="breadcrumb-current">{{ producto.nombre }}</span>
+    </nav>
 
-        <p class="detalle-precio">${{ producto.precio }}</p>
-
-        {% if producto.stock > 0 %}
-            <p class="stock stock--disponible">✓ En stock ({{ producto.stock }} disponibles)</p>
-        {% else %}
-            <p class="stock stock--agotado">✗ Sin stock</p>
-        {% endif %}
-
-        <!-- Descripción -->
-        <div class="detalle-descripcion">
-            <h3>Descripción</h3>
-            <p>{{ producto.descripcion|linebreaks }}</p>
+    <!-- Product Main -->
+    <div class="product-main">
+        <!-- Gallery -->
+        <div class="product-gallery">
+            <div class="product-gallery__main">
+                {% if producto.imagen %}
+                    <img src="{{ producto.imagen.url }}" alt="{{ producto.nombre }}" id="mainImage">
+                {% else %}
+                    <div class="product-gallery__placeholder">
+                        <svg width="64" height="64" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+                            <rect x="3" y="3" width="18" height="18" rx="2" ry="2"></rect>
+                            <circle cx="8.5" cy="8.5" r="1.5"></circle>
+                            <polyline points="21 15 16 10 5 21"></polyline>
+                        </svg>
+                    </div>
+                {% endif %}
+            </div>
+            {% if producto.imagen %}
+            <div class="product-gallery__thumbs">
+                <button class="product-gallery__thumb active" onclick="changeImage('{{ producto.imagen.url }}')">
+                    <img src="{{ producto.imagen.url }}" alt="{{ producto.nombre }}">
+                </button>
+            </div>
+            {% endif %}
         </div>
 
-        <!-- Agregar al Carrito con Cantidad -->
-        <div class="detalle-carrito">
-            <form id="addToCartForm" action="{% url 'carrito:agregar_carrito' producto.id %}" method="get" class="form-cantidad">
-                <label for="cantidad">Cantidad:</label>
-                <input type="number" id="cantidad" name="cantidad" value="1" min="1" max="{{ producto.stock }}">
-                <button type="submit" class="btn-agregar add-to-cart" {% if producto.stock == 0 %}disabled{% endif %}>
-                    Agregar al Carrito
+        <!-- Product Info -->
+        <div class="product-info">
+            <h1 class="product-info__title">{{ producto.nombre }}</h1>
+
+            <div class="product-info__price">
+                <span class="product-info__price-current">${{ producto.precio }}</span>
+            </div>
+
+            <div class="product-info__stock">
+                {% if producto.stock > 0 %}
+                    <span class="stock-badge stock-badge--in">✓ En stock</span>
+                {% else %}
+                    <span class="stock-badge stock-badge--out">Sin stock</span>
+                {% endif %}
+            </div>
+
+            {% if producto.categoria %}
+            <p class="product-info__category">Categoría: {{ producto.categoria.nombre }}</p>
+            {% endif %}
+
+            <!-- Add to Cart -->
+            <form id="addToCartForm" action="{% url 'carrito:agregar_carrito' producto.id %}" method="get" class="product-info__actions">
+                <div class="quantity-selector">
+                    <label for="cantidad">Cantidad:</label>
+                    <div class="quantity-input">
+                        <button type="button" onclick="decreaseQty()">−</button>
+                        <input type="number" id="cantidad" name="cantidad" value="1" min="1" max="{{ producto.stock }}">
+                        <button type="button" onclick="increaseQty()">+</button>
+                    </div>
+                </div>
+                <button type="submit" class="btn-add-cart" {% if producto.stock == 0 %}disabled{% endif %}>
+                    {% if producto.stock > 0 %}Agregar al Carrito{% else %}Sin stock{% endif %}
                 </button>
             </form>
         </div>
+    </div>
 
-        <!-- Volver -->
-        <a href="{% url 'lista_productos' %}" class="btn-volver">Volver a productos</a>
+    <!-- Product Details -->
+    <div class="product-details">
+        <div class="product-details__section">
+            <h2>Descripción</h2>
+            <div class="product-details__description">
+                {{ producto.descripcion|linebreaks }}
+            </div>
+        </div>
     </div>
 </div>
 
+<script>
+function changeImage(src) {
+    document.getElementById('mainImage').src = src;
+    document.querySelectorAll('.product-gallery__thumb').forEach(thumb => {
+        thumb.classList.remove('active');
+    });
+    event.currentTarget.classList.add('active');
+}
+
+function increaseQty() {
+    const input = document.getElementById('cantidad');
+    const max = parseInt(input.max);
+    if (parseInt(input.value) < max) {
+        input.value = parseInt(input.value) + 1;
+    }
+}
+
+function decreaseQty() {
+    const input = document.getElementById('cantidad');
+    if (parseInt(input.value) > 1) {
+        input.value = parseInt(input.value) - 1;
+    }
+}
+</script>
+
+<style>
+.product-page {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: var(--spacing-lg);
+}
+
+.breadcrumb {
+    display: flex;
+    align-items: center;
+    gap: var(--spacing-sm);
+    font-size: 0.875rem;
+    color: var(--color-text-light);
+    margin-bottom: var(--spacing-xl);
+    flex-wrap: wrap;
+}
+
+.breadcrumb a {
+    color: var(--color-text-light);
+    text-decoration: none;
+    transition: color 0.2s;
+}
+
+.breadcrumb a:hover {
+    color: var(--color-primary);
+}
+
+.breadcrumb-separator {
+    color: var(--color-text-muted);
+}
+
+.breadcrumb-current {
+    color: var(--color-text);
+}
+
+.product-main {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: var(--spacing-2xl);
+    margin-bottom: var(--spacing-3xl);
+}
+
+@media (min-width: 768px) {
+    .product-main {
+        grid-template-columns: 1fr 1fr;
+    }
+}
+
+.product-gallery {
+    display: flex;
+    flex-direction: column;
+    gap: var(--spacing-md);
+}
+
+.product-gallery__main {
+    aspect-ratio: 1;
+    border-radius: var(--radius-lg);
+    overflow: hidden;
+    background: var(--color-bg-page);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.product-gallery__main img {
+    width: 100%;
+    height: 100%;
+    object-fit: contain;
+    cursor: pointer;
+    transition: transform 0.3s;
+}
+
+.product-gallery__main img:hover {
+    transform: scale(1.02);
+}
+
+.product-gallery__placeholder {
+    color: var(--color-text-muted);
+}
+
+.product-gallery__thumbs {
+    display: flex;
+    gap: var(--spacing-sm);
+    overflow-x: auto;
+    padding: var(--spacing-xs) 0;
+}
+
+.product-gallery__thumb {
+    width: 80px;
+    height: 80px;
+    border: 2px solid transparent;
+    border-radius: var(--radius-md);
+    overflow: hidden;
+    cursor: pointer;
+    padding: 0;
+    background: none;
+    transition: border-color 0.2s;
+}
+
+.product-gallery__thumb.active {
+    border-color: var(--color-primary);
+}
+
+.product-gallery__thumb img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
+.product-info {
+    display: flex;
+    flex-direction: column;
+    gap: var(--spacing-md);
+}
+
+.product-info__title {
+    font-family: var(--font-heading);
+    font-size: 2rem;
+    font-weight: 700;
+    color: var(--color-text);
+    margin: 0;
+    line-height: 1.2;
+}
+
+.product-info__price {
+    display: flex;
+    align-items: baseline;
+    gap: var(--spacing-sm);
+}
+
+.product-info__price-current {
+    font-size: 1.75rem;
+    font-weight: 700;
+    color: var(--color-text);
+}
+
+.stock-badge {
+    display: inline-flex;
+    align-items: center;
+    padding: var(--spacing-xs) var(--spacing-sm);
+    border-radius: var(--radius-full);
+    font-size: 0.75rem;
+    font-weight: 600;
+    text-transform: uppercase;
+}
+
+.stock-badge--in {
+    background: #dcfce7;
+    color: #166534;
+}
+
+.stock-badge--out {
+    background: #fee2e2;
+    color: #dc2626;
+}
+
+.product-info__category {
+    font-size: 0.875rem;
+    color: var(--color-text-light);
+    margin: 0;
+}
+
+.product-info__actions {
+    display: flex;
+    flex-direction: column;
+    gap: var(--spacing-md);
+    margin-top: var(--spacing-md);
+}
+
+.quantity-selector {
+    display: flex;
+    flex-direction: column;
+    gap: var(--spacing-xs);
+}
+
+.quantity-selector label {
+    font-size: 0.875rem;
+    font-weight: 500;
+    color: var(--color-text);
+}
+
+.quantity-input {
+    display: flex;
+    align-items: center;
+    border: 1px solid var(--color-border);
+    border-radius: var(--radius-md);
+    overflow: hidden;
+    width: fit-content;
+}
+
+.quantity-input button {
+    width: 40px;
+    height: 40px;
+    border: none;
+    background: var(--color-bg-page);
+    color: var(--color-text);
+    font-size: 1.25rem;
+    cursor: pointer;
+    transition: background 0.2s;
+}
+
+.quantity-input button:hover {
+    background: var(--color-border);
+}
+
+.quantity-input input {
+    width: 60px;
+    height: 40px;
+    border: none;
+    text-align: center;
+    font-size: 1rem;
+    font-weight: 500;
+    -moz-appearance: textfield;
+}
+
+.quantity-input input::-webkit-outer-spin-button,
+.quantity-input input::-webkit-inner-spin-button {
+    -webkit-appearance: none;
+    margin: 0;
+}
+
+.btn-add-cart {
+    padding: var(--spacing-md) var(--spacing-xl);
+    background: var(--color-primary);
+    color: white;
+    border: none;
+    border-radius: var(--radius-md);
+    font-size: 1rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: background 0.2s, transform 0.2s;
+}
+
+.btn-add-cart:hover:not(:disabled) {
+    background: var(--color-primary-dark);
+    transform: translateY(-1px);
+}
+
+.btn-add-cart:disabled {
+    background: var(--color-text-muted);
+    cursor: not-allowed;
+}
+
+.product-details {
+    border-top: 1px solid var(--color-border-light);
+    padding-top: var(--spacing-2xl);
+}
+
+.product-details__section {
+    margin-bottom: var(--spacing-2xl);
+}
+
+.product-details__section h2 {
+    font-family: var(--font-heading);
+    font-size: 1.25rem;
+    font-weight: 600;
+    color: var(--color-text);
+    margin: 0 0 var(--spacing-md) 0;
+}
+
+.product-details__description {
+    color: var(--color-text-light);
+    line-height: 1.7;
+}
+</style>
 {% endblock %}
