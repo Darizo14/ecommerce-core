@@ -218,17 +218,18 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     });
 
-    document.querySelectorAll('.dawn-card__add-btn').forEach(btn => {
+    document.querySelectorAll('.dawn-card .btn-add-cart').forEach(btn => {
         btn.addEventListener('click', async (e) => {
             e.preventDefault();
             e.stopPropagation();
 
             const productId = btn.dataset.productId;
             if (!productId) return;
+            if (btn.disabled) return;
 
-            btn.classList.add('loading');
-            const originalText = btn.querySelector('.dawn-card__add-btn-text').textContent;
-            btn.querySelector('.dawn-card__add-btn-text').textContent = 'Agregando...';
+            const originalHtml = btn.innerHTML;
+            btn.innerHTML = 'Agregando...';
+            btn.disabled = true;
 
             try {
                 const response = await fetch(`/carrito/agregar/${productId}/`, {
@@ -245,8 +246,8 @@ document.addEventListener('DOMContentLoaded', () => {
             } catch (error) {
                 toast.show('Error de conexión', 'error');
             } finally {
-                btn.classList.remove('loading');
-                btn.querySelector('.dawn-card__add-btn-text').textContent = originalText;
+                btn.innerHTML = originalHtml;
+                btn.disabled = false;
             }
         });
     });

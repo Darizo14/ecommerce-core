@@ -125,6 +125,10 @@
   color: white;
 }
 
+.btn-add-cart {
+    height: 40px;
+}
+
 .btn-agregar {
   padding: var(--spacing-sm) var(--spacing-lg);
   font-size: var(--font-size-sm);
