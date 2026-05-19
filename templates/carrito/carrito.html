@@ -7,6 +7,14 @@
 <link rel="stylesheet" href="{% static 'css/carrito.css' %}">
 {% endblock %}
 
+{% block breadcrumb %}
+<nav class="breadcrumb">
+    <a href="{% url 'home' %}">Home</a>
+    <span class="breadcrumb-separator">/</span>
+    <span class="breadcrumb-current">Carrito</span>
+</nav>
+{% endblock %}
+
 {% block content %}
 <div class="checkout-container">
     <div class="checkout-header">

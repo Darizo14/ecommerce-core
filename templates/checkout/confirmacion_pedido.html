@@ -3,6 +3,18 @@
 
 {% block title %}Pedido Confirmado{% endblock %}
 
+{% block breadcrumb %}
+<nav class="breadcrumb">
+    <a href="{% url 'home' %}">Home</a>
+    <span class="breadcrumb-separator">/</span>
+    <a href="{% url 'carrito:vista_carrito' %}">Carrito</a>
+    <span class="breadcrumb-separator">/</span>
+    <a href="{% url 'checkout:index' %}">Checkout</a>
+    <span class="breadcrumb-separator">/</span>
+    <span class="breadcrumb-current">Confirmación</span>
+</nav>
+{% endblock %}
+
 {% block content %}
 <div class="checkout-container">
     <div class="checkout-header">

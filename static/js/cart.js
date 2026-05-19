@@ -212,7 +212,7 @@ document.addEventListener('DOMContentLoaded', () => {
             } catch (error) {
                 toast.show('Error de conexión', 'error');
             } finally {
-                btn.textContent = originalText;
+            btn.innerHTML = originalHtml;
                 btn.disabled = false;
             }
         });
@@ -255,13 +255,13 @@ document.addEventListener('DOMContentLoaded', () => {
         e.preventDefault();
         
         const form = e.target;
-        const btn = form.querySelector('.add-to-cart');
+        const btn = form.querySelector('.btn-add-cart');
         const cantidad = form.querySelector('[name="cantidad"]').value;
         let url = form.action;
         url = `${url}?cantidad=${cantidad}`;
         
-        const originalText = btn.textContent;
-        btn.textContent = 'Agregando...';
+        const originalHtml = btn.innerHTML;
+        btn.innerHTML = 'Agregando...';
         btn.disabled = true;
 
         try {
@@ -279,7 +279,7 @@ document.addEventListener('DOMContentLoaded', () => {
         } catch (error) {
             toast.show('Error de conexión', 'error');
         } finally {
-            btn.textContent = originalText;
+            btn.innerHTML = originalHtml;
             btn.disabled = false;
         }
     });

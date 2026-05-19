@@ -1,6 +1,14 @@
 {% extends 'base.html' %}
 {% load static %}
 
+{% block breadcrumb %}
+<nav class="breadcrumb">
+    <a href="{% url 'home' %}">Home</a>
+    <span class="breadcrumb-separator">/</span>
+    <span class="breadcrumb-current">Productos</span>
+</nav>
+{% endblock %}
+
 {% block content %}
 <div class="productos-container">
     <!-- SIDEBAR - Filtros -->

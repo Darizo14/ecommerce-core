@@ -7,6 +7,16 @@
 <script src="{% static 'js/checkout.js' %}"></script>
 {% endblock %}
 
+{% block breadcrumb %}
+<nav class="breadcrumb">
+    <a href="{% url 'home' %}">Home</a>
+    <span class="breadcrumb-separator">/</span>
+    <a href="{% url 'carrito:vista_carrito' %}">Carrito</a>
+    <span class="breadcrumb-separator">/</span>
+    <span class="breadcrumb-current">Checkout</span>
+</nav>
+{% endblock %}
+
 {% block content %}
 <div class="checkout-container">
     <div class="checkout-header">

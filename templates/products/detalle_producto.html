@@ -2,20 +2,22 @@
 
 {% block title %}{{ producto.nombre }} - Tienda Online{% endblock %}
 
+{% block breadcrumb %}
+<nav class="breadcrumb">
+    <a href="{% url 'home' %}">Home</a>
+    <span class="breadcrumb-separator">/</span>
+    <a href="{% url 'lista_productos' %}">Productos</a>
+    {% if producto.categoria %}
+    <span class="breadcrumb-separator">/</span>
+    <a href="{% url 'lista_productos' %}?categoria={{ producto.categoria.id }}">{{ producto.categoria.nombre }}</a>
+    {% endif %}
+    <span class="breadcrumb-separator">/</span>
+    <span class="breadcrumb-current">{{ producto.nombre }}</span>
+</nav>
+{% endblock %}
+
 {% block content %}
 <div class="product-page">
-    <!-- Breadcrumb -->
-    <nav class="breadcrumb">
-        <a href="{% url 'home' %}">Home</a>
-        <span class="breadcrumb-separator">/</span>
-        <a href="{% url 'lista_productos' %}">Productos</a>
-        {% if producto.categoria %}
-        <span class="breadcrumb-separator">/</span>
-        <a href="{% url 'lista_productos' %}?categoria={{ producto.categoria.id }}">{{ producto.categoria.nombre }}</a>
-        {% endif %}
-        <span class="breadcrumb-separator">/</span>
-        <span class="breadcrumb-current">{{ producto.nombre }}</span>
-    </nav>
 
     <!-- Product Main -->
     <div class="product-main">
@@ -73,19 +75,24 @@
                         <button type="button" onclick="increaseQty()">+</button>
                     </div>
                 </div>
-                <button type="submit" class="btn-add-cart" {% if producto.stock == 0 %}disabled{% endif %}>
-                    {% if producto.stock > 0 %}Agregar al Carrito{% else %}Sin stock{% endif %}
+                <button type="submit" class="btn btn--primary btn-add-cart" {% if producto.stock == 0 %}disabled{% endif %}>
+                    <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                        <circle cx="9" cy="21" r="1"></circle>
+                        <circle cx="20" cy="21" r="1"></circle>
+                        <path d="M1 1h4l2.68 13.39a2 2 0 0 0 2 1.61h9.72a2 2 0 0 0 2-1.61L23 6H6"></path>
+                    </svg>
+                    {% if producto.stock > 0 %}Agregar{% else %}Sin stock{% endif %}
                 </button>
             </form>
-        </div>
-    </div>
 
-    <!-- Product Details -->
-    <div class="product-details">
-        <div class="product-details__section">
-            <h2>Descripción</h2>
-            <div class="product-details__description">
-                {{ producto.descripcion|linebreaks }}
+            <!-- Product Details -->
+            <div class="product-details">
+                <div class="product-details__section">
+                    <h2>Descripción</h2>
+                    <div class="product-details__description">
+                        {{ producto.descripcion|linebreaks }}
+                    </div>
+                </div>
             </div>
         </div>
     </div>
@@ -121,34 +128,6 @@ function decreaseQty() {
     max-width: 1200px;
     margin: 0 auto;
     padding: var(--spacing-lg);
-}
-
-.breadcrumb {
-    display: flex;
-    align-items: center;
-    gap: var(--spacing-sm);
-    font-size: 0.875rem;
-    color: var(--color-text-light);
-    margin-bottom: var(--spacing-xl);
-    flex-wrap: wrap;
-}
-
-.breadcrumb a {
-    color: var(--color-text-light);
-    text-decoration: none;
-    transition: color 0.2s;
-}
-
-.breadcrumb a:hover {
-    color: var(--color-primary);
-}
-
-.breadcrumb-separator {
-    color: var(--color-text-muted);
-}
-
-.breadcrumb-current {
-    color: var(--color-text);
 }
 
 .product-main {
@@ -280,21 +259,25 @@ function decreaseQty() {
 
 .product-info__actions {
     display: flex;
-    flex-direction: column;
+    flex-direction: row;
+    align-items: center;
     gap: var(--spacing-md);
     margin-top: var(--spacing-md);
+    flex-wrap: wrap;
 }
 
 .quantity-selector {
     display: flex;
-    flex-direction: column;
-    gap: var(--spacing-xs);
+    flex-direction: row;
+    align-items: center;
+    gap: var(--spacing-sm);
 }
 
 .quantity-selector label {
     font-size: 0.875rem;
     font-weight: 500;
     color: var(--color-text);
+    white-space: nowrap;
 }
 
 .quantity-input {
@@ -338,30 +321,11 @@ function decreaseQty() {
 }
 
 .btn-add-cart {
-    padding: var(--spacing-md) var(--spacing-xl);
-    background: var(--color-primary);
-    color: white;
-    border: none;
-    border-radius: var(--radius-md);
-    font-size: 1rem;
-    font-weight: 600;
-    cursor: pointer;
-    transition: background 0.2s, transform 0.2s;
-}
-
-.btn-add-cart:hover:not(:disabled) {
-    background: var(--color-primary-dark);
-    transform: translateY(-1px);
-}
-
-.btn-add-cart:disabled {
-    background: var(--color-text-muted);
-    cursor: not-allowed;
+    height: 40px;
 }
 
 .product-details {
-    border-top: 1px solid var(--color-border-light);
-    padding-top: var(--spacing-2xl);
+    padding-top: var(--spacing-lg);
 }
 
 .product-details__section {
