@@ -111,6 +111,7 @@ def obtener_carrito(request):
             productos.append({
                 'id': producto.id,
                 'nombre': producto.nombre,
+                'categoria': producto.categoria.nombre if producto.categoria else '',
                 'precio': str(producto.precio),
                 'cantidad': cantidad,
                 'subtotal': float(producto.precio * cantidad),

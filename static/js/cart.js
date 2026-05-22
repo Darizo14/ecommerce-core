@@ -73,15 +73,27 @@ const cartDrawer = {
                         ${item.imagen ? `<img src="${item.imagen}" alt="${item.nombre}">` : '<div class="imagen-placeholder"></div>'}
                     </div>
                     <div class="cart-drawer__item-info">
-                        <span class="cart-drawer__item-name">${item.nombre}</span>
-                        <span class="cart-drawer__item-price">$${item.precio}</span>
-                        <div class="cart-drawer__item-qty">
-                            <a href="/carrito/restar/${item.id}/" class="cart-drawer__qty-btn" data-action="decrease">−</a>
-                            <span class="cart-drawer__qty-value">${item.cantidad}</span>
-                            <a href="/carrito/sumar/${item.id}/" class="cart-drawer__qty-btn" data-action="increase">+</a>
+                        <div class="cart-drawer__item-header">
+                            <span class="cart-drawer__item-name">${item.nombre}</span>
+                            <span class="cart-drawer__item-price">$${item.precio}</span>
+                        </div>
+                        ${item.categoria ? `<span class="cart-drawer__item-category">${item.categoria}</span>` : ''}
+                        <div class="cart-drawer__item-actions">
+                            <div class="cart-drawer__qty">
+                                <a href="/carrito/restar/${item.id}/" class="cart-drawer__qty-btn" data-action="decrease">−</a>
+                                <span class="cart-drawer__qty-value">${item.cantidad}</span>
+                                <a href="/carrito/sumar/${item.id}/" class="cart-drawer__qty-btn" data-action="increase">+</a>
+                            </div>
+                            <a href="/carrito/eliminar/${item.id}/" class="cart-drawer__item-remove" aria-label="Eliminar ${item.nombre}">
+                                <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                    <polyline points="3 6 5 6 21 6"></polyline>
+                                    <path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"></path>
+                                    <line x1="10" y1="11" x2="10" y2="17"></line>
+                                    <line x1="14" y1="11" x2="14" y2="17"></line>
+                                </svg>
+                            </a>
                         </div>
                     </div>
-                    <a href="/carrito/eliminar/${item.id}/" class="cart-drawer__item-remove">Eliminar</a>
                 </div>
             `).join('');
 
