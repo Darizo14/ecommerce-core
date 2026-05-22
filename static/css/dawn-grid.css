@@ -206,6 +206,12 @@
     visibility: hidden;
     transition: opacity var(--transition-fast), visibility var(--transition-fast);
     z-index: 10;
+    pointer-events: none;
+}
+
+.dawn-card__overlay-actions,
+.dawn-card__overlay .btn--primary {
+    pointer-events: auto;
 }
 
 .dawn-card:hover .dawn-card__overlay {
