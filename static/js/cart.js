@@ -227,12 +227,16 @@ document.addEventListener('DOMContentLoaded', () => {
             if (!productId) return;
             if (btn.disabled) return;
 
+            const card = btn.closest('.dawn-card');
+            const qtyInput = card ? card.querySelector('.quantity-input input') : null;
+            const cantidad = qtyInput ? qtyInput.value : 1;
+
             const originalHtml = btn.innerHTML;
             btn.innerHTML = 'Agregando...';
             btn.disabled = true;
 
             try {
-                const response = await fetch(`/carrito/agregar/${productId}/`, {
+                const response = await fetch(`/carrito/agregar/${productId}/?cantidad=${cantidad}`, {
                     headers: { 'X-Requested-With': 'XMLHttpRequest' }
                 });
                 const data = await response.json();
@@ -298,3 +302,20 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     }
 });
+
+function increaseQty(productId) {
+    const input = document.getElementById('cantidad-' + productId);
+    if (!input) return;
+    const max = parseInt(input.max);
+    if (parseInt(input.value) < max) {
+        input.value = parseInt(input.value) + 1;
+    }
+}
+
+function decreaseQty(productId) {
+    const input = document.getElementById('cantidad-' + productId);
+    if (!input) return;
+    if (parseInt(input.value) > 1) {
+        input.value = parseInt(input.value) - 1;
+    }
+}

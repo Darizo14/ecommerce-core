@@ -68,11 +68,11 @@
             <!-- Add to Cart -->
             <form id="addToCartForm" action="{% url 'carrito:agregar_carrito' producto.id %}" method="get" class="product-info__actions">
                 <div class="quantity-selector">
-                    <label for="cantidad">Cantidad:</label>
+                    <label for="cantidad-{{ producto.id }}">Cantidad:</label>
                     <div class="quantity-input">
-                        <button type="button" onclick="decreaseQty()">−</button>
-                        <input type="number" id="cantidad" name="cantidad" value="1" min="1" max="{{ producto.stock }}">
-                        <button type="button" onclick="increaseQty()">+</button>
+                        <button type="button" onclick="decreaseQty('{{ producto.id }}')">−</button>
+                        <input type="number" id="cantidad-{{ producto.id }}" name="cantidad" value="1" min="1" max="{{ producto.stock }}">
+                        <button type="button" onclick="increaseQty('{{ producto.id }}')">+</button>
                     </div>
                 </div>
                 <button type="submit" class="btn btn--primary btn-add-cart" {% if producto.stock == 0 %}disabled{% endif %}>
@@ -105,21 +105,6 @@ function changeImage(src) {
         thumb.classList.remove('active');
     });
     event.currentTarget.classList.add('active');
-}
-
-function increaseQty() {
-    const input = document.getElementById('cantidad');
-    const max = parseInt(input.max);
-    if (parseInt(input.value) < max) {
-        input.value = parseInt(input.value) + 1;
-    }
-}
-
-function decreaseQty() {
-    const input = document.getElementById('cantidad');
-    if (parseInt(input.value) > 1) {
-        input.value = parseInt(input.value) - 1;
-    }
 }
 </script>
 
