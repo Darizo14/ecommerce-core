@@ -488,6 +488,7 @@ input[type="radio"] {
 
 /* Product Carousel */
 .product-carousel {
+  position: relative;
   display: flex;
   align-items: center;
   overflow: visible;
@@ -495,9 +496,20 @@ input[type="radio"] {
 }
 
 .product-carousel .section-arrow {
+  position: absolute;
+  top: 50%;
+  transform: translateY(-50%);
   flex-shrink: 0;
   z-index: 10;
-  margin: 0 var(--spacing-sm);
+  margin: 0;
+}
+
+.product-carousel .section-arrow--prev {
+  left: 0;
+}
+
+.product-carousel .section-arrow--next {
+  right: 0;
 }
 
 @media (min-width: 769px) {
@@ -510,8 +522,8 @@ input[type="radio"] {
   flex: 1;
   align-self: stretch;
   overflow: hidden;
-  margin: 0 calc(var(--spacing-xl) * -1);
-  padding: 0 var(--spacing-xl);
+  margin: 0;
+  padding: 0;
 }
 
 .product-carousel__track {

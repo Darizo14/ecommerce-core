@@ -208,7 +208,11 @@
                 <span>Store</span>
             </a>
             
-            <div class="navbar__menu">
+            <button class="navbar__toggle" id="navToggle" aria-label="Menú" type="button">
+                <span class="navbar__toggle-icon"></span>
+            </button>
+
+            <div class="navbar__menu" id="navMenu">
                 <a href="{% url 'home' %}" class="navbar__link {% if request.resolver_match.url_name == 'home' %}navbar__link--active{% endif %}">
                     Inicio
                 </a>
@@ -328,6 +332,19 @@
                 searchToggle.addEventListener('click', function() {
                     navbar.classList.add('navbar--search-active');
                     searchInput.focus();
+                });
+            }
+
+            const navToggle = document.getElementById('navToggle');
+            const navMenu = document.getElementById('navMenu');
+            if (navToggle && navMenu) {
+                navToggle.addEventListener('click', function() {
+                    navMenu.classList.toggle('navbar__menu--open');
+                });
+                document.addEventListener('click', function(e) {
+                    if (!navToggle.contains(e.target) && !navMenu.contains(e.target)) {
+                        navMenu.classList.remove('navbar__menu--open');
+                    }
                 });
             }
 

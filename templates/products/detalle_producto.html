@@ -329,5 +329,104 @@ function changeImage(src) {
     color: var(--color-text-light);
     line-height: 1.7;
 }
+
+/* === Responsive móvil === */
+@media (max-width: 767px) {
+    .product-page {
+        padding: 0;
+    }
+
+    .product-main {
+        gap: var(--spacing-lg);
+    }
+
+    .product-gallery__main {
+        aspect-ratio: auto;
+        padding: 0;
+        border-radius: 0;
+        background: transparent;
+    }
+
+    .product-gallery__main img {
+        width: 100%;
+        height: auto;
+        object-fit: contain;
+    }
+
+    .product-info {
+        padding: 0 var(--spacing-lg);
+        gap: var(--spacing-sm);
+    }
+
+    .product-info__title {
+        font-size: 1.25rem;
+        line-height: 1.3;
+    }
+
+    .product-info__price-current {
+        font-size: 1.375rem;
+    }
+
+    .stock-badge {
+        font-size: 0.6875rem;
+        padding: 0.25rem 0.5rem;
+    }
+
+    .product-info__category {
+        font-size: 0.75rem;
+    }
+
+    .product-info__actions {
+        flex-direction: row;
+        align-items: center;
+        gap: var(--spacing-md);
+        margin-top: var(--spacing-lg);
+        padding-top: var(--spacing-lg);
+        border-top: 1px solid var(--color-border-light);
+    }
+
+    .quantity-selector {
+        flex-shrink: 0;
+    }
+
+    .quantity-selector label {
+        display: none;
+    }
+
+    .quantity-input button {
+        width: 44px;
+        height: 44px;
+        font-size: 1.25rem;
+    }
+
+    .quantity-input input {
+        width: 48px;
+        height: 44px;
+        font-size: 1rem;
+    }
+
+    .product-info__actions .btn {
+        flex: 1;
+        min-height: 48px;
+        font-size: 1rem;
+        white-space: nowrap;
+    }
+
+    .product-info__actions .btn svg {
+        flex-shrink: 0;
+    }
+
+    .product-details {
+        padding: var(--spacing-lg);
+    }
+
+    .product-details__section h2 {
+        font-size: 1rem;
+    }
+
+    .product-details__description {
+        font-size: 0.875rem;
+    }
+}
 </style>
 {% endblock %}
