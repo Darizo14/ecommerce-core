@@ -382,9 +382,6 @@ html {
   .product-grid {
     gap: 0.375rem;
   }
-  .dawn-grid--medium > .dawn-card {
-    flex: 0 0 82%;
-  }
 
   .product-carousel__track {
     gap: 0.5rem;
@@ -688,28 +685,9 @@ html {
   }
   .dawn-grid-container {
     padding: 0 var(--spacing-sm);
-    overflow: hidden;
   }
   .dawn-grid--medium {
-    display: flex;
-    flex-wrap: nowrap;
-    overflow-x: auto;
-    scroll-snap-type: x mandatory;
-    -webkit-overflow-scrolling: touch;
-    scrollbar-width: none;
     gap: var(--spacing-md);
-    padding-right: var(--spacing-sm);
-  }
-  .dawn-grid--medium::-webkit-scrollbar {
-    display: none;
-  }
-  .dawn-grid--medium > .dawn-card {
-    flex: 0 0 78%;
-    scroll-snap-align: start;
-    min-width: 0;
-  }
-  .dawn-grid--medium .dawn-card__image-wrapper {
-    padding: var(--spacing-md);
   }
   .dawn-card__info {
     padding: var(--spacing-xs) 0;
@@ -893,9 +871,6 @@ html {
   .dawn-grid,
   .dawn-grid--medium {
     gap: var(--spacing-sm);
-  }
-  .dawn-grid--medium > .dawn-card {
-    flex: 0 0 80%;
   }
   .dawn-grid--large {
     gap: var(--spacing-sm);
