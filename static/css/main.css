@@ -733,7 +733,7 @@ html {
     display: none;
   }
   .product-carousel__track .dawn-card {
-    flex: 0 0 80%;
+    flex: 0 0 64%;
     scroll-snap-align: start;
     min-width: 0;
   }
@@ -1056,7 +1056,7 @@ html {
     gap: 0;
   }
   .product-carousel__track .dawn-card {
-    flex: 0 0 80%;
+    flex: 0 0 64%;
   }
   .product-carousel .section-arrow--prev {
     left: 0;
