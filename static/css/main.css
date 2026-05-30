@@ -89,10 +89,6 @@ html {
 
 /* Up to 768px - Small tablets & large phones */
 @media (max-width: 768px) {
-  body {
-    overflow-x: hidden;
-  }
-
   .hero-carousel__slide {
     aspect-ratio: 16 / 9;
   }
@@ -126,7 +122,15 @@ html {
   }
 
   .dawn-card__overlay {
+    opacity: 0 !important;
+    visibility: hidden !important;
     background-color: rgba(0, 0, 0, 0.08);
+    pointer-events: auto;
+  }
+
+  .dawn-card__overlay--visible {
+    opacity: 1 !important;
+    visibility: visible !important;
   }
 
   .product-card__actions-overlay {
@@ -378,6 +382,9 @@ html {
   .product-grid {
     gap: 0.375rem;
   }
+  .dawn-grid--medium > .dawn-card {
+    flex: 0 0 82%;
+  }
 
   .product-carousel__track {
     gap: 0.5rem;
@@ -556,9 +563,7 @@ html {
     width: 100%;
   }
   .hero-carousel__arrow {
-    width: 32px;
-    height: 32px;
-    font-size: 14px;
+    display: none;
   }
   .product-carousel .section-arrow {
     width: 36px;
@@ -683,10 +688,28 @@ html {
   }
   .dawn-grid-container {
     padding: 0 var(--spacing-sm);
+    overflow: hidden;
   }
-  .dawn-grid,
   .dawn-grid--medium {
+    display: flex;
+    flex-wrap: nowrap;
+    overflow-x: auto;
+    scroll-snap-type: x mandatory;
+    -webkit-overflow-scrolling: touch;
+    scrollbar-width: none;
     gap: var(--spacing-md);
+    padding-right: var(--spacing-sm);
+  }
+  .dawn-grid--medium::-webkit-scrollbar {
+    display: none;
+  }
+  .dawn-grid--medium > .dawn-card {
+    flex: 0 0 78%;
+    scroll-snap-align: start;
+    min-width: 0;
+  }
+  .dawn-grid--medium .dawn-card__image-wrapper {
+    padding: var(--spacing-md);
   }
   .dawn-card__info {
     padding: var(--spacing-xs) 0;
@@ -714,27 +737,27 @@ html {
   .section-header h2 {
     font-size: 1.125rem;
   }
-  .section-arrow {
-    width: 36px;
-    height: 36px;
+  .product-carousel .section-arrow {
+    display: none;
   }
   .product-carousel {
     padding: 0 var(--spacing-sm);
   }
   .product-carousel__track {
-    gap: 0;
+    overflow-x: auto;
+    scroll-snap-type: x mandatory;
+    -webkit-overflow-scrolling: touch;
+    scrollbar-width: none;
+    gap: var(--spacing-md);
+    transition: none;
+  }
+  .product-carousel__track::-webkit-scrollbar {
+    display: none;
   }
   .product-carousel__track .dawn-card {
-    flex: 0 0 100%;
-  }
-  .product-carousel {
-    padding: 0 var(--spacing-sm);
-  }
-  .product-carousel__track {
-    gap: 0;
-  }
-  .product-carousel__track .dawn-card {
-    flex: 0 0 100%;
+    flex: 0 0 80%;
+    scroll-snap-align: start;
+    min-width: 0;
   }
   .home-productos {
     padding: var(--spacing-lg) 0;
@@ -857,11 +880,6 @@ html {
     font-size: 0.8125rem;
     padding: 0.5rem 0.75rem;
   }
-  .hero-carousel__arrow {
-    width: 28px;
-    height: 28px;
-    font-size: 12px;
-  }
   .confirmation-grid {
     grid-template-columns: 1fr !important;
   }
@@ -875,6 +893,9 @@ html {
   .dawn-grid,
   .dawn-grid--medium {
     gap: var(--spacing-sm);
+  }
+  .dawn-grid--medium > .dawn-card {
+    flex: 0 0 80%;
   }
   .dawn-grid--large {
     gap: var(--spacing-sm);
@@ -930,11 +951,6 @@ html {
     width: 8px;
     height: 8px;
   }
-  .hero-carousel__arrow {
-    width: 24px;
-    height: 24px;
-    font-size: 10px;
-  }
   .productos-grid {
     grid-template-columns: repeat(auto-fill, minmax(140px, 1fr));
     gap: var(--spacing-sm);
@@ -987,6 +1003,12 @@ html {
   .dawn-grid,
   .dawn-grid--medium {
     gap: 0.25rem;
+  }
+  .dawn-grid--medium > .dawn-card {
+    flex: 0 0 84%;
+  }
+  .dawn-card__info {
+    padding: 0.125rem 0;
   }
   .dawn-grid--large {
     gap: 0.25rem;
@@ -1059,7 +1081,7 @@ html {
     gap: 0;
   }
   .product-carousel__track .dawn-card {
-    flex: 0 0 100%;
+    flex: 0 0 80%;
   }
   .product-carousel .section-arrow--prev {
     left: 0;
@@ -1092,11 +1114,6 @@ html {
   .hero-carousel__dot {
     width: 6px;
     height: 6px;
-  }
-  .hero-carousel__arrow {
-    width: 22px;
-    height: 22px;
-    font-size: 8px;
   }
   .productos-grid {
     grid-template-columns: repeat(auto-fill, minmax(120px, 1fr));
@@ -1138,4 +1155,24 @@ html {
   .product-gallery__main img {
     object-fit: contain;
   }
+}
+
+/* ===================================
+   PRODUCT DETAIL (detalle_producto)
+   =================================== */
+.product-info__title {
+  font-family: var(--font-heading);
+  font-size: 2rem;
+  font-weight: 700;
+  color: var(--color-text);
+  margin: 0;
+  line-height: 1.2;
+}
+
+.product-details__section h2 {
+  font-family: var(--font-heading);
+  font-size: 1.25rem;
+  font-weight: 600;
+  color: var(--color-text);
+  margin: 0 0 var(--spacing-md) 0;
 }

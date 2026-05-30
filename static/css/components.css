@@ -491,7 +491,7 @@ input[type="radio"] {
   position: relative;
   display: flex;
   align-items: center;
-  overflow: visible;
+  overflow: hidden;
   padding: 0 var(--spacing-lg);
 }
 
@@ -530,6 +530,13 @@ input[type="radio"] {
   display: flex;
   gap: var(--spacing-xl);
   transition: transform 350ms cubic-bezier(0.25, 0.1, 0.25, 1);
+  will-change: transform;
+  backface-visibility: hidden;
+  -webkit-backface-visibility: hidden;
+}
+
+.product-carousel__track--dragging {
+  transition: none;
 }
 
 .product-carousel__track .dawn-card {
@@ -604,6 +611,12 @@ input[type="radio"] {
 .hero-carousel__slides {
   display: flex;
   transition: transform 0.5s ease-in-out;
+  will-change: transform;
+  backface-visibility: hidden;
+}
+
+.hero-carousel__slides--dragging {
+  transition: none;
 }
 
 .hero-carousel__slide {

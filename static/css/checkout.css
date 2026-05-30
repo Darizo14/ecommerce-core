@@ -7,6 +7,7 @@
   max-width: 1200px;
   margin: 0 auto;
   padding: var(--spacing-xl);
+  width: 100%;
 }
 
 .checkout-header {
@@ -112,6 +113,11 @@
   display: grid;
   grid-template-columns: 2fr 1fr;
   gap: var(--spacing-xl);
+  width: 100%;
+}
+
+.checkout-content > * {
+  min-width: 0;
 }
 
 @media (max-width: 768px) {
@@ -757,6 +763,11 @@
     display: grid;
     grid-template-columns: 1fr 350px;
     gap: var(--spacing-xl);
+    width: 100%;
+}
+
+.checkout-content > * {
+    min-width: 0;
 }
 
 @media (max-width: 768px) {

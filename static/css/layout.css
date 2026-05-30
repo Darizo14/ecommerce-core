@@ -21,6 +21,11 @@
   grid-template-columns: 1fr;
   gap: var(--spacing-xl);
   padding: var(--spacing-xl) 0;
+  width: 100%;
+}
+
+.productos-container > * {
+  min-width: 0;
 }
 
 /* Sidebar - Filtros */
@@ -87,7 +92,12 @@
 }
 
 .productos-header h2 {
-  margin-bottom: var(--spacing-xs);
+  font-family: var(--font-heading);
+  font-size: 1.75rem;
+  font-weight: 700;
+  color: var(--color-text);
+  margin: 0 0 var(--spacing-xs) 0;
+  line-height: 1;
 }
 
 .texto-secundario {
@@ -108,6 +118,11 @@
   grid-template-columns: 1fr;
   gap: var(--spacing-2xl);
   padding: var(--spacing-xl) 0;
+  width: 100%;
+}
+
+.detalle-container > * {
+  min-width: 0;
 }
 
 .detalle-imagen {
