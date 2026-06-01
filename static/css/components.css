@@ -761,3 +761,93 @@ input[type="radio"] {
 .breadcrumb-current {
   color: var(--color-text);
 }
+
+/* ===================================
+   QUANTITY SELECTOR — Premium
+   =================================== */
+
+.qty-selector {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  width: fit-content;
+}
+
+.qty-selector__btn {
+  width: 40px;
+  height: 40px;
+  border: 1px solid var(--color-border);
+  border-radius: 10px;
+  background: var(--color-bg-page);
+  color: var(--color-text);
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1.25rem;
+  padding: 0;
+  flex-shrink: 0;
+  user-select: none;
+  -webkit-tap-highlight-color: transparent;
+}
+
+.qty-selector__btn:disabled {
+  opacity: 0.3;
+  cursor: not-allowed;
+}
+
+.qty-selector__value {
+  min-width: 52px;
+  height: 40px;
+  border: 1px solid var(--color-border);
+  border-radius: 10px;
+  background: var(--color-bg-card);
+  color: var(--color-text);
+  font-size: 1rem;
+  font-weight: 500;
+  font-family: var(--font-sans);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0 var(--spacing-xs);
+  user-select: none;
+}
+
+/* Sizes */
+.qty-selector--sm {
+  gap: 3px;
+}
+
+.qty-selector--sm .qty-selector__btn {
+  width: 36px;
+  height: 36px;
+  font-size: 1rem;
+}
+
+.qty-selector--sm .qty-selector__value {
+  min-width: 44px;
+  height: 36px;
+  font-size: 0.875rem;
+}
+
+.qty-selector--lg {
+  gap: 5px;
+}
+
+.qty-selector--lg .qty-selector__btn {
+  width: 48px;
+  height: 48px;
+  font-size: 1.5rem;
+}
+
+.qty-selector--lg .qty-selector__value {
+  min-width: 60px;
+  height: 48px;
+  font-size: 1.125rem;
+}
+
+/* Disabled state for the whole selector */
+.qty-selector[data-disabled] {
+  opacity: 0.5;
+  pointer-events: none;
+}

@@ -1,0 +1,33 @@
+{% comment %}
+  Quantity Selector Component
+  Usage:
+    {% include 'components/quantity_selector.html' with product_id=producto.id stock=producto.stock %}
+    {% include 'components/quantity_selector.html' with product_id=producto.id stock=producto.stock classes="qty-selector--sm" %}
+{% endcomment %}
+<div class="qty-selector{% if classes %} {{ classes }}{% endif %}"{% if stock == 0 %} data-disabled{% endif %}>
+  <button type="button"
+          class="qty-selector__btn qty-selector__btn--dec"
+          onclick="decreaseQty('{{ product_id }}')"
+          aria-label="Disminuir cantidad"
+           {% if stock == 0 %}disabled{% endif %}>
+    <svg width="12" height="12" viewBox="0 0 12 12" fill="none">
+      <path d="M2 6h8" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/>
+    </svg>
+  </button>
+
+  <span id="cantidad-{{ product_id }}"
+        class="qty-selector__value"
+        data-stock="{{ stock }}"
+        {% if stock == 0 %}data-disabled{% endif %}>{% if initial_value %}{{ initial_value }}{% else %}1{% endif %}</span>
+  <input type="hidden" name="cantidad" id="hidden-cantidad-{{ product_id }}" value="{% if initial_value %}{{ initial_value }}{% else %}1{% endif %}">
+
+  <button type="button"
+          class="qty-selector__btn qty-selector__btn--inc"
+          onclick="increaseQty('{{ product_id }}')"
+          aria-label="Aumentar cantidad"
+          {% if stock == 0 %}disabled{% endif %}>
+    <svg width="12" height="12" viewBox="0 0 12 12" fill="none">
+      <path d="M6 2v8M2 6h8" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/>
+    </svg>
+  </button>
+</div>

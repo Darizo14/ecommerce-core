@@ -60,10 +60,14 @@
                                             </div>
                                         </td>
                                         <td class="product-quantity">
-                                            <div style="display: flex; align-items: center; gap: var(--spacing-sm); justify-content: center;">
-                                                <a href="{% url 'carrito:restar_1' item.producto.id %}" class="btn btn--sm btn--ghost" title="Decrementar">−</a>
-                                                <span style="min-width: 30px; text-align: center;">{{ item.cantidad }}</span>
-                                                <a href="{% url 'carrito:sumar_1' item.producto.id %}" class="btn btn--sm btn--ghost" title="Incrementar">+</a>
+                                            <div class="qty-selector">
+                                                <a href="{% url 'carrito:restar_1' item.producto.id %}" class="qty-selector__btn" aria-label="Disminuir cantidad">
+                                                    <svg width="12" height="12" viewBox="0 0 12 12" fill="none"><path d="M2 6h8" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg>
+                                                </a>
+                                                <span class="qty-selector__value">{{ item.cantidad }}</span>
+                                                <a href="{% url 'carrito:sumar_1' item.producto.id %}" class="qty-selector__btn" aria-label="Aumentar cantidad">
+                                                    <svg width="12" height="12" viewBox="0 0 12 12" fill="none"><path d="M6 2v8M2 6h8" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg>
+                                                </a>
                                             </div>
                                         </td>
                                         <td class="product-price">${{ item.precio|floatformat:2 }}</td>

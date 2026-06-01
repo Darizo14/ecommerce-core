@@ -35,11 +35,7 @@
                         </svg>
                         {% if producto.stock > 0 %}Agregar{% else %}Sin stock{% endif %}
                     </button>
-                    <div class="quantity-input">
-                        <button type="button" onclick="decreaseQty('{{ producto.id }}')" {% if producto.stock == 0 %}disabled{% endif %}>−</button>
-                        <input type="number" id="cantidad-{{ producto.id }}" name="cantidad" value="1" min="1" max="{{ producto.stock }}" readonly {% if producto.stock == 0 %}disabled{% endif %}>
-                        <button type="button" onclick="increaseQty('{{ producto.id }}')" {% if producto.stock == 0 %}disabled{% endif %}>+</button>
-                    </div>
+                    {% include 'components/quantity_selector.html' with product_id=producto.id stock=producto.stock classes="qty-selector--sm" %}
                 </div>
             </div>
     </div>

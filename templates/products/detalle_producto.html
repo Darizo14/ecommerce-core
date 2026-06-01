@@ -17,18 +17,17 @@
 {% endblock %}
 
 {% block content %}
-<div class="product-page">
+<div class="product-detail">
 
-    <!-- Product Main -->
-    <div class="product-main">
-        <!-- Gallery -->
-        <div class="product-gallery">
-            <div class="product-gallery__main">
+    <div class="product-detail__grid">
+
+        <div class="product-detail__gallery">
+            <div class="product-detail__main-image">
                 {% if producto.imagen %}
                     <img src="{{ producto.imagen.url }}" alt="{{ producto.nombre }}" id="mainImage">
                 {% else %}
-                    <div class="product-gallery__placeholder">
-                        <svg width="64" height="64" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+                    <div class="product-detail__placeholder">
+                        <svg width="80" height="80" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
                             <rect x="3" y="3" width="18" height="18" rx="2" ry="2"></rect>
                             <circle cx="8.5" cy="8.5" r="1.5"></circle>
                             <polyline points="21 15 16 10 5 21"></polyline>
@@ -37,71 +36,99 @@
                 {% endif %}
             </div>
             {% if producto.imagen %}
-            <div class="product-gallery__thumbs">
-                <button class="product-gallery__thumb active" onclick="changeImage('{{ producto.imagen.url }}')">
+            <div class="product-detail__thumbs">
+                <button class="product-detail__thumb active" onclick="changeImage('{{ producto.imagen.url }}')">
                     <img src="{{ producto.imagen.url }}" alt="{{ producto.nombre }}">
                 </button>
             </div>
             {% endif %}
         </div>
 
-        <!-- Product Info -->
-        <div class="product-info">
-            <h1 class="product-info__title">{{ producto.nombre }}</h1>
+        <div class="product-detail__info">
+            {% if producto.categoria %}
+            <span class="product-detail__category">{{ producto.categoria.nombre }}</span>
+            {% endif %}
 
-            <div class="product-info__price">
-                <span class="product-info__price-current">${{ producto.precio }}</span>
+            <h1 class="product-detail__name">{{ producto.nombre }}</h1>
+
+            <div class="product-detail__price">
+                <span class="product-detail__price-value">${{ producto.precio }}</span>
             </div>
 
-            <div class="product-info__stock">
+            <div class="product-detail__stock">
                 {% if producto.stock > 0 %}
-                    <span class="stock-badge stock-badge--in">✓ En stock</span>
+                    <span class="product-detail__stock-badge product-detail__stock-badge--in">En stock</span>
+                    <span class="product-detail__stock-text">{{ producto.stock }} unidades disponibles</span>
                 {% else %}
-                    <span class="stock-badge stock-badge--out">Sin stock</span>
+                    <span class="product-detail__stock-badge product-detail__stock-badge--out">Sin stock</span>
                 {% endif %}
             </div>
 
-            {% if producto.categoria %}
-            <p class="product-info__category">Categoría: {{ producto.categoria.nombre }}</p>
-            {% endif %}
+            <hr class="product-detail__divider">
 
-            <!-- Add to Cart -->
-            <form id="addToCartForm" action="{% url 'carrito:agregar_carrito' producto.id %}" method="get" class="product-info__actions">
-                <div class="quantity-selector">
-                    <label for="cantidad-{{ producto.id }}">Cantidad:</label>
-                    <div class="quantity-input">
-                        <button type="button" onclick="decreaseQty('{{ producto.id }}')">−</button>
-                        <input type="number" id="cantidad-{{ producto.id }}" name="cantidad" value="1" min="1" max="{{ producto.stock }}">
-                        <button type="button" onclick="increaseQty('{{ producto.id }}')">+</button>
+            <form id="addToCartForm" action="{% url 'carrito:agregar_carrito' producto.id %}" method="get" class="product-detail__form">
+                {% if producto.stock > 0 %}
+                <div class="product-detail__qty">
+                    <label class="product-detail__qty-label" for="cantidad-{{ producto.id }}">Cantidad</label>
+                    <div class="product-detail__qty-selector">
+                        {% include 'components/quantity_selector.html' with product_id=producto.id stock=producto.stock %}
                     </div>
                 </div>
-                <button type="submit" class="btn btn--primary btn-add-cart" {% if producto.stock == 0 %}disabled{% endif %}>
-                    <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                {% endif %}
+
+                <button type="submit" class="product-detail__add-btn btn-add-cart" {% if producto.stock == 0 %}disabled{% endif %}>
+                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
                         <circle cx="9" cy="21" r="1"></circle>
                         <circle cx="20" cy="21" r="1"></circle>
                         <path d="M1 1h4l2.68 13.39a2 2 0 0 0 2 1.61h9.72a2 2 0 0 0 2-1.61L23 6H6"></path>
                     </svg>
-                    {% if producto.stock > 0 %}Agregar{% else %}Sin stock{% endif %}
+                    {% if producto.stock > 0 %}Agregar al carrito{% else %}Sin stock{% endif %}
                 </button>
             </form>
 
-            <!-- Product Details -->
-            <div class="product-details">
-                <div class="product-details__section">
-                    <h2>Descripción</h2>
-                    <div class="product-details__description">
-                        {{ producto.descripcion|linebreaks }}
-                    </div>
+            <div class="product-detail__features">
+                <div class="product-detail__feature">
+                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                        <polyline points="23 6 13.5 15.5 8.5 10.5 1 18"></polyline>
+                        <polyline points="17 6 23 6 23 12"></polyline>
+                    </svg>
+                    <span>Envío gratis en pedidos mayores a $50</span>
+                </div>
+                <div class="product-detail__feature">
+                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                        <rect x="2" y="2" width="20" height="20" rx="2" ry="2"></rect>
+                        <path d="M16 11.37A4 4 0 1 1 12.63 8 4 4 0 0 1 16 11.37z"></path>
+                        <line x1="17.5" y1="6.5" x2="17.51" y2="6.5"></line>
+                    </svg>
+                    <span>Pago seguro</span>
+                </div>
+                <div class="product-detail__feature">
+                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                        <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path>
+                        <polyline points="7 10 12 15 17 10"></polyline>
+                        <line x1="12" y1="15" x2="12" y2="3"></line>
+                    </svg>
+                    <span>Devoluciones gratis</span>
                 </div>
             </div>
         </div>
     </div>
+
+    {% if producto.descripcion %}
+    <div class="product-detail__description">
+        <h2 class="product-detail__description-title">Descripción</h2>
+        <div class="product-detail__description-text">
+            {{ producto.descripcion|linebreaks }}
+        </div>
+    </div>
+    {% endif %}
+
 </div>
 
 <script>
 function changeImage(src) {
     document.getElementById('mainImage').src = src;
-    document.querySelectorAll('.product-gallery__thumb').forEach(thumb => {
+    document.querySelectorAll('.product-detail__thumb').forEach(thumb => {
         thumb.classList.remove('active');
     });
     event.currentTarget.classList.add('active');
@@ -109,32 +136,26 @@ function changeImage(src) {
 </script>
 
 <style>
-.product-page {
+.product-detail {
     max-width: 1200px;
     margin: 0 auto;
-    padding: var(--spacing-lg);
+    padding-bottom: var(--spacing-3xl, 3rem);
 }
 
-.product-main {
+.product-detail__grid {
     display: grid;
     grid-template-columns: 1fr;
     gap: var(--spacing-2xl);
-    margin-bottom: var(--spacing-3xl);
+    align-items: start;
 }
 
-@media (min-width: 768px) {
-    .product-main {
-        grid-template-columns: 1fr 1fr;
-    }
-}
-
-.product-gallery {
+.product-detail__gallery {
     display: flex;
     flex-direction: column;
     gap: var(--spacing-md);
 }
 
-.product-gallery__main {
+.product-detail__main-image {
     aspect-ratio: 1;
     border-radius: var(--radius-lg);
     overflow: hidden;
@@ -142,273 +163,296 @@ function changeImage(src) {
     display: flex;
     align-items: center;
     justify-content: center;
+    border: 1px solid var(--color-border-light);
 }
 
-.product-gallery__main img {
+.product-detail__main-image img {
     width: 100%;
     height: 100%;
     object-fit: contain;
-    cursor: pointer;
-    transition: transform 0.3s;
+    transition: transform var(--transition-slow);
 }
 
-.product-gallery__main img:hover {
-    transform: scale(1.02);
+.product-detail__main-image:hover img {
+    transform: scale(1.03);
 }
 
-.product-gallery__placeholder {
+.product-detail__placeholder {
     color: var(--color-text-muted);
 }
 
-.product-gallery__thumbs {
+.product-detail__thumbs {
     display: flex;
     gap: var(--spacing-sm);
     overflow-x: auto;
-    padding: var(--spacing-xs) 0;
 }
 
-.product-gallery__thumb {
-    width: 80px;
-    height: 80px;
-    border: 2px solid transparent;
+.product-detail__thumb {
+    width: 76px;
+    height: 76px;
     border-radius: var(--radius-md);
     overflow: hidden;
     cursor: pointer;
+    border: 2px solid transparent;
     padding: 0;
     background: none;
-    transition: border-color 0.2s;
+    transition: border-color var(--transition-fast);
+    flex-shrink: 0;
 }
 
-.product-gallery__thumb.active {
+.product-detail__thumb.active {
     border-color: var(--color-primary);
 }
 
-.product-gallery__thumb img {
+.product-detail__thumb img {
     width: 100%;
     height: 100%;
     object-fit: cover;
 }
 
-.product-info {
+.product-detail__info {
     display: flex;
     flex-direction: column;
-    gap: var(--spacing-md);
+    gap: var(--spacing-lg);
 }
 
-.product-info__price {
+.product-detail__category {
+    display: inline-block;
+    font-size: var(--font-size-sm);
+    font-weight: 600;
+    color: var(--color-text-light);
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+}
+
+.product-detail__name {
+    font-family: var(--font-heading);
+    font-size: 2rem;
+    font-weight: 700;
+    color: var(--color-text);
+    margin: 0;
+    line-height: 1.2;
+}
+
+.product-detail__price {
     display: flex;
     align-items: baseline;
     gap: var(--spacing-sm);
 }
 
-.product-info__price-current {
-    font-size: 1.75rem;
+.product-detail__price-value {
+    font-size: 2rem;
     font-weight: 700;
     color: var(--color-text);
 }
 
-.stock-badge {
-    display: inline-flex;
-    align-items: center;
-    padding: var(--spacing-xs) var(--spacing-sm);
-    border-radius: var(--radius-full);
-    font-size: 0.75rem;
-    font-weight: 600;
-    text-transform: uppercase;
-}
-
-.stock-badge--in {
-    background: #dcfce7;
-    color: #166534;
-}
-
-.stock-badge--out {
-    background: #fee2e2;
-    color: #dc2626;
-}
-
-.product-info__category {
-    font-size: 0.875rem;
-    color: var(--color-text-light);
-    margin: 0;
-}
-
-.product-info__actions {
+.product-detail__stock {
     display: flex;
-    flex-direction: row;
-    align-items: center;
-    gap: var(--spacing-md);
-    margin-top: var(--spacing-md);
-    flex-wrap: wrap;
-}
-
-.quantity-selector {
-    display: flex;
-    flex-direction: row;
     align-items: center;
     gap: var(--spacing-sm);
 }
 
-.quantity-selector label {
-    font-size: 0.875rem;
-    font-weight: 500;
-    color: var(--color-text);
-    white-space: nowrap;
-}
-
-.quantity-input {
-    display: flex;
+.product-detail__stock-badge {
+    display: inline-flex;
     align-items: center;
-    border: 1px solid var(--color-border);
-    border-radius: var(--radius-md);
-    overflow: hidden;
-    width: fit-content;
+    padding: 0.25rem 0.75rem;
+    border-radius: var(--radius-full);
+    font-size: var(--font-size-sm);
+    font-weight: 600;
 }
 
-.quantity-input button {
-    width: 40px;
-    height: 40px;
+.product-detail__stock-badge--in {
+    background: #dcfce7;
+    color: #166534;
+}
+
+.product-detail__stock-badge--out {
+    background: #fee2e2;
+    color: #dc2626;
+}
+
+.product-detail__stock-text {
+    font-size: var(--font-size-sm);
+    color: var(--color-text-light);
+}
+
+.product-detail__divider {
     border: none;
-    background: var(--color-bg-page);
-    color: var(--color-text);
-    font-size: 1.25rem;
-    cursor: pointer;
-    transition: background 0.2s;
-}
-
-.quantity-input button:hover {
-    background: var(--color-border);
-}
-
-.quantity-input input {
-    width: 60px;
-    height: 40px;
-    border: none;
-    text-align: center;
-    font-size: 1rem;
-    font-weight: 500;
-    -moz-appearance: textfield;
-}
-
-.quantity-input input::-webkit-outer-spin-button,
-.quantity-input input::-webkit-inner-spin-button {
-    -webkit-appearance: none;
+    border-top: 1px solid var(--color-border-light);
     margin: 0;
 }
 
-.btn-add-cart {
-    height: 40px;
+.product-detail__form {
+    display: flex;
+    flex-direction: column;
+    gap: var(--spacing-lg);
 }
 
-.product-details {
-    padding-top: var(--spacing-lg);
+.product-detail__qty {
+    display: flex;
+    flex-direction: column;
+    gap: var(--spacing-sm);
 }
 
-.product-details__section {
-    margin-bottom: var(--spacing-2xl);
+.product-detail__qty-label {
+    font-size: var(--font-size-sm);
+    font-weight: 500;
+    color: var(--color-text);
 }
 
-.product-details__description {
+.product-detail__qty-selector {
+    display: flex;
+    align-items: center;
+    width: fit-content;
+}
+
+.product-detail__add-btn {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: var(--spacing-sm);
+    width: 100%;
+    padding: 14px 28px;
+    background: var(--color-primary);
+    color: white;
+    font-size: var(--font-size-base);
+    font-weight: 600;
+    border: none;
+    border-radius: var(--radius-md);
+    cursor: pointer;
+    transition: background var(--transition-fast), transform var(--transition-fast);
+}
+
+.product-detail__add-btn:hover:not(:disabled) {
+    background: var(--color-primary-hover);
+    transform: translateY(-1px);
+}
+
+.product-detail__add-btn:active:not(:disabled) {
+    transform: translateY(0);
+}
+
+.product-detail__add-btn:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+}
+
+.product-detail__features {
+    display: flex;
+    flex-direction: column;
+    gap: var(--spacing-md);
+    padding: var(--spacing-lg);
+    background: var(--color-bg-page);
+    border-radius: var(--radius-md);
+    border: 1px solid var(--color-border-light);
+}
+
+.product-detail__feature {
+    display: flex;
+    align-items: center;
+    gap: var(--spacing-sm);
+    font-size: var(--font-size-sm);
     color: var(--color-text-light);
-    line-height: 1.7;
 }
 
-/* === Responsive móvil === */
-@media (max-width: 767px) {
-    .product-page {
-        padding: 0;
+.product-detail__feature svg {
+    flex-shrink: 0;
+    color: var(--color-text-muted);
+}
+
+.product-detail__description {
+    margin-top: var(--spacing-3xl, 3rem);
+    padding-top: var(--spacing-2xl);
+    border-top: 1px solid var(--color-border);
+}
+
+.product-detail__description-title {
+    font-family: var(--font-heading);
+    font-size: 1.5rem;
+    font-weight: 600;
+    color: var(--color-text);
+    margin: 0 0 var(--spacing-lg);
+}
+
+.product-detail__description-text {
+    color: var(--color-text-light);
+    line-height: 1.8;
+    font-size: var(--font-size-base);
+    max-width: 800px;
+}
+
+.product-detail__description-text p {
+    margin-bottom: var(--spacing-md);
+}
+
+@media (min-width: 768px) {
+    .product-detail__grid {
+        grid-template-columns: 1fr 1fr;
     }
 
-    .product-main {
+    .product-detail__main-image {
+        position: sticky;
+        top: calc(var(--header-height) + var(--spacing-xl));
+    }
+
+    .product-detail__name {
+        font-size: 2.25rem;
+    }
+}
+
+@media (max-width: 767px) {
+    .product-detail {
+        padding-bottom: var(--spacing-2xl);
+    }
+
+    .product-detail__grid {
         gap: var(--spacing-lg);
     }
 
-    .product-gallery__main {
+    .product-detail__main-image {
         aspect-ratio: auto;
-        padding: 0;
         border-radius: 0;
+        border-left: none;
+        border-right: none;
         background: transparent;
     }
 
-    .product-gallery__main img {
-        width: 100%;
-        height: auto;
+    .product-detail__main-image img {
         object-fit: contain;
+        max-height: 400px;
     }
 
-    .product-info {
+    .product-detail__thumbs {
         padding: 0 var(--spacing-lg);
-        gap: var(--spacing-sm);
     }
 
-    .product-info__title {
-        font-size: 1.25rem;
-        line-height: 1.3;
+    .product-detail__info {
+        padding: 0 var(--spacing-lg);
     }
 
-    .product-info__price-current {
-        font-size: 1.375rem;
+    .product-detail__name {
+        font-size: 1.5rem;
     }
 
-    .stock-badge {
-        font-size: 0.6875rem;
-        padding: 0.25rem 0.5rem;
+    .product-detail__price-value {
+        font-size: 1.625rem;
     }
 
-    .product-info__category {
-        font-size: 0.75rem;
-    }
-
-    .product-info__actions {
-        flex-direction: row;
-        align-items: center;
-        gap: var(--spacing-md);
-        margin-top: var(--spacing-lg);
-        padding-top: var(--spacing-lg);
-        border-top: 1px solid var(--color-border-light);
-    }
-
-    .quantity-selector {
-        flex-shrink: 0;
-    }
-
-    .quantity-selector label {
-        display: none;
-    }
-
-    .quantity-input button {
-        width: 44px;
-        height: 44px;
-        font-size: 1.25rem;
-    }
-
-    .quantity-input input {
-        width: 48px;
-        height: 44px;
-        font-size: 1rem;
-    }
-
-    .product-info__actions .btn {
-        flex: 1;
+    .product-detail__add-btn {
         min-height: 48px;
-        font-size: 1rem;
-        white-space: nowrap;
     }
 
-    .product-info__actions .btn svg {
-        flex-shrink: 0;
+    .product-detail__features {
+        padding: var(--spacing-md);
     }
 
-    .product-details {
-        padding: var(--spacing-lg);
+    .product-detail__description {
+        padding: var(--spacing-xl) var(--spacing-lg);
+        margin-top: 0;
     }
 
-    .product-details__section h2 {
-        font-size: 1rem;
-    }
-
-    .product-details__description {
-        font-size: 0.875rem;
+    .product-detail__description-title {
+        font-size: 1.25rem;
     }
 }
 </style>

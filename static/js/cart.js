@@ -79,10 +79,14 @@ const cartDrawer = {
                         </div>
                         ${item.categoria ? `<span class="cart-drawer__item-category">${item.categoria}</span>` : ''}
                         <div class="cart-drawer__item-actions">
-                            <div class="cart-drawer__qty">
-                                <a href="/carrito/restar/${item.id}/" class="cart-drawer__qty-btn" data-action="decrease">−</a>
-                                <span class="cart-drawer__qty-value">${item.cantidad}</span>
-                                <a href="/carrito/sumar/${item.id}/" class="cart-drawer__qty-btn" data-action="increase">+</a>
+                            <div class="qty-selector">
+                                <button type="button" class="qty-selector__btn" data-action="decrease" data-item-id="${item.id}" aria-label="Disminuir cantidad">
+                                    <svg width="12" height="12" viewBox="0 0 12 12" fill="none"><path d="M2 6h8" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg>
+                                </button>
+                                <span class="qty-selector__value">${item.cantidad}</span>
+                                <button type="button" class="qty-selector__btn" data-action="increase" data-item-id="${item.id}" aria-label="Aumentar cantidad">
+                                    <svg width="12" height="12" viewBox="0 0 12 12" fill="none"><path d="M6 2v8M2 6h8" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg>
+                                </button>
                             </div>
                             <a href="/carrito/eliminar/${item.id}/" class="cart-drawer__item-remove" aria-label="Eliminar ${item.nombre}">
                                 <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
@@ -97,11 +101,13 @@ const cartDrawer = {
                 </div>
             `).join('');
 
-            body.querySelectorAll('a[data-action]').forEach(link => {
-                link.addEventListener('click', async (e) => {
+            body.querySelectorAll('.qty-selector__btn[data-action]').forEach(btn => {
+                btn.addEventListener('click', async (e) => {
                     e.preventDefault();
-                    const url = link.getAttribute('href');
-                    await fetch(url, { 
+                    const itemId = btn.dataset.itemId;
+                    const action = btn.dataset.action;
+                    const endpoint = action === 'increase' ? 'sumar' : 'restar';
+                    await fetch(`/carrito/${endpoint}/${itemId}/`, {
                         headers: { 'X-Requested-With': 'XMLHttpRequest' }
                     }).then(() => this.loadCart());
                 });
@@ -240,8 +246,8 @@ document.addEventListener('DOMContentLoaded', () => {
             if (btn.disabled) return;
 
             const card = btn.closest('.dawn-card');
-            const qtyInput = card ? card.querySelector('.quantity-input input') : null;
-            const cantidad = qtyInput ? qtyInput.value : 1;
+            const qtyEl = card ? card.querySelector('.qty-selector__value, .quantity-input input') : null;
+            const cantidad = qtyEl ? (qtyEl.tagName === 'SPAN' ? parseInt(qtyEl.textContent) : qtyEl.value) : 1;
 
             const originalHtml = btn.innerHTML;
             btn.innerHTML = 'Agregando...';
@@ -316,18 +322,26 @@ document.addEventListener('DOMContentLoaded', () => {
 });
 
 function increaseQty(productId) {
-    const input = document.getElementById('cantidad-' + productId);
-    if (!input) return;
-    const max = parseInt(input.max);
-    if (parseInt(input.value) < max) {
-        input.value = parseInt(input.value) + 1;
+    const span = document.getElementById('cantidad-' + productId);
+    if (!span) return;
+    const max = parseInt(span.dataset.stock);
+    const current = parseInt(span.textContent);
+    if (current < max) {
+        const next = current + 1;
+        span.textContent = next;
+        const hidden = document.getElementById('hidden-cantidad-' + productId);
+        if (hidden) hidden.value = next;
     }
 }
 
 function decreaseQty(productId) {
-    const input = document.getElementById('cantidad-' + productId);
-    if (!input) return;
-    if (parseInt(input.value) > 1) {
-        input.value = parseInt(input.value) - 1;
+    const span = document.getElementById('cantidad-' + productId);
+    if (!span) return;
+    const current = parseInt(span.textContent);
+    if (current > 1) {
+        const next = current - 1;
+        span.textContent = next;
+        const hidden = document.getElementById('hidden-cantidad-' + productId);
+        if (hidden) hidden.value = next;
     }
 }
