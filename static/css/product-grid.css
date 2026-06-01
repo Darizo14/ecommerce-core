@@ -194,7 +194,7 @@
     padding: 12px 24px;
     font-size: var(--font-size-sm);
     font-weight: 600;
-    border-radius: var(--radius-sm);
+    border-radius: 12px;
     text-decoration: none;
     cursor: pointer;
     transition: all 0.25s ease;
@@ -223,7 +223,7 @@
     justify-content: center;
     width: 44px;
     height: 44px;
-    border-radius: var(--radius-sm);
+    border-radius: 12px;
     background-color: white;
     color: var(--color-text);
     border: none;
