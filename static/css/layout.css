@@ -15,12 +15,81 @@
   min-height: calc(100vh - var(--header-height));
 }
 
+/* Page header */
+.productos-page {
+  max-width: var(--max-width);
+  margin: 0 auto;
+  padding: var(--spacing-xl) var(--spacing-lg);
+}
+
+.productos-page__header {
+  margin-bottom: var(--spacing-xl);
+}
+
+.productos-page__title {
+  font-family: var(--font-heading);
+  font-size: var(--font-size-3xl);
+  font-weight: 700;
+  color: var(--color-text);
+  margin: 0;
+}
+
+.productos-page__subtitle {
+  color: var(--color-text-light);
+  margin-top: var(--spacing-xs);
+}
+
+/* Toolbar */
+.productos-toolbar {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  gap: var(--spacing-sm);
+  margin-bottom: var(--spacing-xl);
+}
+
+.productos-toolbar__select {
+  height: 40px;
+  padding: 0 var(--spacing-md);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-sm);
+  font-size: var(--font-size-sm);
+  color: var(--color-text);
+  background: var(--color-bg-input);
+  cursor: pointer;
+  outline: none;
+  min-width: 180px;
+}
+
+.productos-toolbar__filter-btn {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 40px;
+  height: 40px;
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-sm);
+  background: var(--color-bg-input);
+  color: var(--color-text);
+  cursor: pointer;
+  transition: border-color var(--transition-fast);
+}
+
+.productos-toolbar__filter-btn:hover {
+  border-color: var(--color-primary);
+}
+
+@media (min-width: 1024px) {
+  .productos-toolbar__filter-btn {
+    display: none;
+  }
+}
+
 /* Grid systems */
 .productos-container {
   display: grid;
   grid-template-columns: 1fr;
   gap: var(--spacing-xl);
-  padding: var(--spacing-xl) 0;
   width: 100%;
 }
 
@@ -39,11 +108,36 @@
   top: calc(var(--header-height) + var(--spacing-md));
 }
 
-.productos-sidebar h3 {
+.productos-sidebar__header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
   margin-bottom: var(--spacing-md);
-  font-size: var(--font-size-lg);
   border-bottom: 1px solid var(--color-border-light);
   padding-bottom: var(--spacing-sm);
+}
+
+.productos-sidebar__header h3 {
+  margin: 0;
+  font-size: var(--font-size-lg);
+}
+
+.productos-sidebar__close {
+  display: none;
+  align-items: center;
+  justify-content: center;
+  width: 32px;
+  height: 32px;
+  border: none;
+  background: transparent;
+  color: var(--color-text-light);
+  cursor: pointer;
+  border-radius: var(--radius-sm);
+}
+
+.productos-sidebar__close:hover {
+  background: var(--color-border-light);
+  color: var(--color-text);
 }
 
 .categorias-filter {
@@ -82,22 +176,54 @@
   gap: var(--spacing-sm);
 }
 
+/* Mobile sidebar */
+.productos-sidebar-overlay {
+  display: none;
+  position: fixed;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.5);
+  z-index: 999;
+}
+
+.productos-sidebar-overlay--visible {
+  display: block;
+}
+
+@media (max-width: 1023px) {
+  .productos-sidebar {
+    position: fixed;
+    top: 0;
+    left: -300px;
+    width: 300px;
+    max-width: 85vw;
+    height: 100vh;
+    z-index: 1000;
+    border-radius: 0;
+    overflow-y: auto;
+    transition: left var(--transition-base);
+    box-shadow: var(--shadow-lg);
+  }
+
+  .productos-sidebar--open {
+    left: 0;
+  }
+
+  .productos-sidebar__close {
+    display: flex;
+  }
+
+  .productos-sidebar__header {
+    margin-bottom: var(--spacing-lg);
+  }
+}
+
 /* Main content area */
 .productos-main {
   min-width: 0;
 }
 
-.productos-header {
+.productos-count {
   margin-bottom: var(--spacing-lg);
-}
-
-.productos-header h2 {
-  font-family: var(--font-heading);
-  font-size: 1.75rem;
-  font-weight: 700;
-  color: var(--color-text);
-  margin: 0 0 var(--spacing-xs) 0;
-  line-height: 1;
 }
 
 .texto-secundario {
@@ -251,7 +377,7 @@
 }
 
 /* Responsive */
-@media (min-width: 768px) {
+@media (min-width: 1024px) {
   .productos-container {
     grid-template-columns: 240px 1fr;
   }
@@ -267,9 +393,9 @@
   }
 }
 
-@media (max-width: 767px) {
-  .productos-sidebar {
-    position: static;
+@media (max-width: 1023px) {
+  .productos-sidebar:not(.productos-sidebar--open) {
+    display: none;
   }
   
   .productos-grid {

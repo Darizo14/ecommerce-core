@@ -10,64 +10,105 @@
 {% endblock %}
 
 {% block content %}
-<div class="productos-container">
-    <!-- SIDEBAR - Filtros -->
-    <aside class="productos-sidebar">
-        <h3>Filtrar por Categoría</h3>
-        <form method="get" action="{% url 'lista_productos' %}" id="form-filtro">
-            <div class="categorias-filter">
-                {% for categoria in categorias %}
-                    <div class="categoria-checkbox">
-                        <input 
-                            type="checkbox" 
-                            name="categorias" 
-                            value="{{ categoria.id }}"
-                            id="cat-{{ categoria.id }}"
-                            {% if categoria.id|stringformat:"s" in categorias_seleccionadas %}checked{% endif %}
-                        >
-                        <label for="cat-{{ categoria.id }}">{{ categoria.nombre }}</label>
-                    </div>
-                {% empty %}
-                    <p class="texto-vacio">No hay categorías disponibles</p>
-                {% endfor %}
-            </div>
-            
-            <div class="botones-filtro">
-                <button type="submit" class="btn btn--primary">Filtrar</button>
-                <button type="reset" class="btn btn--secondary" onclick="limpiarFiltros()">Limpiar</button>
-            </div>
-        </form>
-    </aside>
+<div class="productos-page">
+    <div class="productos-page__header">
+        <h1 class="productos-page__title">Nuestros Productos</h1>
+        <p class="productos-page__subtitle">Explora nuestra colección completa</p>
+    </div>
 
-    <!-- CONTENIDO - Grid de Productos -->
-    <main class="productos-main">
-        <div class="productos-header">
-            <h2>Nuestros Productos</h2>
-            {% if categorias_seleccionadas %}
-                <p class="texto-secundario">{{ productos.count }} producto(s) encontrado(s)</p>
-            {% endif %}
-        </div>
+    <!-- Toolbar -->
+    <div class="productos-toolbar">
+        <select name="orden" class="productos-toolbar__select" form="form-filtro" onchange="this.form.submit()">
+            <option value="">Ordenar por</option>
+            <option value="newest" {% if request.GET.orden == 'newest' %}selected{% endif %}>Más Recientes</option>
+            <option value="price-asc" {% if request.GET.orden == 'price-asc' %}selected{% endif %}>Precio: Menor a Mayor</option>
+            <option value="price-desc" {% if request.GET.orden == 'price-desc' %}selected{% endif %}>Precio: Mayor a Menor</option>
+        </select>
 
-        {% if productos %}
-            <div class="dawn-grid-container">
-                <div class="dawn-grid dawn-grid--medium">
-                    {% for producto in productos %}
-                        {% include 'components/product_card.html' with producto=producto %}
+        <button type="button" class="productos-toolbar__filter-btn" id="mobileFilterToggle" aria-label="Filtros">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <line x1="4" y1="6" x2="20" y2="6"></line>
+                <line x1="8" y1="12" x2="20" y2="12"></line>
+                <line x1="12" y1="18" x2="20" y2="18"></line>
+                <circle cx="6" cy="6" r="2" fill="currentColor"></circle>
+                <circle cx="10" cy="12" r="2" fill="currentColor"></circle>
+                <circle cx="14" cy="18" r="2" fill="currentColor"></circle>
+            </svg>
+        </button>
+    </div>
+
+    <div class="productos-container">
+        <!-- Sidebar - Filtros -->
+        <aside class="productos-sidebar" id="productosSidebar">
+            <div class="productos-sidebar__header">
+                <h3>Filtros</h3>
+                <button type="button" class="productos-sidebar__close" id="mobileFilterClose" aria-label="Cerrar filtros">
+                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                        <line x1="18" y1="6" x2="6" y2="18"></line>
+                        <line x1="6" y1="6" x2="18" y2="18"></line>
+                    </svg>
+                </button>
+            </div>
+            <form method="get" action="{% url 'lista_productos' %}" id="form-filtro">
+                {% if request.GET.q %}
+                    <input type="hidden" name="q" value="{{ request.GET.q }}">
+                {% endif %}
+                <div class="categorias-filter">
+                    {% for categoria in categorias %}
+                        <div class="categoria-checkbox">
+                            <input 
+                                type="checkbox" 
+                                name="categorias" 
+                                value="{{ categoria.id }}"
+                                id="cat-{{ categoria.id }}"
+                                {% if categoria.id|stringformat:"s" in categorias_seleccionadas %}checked{% endif %}
+                            >
+                            <label for="cat-{{ categoria.id }}">{{ categoria.nombre }}</label>
+                        </div>
+                    {% empty %}
+                        <p class="texto-vacio">No hay categorías disponibles</p>
                     {% endfor %}
                 </div>
-            </div>
-        {% else %}
-            <div class="sin-productos">
-                <p>No hay productos disponibles{% if categorias_seleccionadas %} en las categorías seleccionadas{% endif %}</p>
-                {% if categorias_seleccionadas %}
-                    <a href="{% url 'lista_productos' %}" class="btn btn--primary">Ver todos</a>
-                {% endif %}
-            </div>
-        {% endif %}
-    </main>
+                
+                <div class="botones-filtro">
+                    <button type="submit" class="btn btn--primary">Filtrar</button>
+                    <button type="reset" class="btn btn--secondary" onclick="limpiarFiltros()">Limpiar</button>
+                </div>
+            </form>
+        </aside>
+
+        <!-- Overlay for mobile -->
+        <div class="productos-sidebar-overlay" id="productosSidebarOverlay"></div>
+
+        <!-- CONTENIDO - Grid de Productos -->
+        <main class="productos-main">
+            {% if productos %}
+                <div class="productos-count">
+                    <p class="texto-secundario">{{ productos.count }} producto{{ productos.count|pluralize }} encontrado{{ productos.count|pluralize }}</p>
+                </div>
+                <div class="dawn-grid-container">
+                    <div class="dawn-grid dawn-grid--medium">
+                        {% for producto in productos %}
+                            {% include 'components/product_card.html' with producto=producto %}
+                        {% endfor %}
+                    </div>
+                </div>
+            {% else %}
+                <div class="sin-productos">
+                    <svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" style="color: var(--color-text-muted); margin-bottom: var(--spacing-md);">
+                        <circle cx="11" cy="11" r="8"></circle>
+                        <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
+                    </svg>
+                    <h3>No se encontraron productos</h3>
+                    <p>Intenta ajustar tus filtros o buscar algo diferente</p>
+                    {% if categorias_seleccionadas or request.GET.q %}
+                        <a href="{% url 'lista_productos' %}" class="btn btn--primary" style="margin-top: var(--spacing-lg);">Limpiar filtros</a>
+                    {% endif %}
+                </div>
+            {% endif %}
+        </main>
+    </div>
 </div>
-
-
 {% endblock %}
 
 {% block extra_js %}
