@@ -844,7 +844,7 @@ input[type="radio"] {
   font-size: 1.125rem;
 }
 
-/* Disabled state for the whole selector */
+/* Disabled state for the whole selecselector */
 .qty-selector[data-disabled] {
   opacity: 0.5;
   pointer-events: none;

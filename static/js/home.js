@@ -190,7 +190,9 @@ document.addEventListener('DOMContentLoaded', function() {
         }
         
         function onDragStart(e) {
-            if (dragState || e.type === 'mousedown' && track.dataset.touchEnded) return;
+            if (dragState) return;
+            if (e.type === 'mousedown' && track.dataset.touchEnded) return;
+            if (window.innerWidth > 768) return;
             dragState = { startX: getClientX(e), baseX: getCurrentX() };
             track.classList.add('product-carousel__track--dragging');
             if (e.type === 'mousedown') {
@@ -232,7 +234,9 @@ document.addEventListener('DOMContentLoaded', function() {
         track.addEventListener('touchmove', onDragMove, { passive: true });
         track.addEventListener('touchend', onDragEnd);
         track.addEventListener('touchcancel', onTouchCancel);
-        track.addEventListener('mousedown', onDragStart);
+        if (window.innerWidth <= 768) {
+            track.addEventListener('mousedown', onDragStart);
+        }
     });
     
     // --- Mobile: tap overlay toggle ---

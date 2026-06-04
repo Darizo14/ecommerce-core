@@ -259,6 +259,14 @@
     box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
 }
 
+/* Home page carousel - match qty-selector--sm height */
+.product-carousel__track .dawn-card__overlay .btn--primary {
+    height: 36px;
+    padding: 0 0.75rem;
+    font-size: 0.875rem;
+    border-radius: 10px;
+}
+
 .dawn-card__overlay .btn--primary:hover {
     box-shadow: 0 6px 20px rgba(0, 0, 0, 0.2);
 }
@@ -273,7 +281,7 @@
     padding: 0 0.75rem;
     height: 30px;
     font-size: 0.8125rem;
-    border-radius: 12px;
+    border-radius: 10px;
 }
 
 /* ===================================
