@@ -45,15 +45,25 @@
         </div>
 
         <div class="product-detail__info">
-            {% if producto.categoria %}
-            <span class="product-detail__category">{{ producto.categoria.nombre }}</span>
-            {% endif %}
-
-            <h1 class="product-detail__name">{{ producto.nombre }}</h1>
+            <div class="product-detail__header">
+                {% if producto.categoria %}
+                <span class="product-detail__category">{{ producto.categoria.nombre }}</span>
+                {% endif %}
+                <h1 class="product-detail__name">{{ producto.nombre }}</h1>
+            </div>
 
             <div class="product-detail__price">
                 <span class="product-detail__price-value">${{ producto.precio }}</span>
             </div>
+
+            {% if producto.descripcion %}
+            <div class="product-detail__description">
+                <h2 class="product-detail__description-title">Descripción</h2>
+                <div class="product-detail__description-text">
+                    {{ producto.descripcion|linebreaks }}
+                </div>
+            </div>
+            {% endif %}
 
             <div class="product-detail__stock">
                 {% if producto.stock > 0 %}
@@ -114,15 +124,6 @@
         </div>
     </div>
 
-    {% if producto.descripcion %}
-    <div class="product-detail__description">
-        <h2 class="product-detail__description-title">Descripción</h2>
-        <div class="product-detail__description-text">
-            {{ producto.descripcion|linebreaks }}
-        </div>
-    </div>
-    {% endif %}
-
 </div>
 
 <script>
@@ -155,27 +156,27 @@ function changeImage(src) {
     gap: var(--spacing-md);
 }
 
-.product-detail__main-image {
-    aspect-ratio: 1;
-    border-radius: var(--radius-lg);
-    overflow: hidden;
-    background: var(--color-bg-page);
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    border: 1px solid var(--color-border-light);
-}
+    .product-detail__main-image {
+        aspect-ratio: 1;
+        border-radius: 16px;
+        overflow: hidden;
+        background: var(--color-bg-page);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        border: 1px solid var(--color-border-light);
+    }
 
-.product-detail__main-image img {
-    width: 100%;
-    height: 100%;
-    object-fit: contain;
-    transition: transform var(--transition-slow);
-}
+    .product-detail__main-image img {
+        width: 100%;
+        height: 100%;
+        object-fit: contain;
+        transition: transform var(--transition-slow);
+    }
 
-.product-detail__main-image:hover img {
-    transform: scale(1.03);
-}
+    .product-detail__main-image:hover img {
+        transform: scale(1.03);
+    }
 
 .product-detail__placeholder {
     color: var(--color-text-muted);
@@ -223,6 +224,12 @@ function changeImage(src) {
     color: var(--color-text-light);
     text-transform: uppercase;
     letter-spacing: 0.5px;
+}
+
+.product-detail__header {
+    display: flex;
+    flex-direction: column;
+    gap: var(--spacing-xs);
 }
 
 .product-detail__name {
@@ -413,9 +420,9 @@ function changeImage(src) {
 
     .product-detail__main-image {
         aspect-ratio: auto;
-        border-radius: 0;
-        border-left: none;
-        border-right: none;
+        border-radius: 16px;
+        margin: 0 var(--spacing-lg);
+        max-height: 400px;
         background: transparent;
     }
 
