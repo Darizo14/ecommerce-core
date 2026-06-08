@@ -16,27 +16,6 @@
         <p class="productos-page__subtitle">Explora nuestra colección completa</p>
     </div>
 
-    <div class="productos-toolbar">
-        <select name="orden" class="productos-toolbar__select" form="form-filtro" onchange="this.form.submit()">
-            <option value="">Ordenar por</option>
-            <option value="price-asc" {% if orden_actual == 'price-asc' %}selected{% endif %}>Precio: Menor a Mayor</option>
-            <option value="price-desc" {% if orden_actual == 'price-desc' %}selected{% endif %}>Precio: Mayor a Menor</option>
-            <option value="name-asc" {% if orden_actual == 'name-asc' %}selected{% endif %}>Nombre: A-Z</option>
-            <option value="name-desc" {% if orden_actual == 'name-desc' %}selected{% endif %}>Nombre: Z-A</option>
-        </select>
-
-        <button type="button" class="productos-toolbar__filter-btn" id="mobileFilterToggle" aria-label="Filtros">
-            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                <line x1="4" y1="6" x2="20" y2="6"></line>
-                <line x1="8" y1="12" x2="20" y2="12"></line>
-                <line x1="12" y1="18" x2="20" y2="18"></line>
-                <circle cx="6" cy="6" r="2" fill="currentColor"></circle>
-                <circle cx="10" cy="12" r="2" fill="currentColor"></circle>
-                <circle cx="14" cy="18" r="2" fill="currentColor"></circle>
-            </svg>
-        </button>
-    </div>
-
     <div class="productos-container">
         <aside class="productos-sidebar" id="productosSidebar">
             <div class="productos-sidebar__header">
@@ -86,60 +65,47 @@
                     </label>
                 </div>
                 
-                <div class="botones-filtro" style="margin-top: var(--spacing-lg);">
-                    <button type="submit" class="btn btn--primary">Filtrar</button>
-                    <button type="reset" class="btn btn--secondary" onclick="limpiarFiltros()">Limpiar</button>
-                </div>
+                <input type="hidden" name="orden" id="ordenInput" value="{{ orden_actual }}">
+                <button type="button" id="clearFilters" disabled>Limpiar filtros</button>
             </form>
         </aside>
 
         <div class="productos-sidebar-overlay" id="productosSidebarOverlay"></div>
 
-        <main class="productos-main">
-            {% if productos %}
-                <div class="productos-count">
-                    <p class="texto-secundario">{{ paginator.count }} producto{{ paginator.count|pluralize }} encontrado{{ paginator.count|pluralize }}</p>
-                </div>
-                <div class="dawn-grid-container">
-                    <div class="dawn-grid dawn-grid--medium">
-                        {% for producto in productos %}
-                            {% include 'components/product_card.html' with producto=producto %}
-                        {% endfor %}
-                    </div>
+        <main class="productos-main" id="productosMain">
+
+            <div class="productos-toolbar">
+                <div class="sort-dropdown" id="sortDropdown">
+                    <button type="button" class="sort-dropdown__trigger" id="sortDropdownTrigger" aria-haspopup="listbox" aria-expanded="false">
+                        <span id="sortDropdownLabel">Ordenar por</span>
+                        <svg class="sort-dropdown__arrow" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+                            <polyline points="6 9 12 15 18 9"/>
+                        </svg>
+                    </button>
+                    <ul class="sort-dropdown__menu" id="sortDropdownMenu" role="listbox" aria-label="Ordenar por">
+                        <li role="option" aria-selected="true" data-value="">Ordenar por</li>
+                        <li role="option" aria-selected="false" data-value="price-asc">Precio: Menor a Mayor</li>
+                        <li role="option" aria-selected="false" data-value="price-desc">Precio: Mayor a Menor</li>
+                        <li role="option" aria-selected="false" data-value="name-asc">Nombre: A-Z</li>
+                        <li role="option" aria-selected="false" data-value="name-desc">Nombre: Z-A</li>
+                    </ul>
                 </div>
 
-                {% if paginator.num_pages > 1 %}
-                <div class="pagination" style="display: flex; justify-content: center; gap: var(--spacing-sm); margin-top: var(--spacing-2xl);">
-                    {% if productos.has_previous %}
-                        <a href="?page={{ productos.previous_page_number }}{% for c in categorias_seleccionadas %}&categorias={{ c }}{% endfor %}{% if precio_min %}&precio_min={{ precio_min }}{% endif %}{% if precio_max %}&precio_max={{ precio_max }}{% endif %}{% if solo_ofertas %}&ofertas=1{% endif %}{% if orden_actual %}&orden={{ orden_actual }}{% endif %}" class="btn btn--secondary btn--sm">Anterior</a>
-                    {% endif %}
-
-                    {% for num in productos.paginator.page_range %}
-                        {% if num == productos.number %}
-                            <span style="display: inline-flex; align-items: center; justify-content: center; width: 40px; height: 40px; background: var(--color-primary); color: white; border-radius: var(--radius-sm); font-weight: 600;">{{ num }}</span>
-                        {% elif num > productos.number|add:'-3' and num < productos.number|add:'3' %}
-                            <a href="?page={{ num }}{% for c in categorias_seleccionadas %}&categorias={{ c }}{% endfor %}{% if precio_min %}&precio_min={{ precio_min }}{% endif %}{% if precio_max %}&precio_max={{ precio_max }}{% endif %}{% if solo_ofertas %}&ofertas=1{% endif %}{% if orden_actual %}&orden={{ orden_actual }}{% endif %}" style="display: inline-flex; align-items: center; justify-content: center; width: 40px; height: 40px; border: 1px solid var(--color-border); border-radius: var(--radius-sm); color: var(--color-text); text-decoration: none;">{{ num }}</a>
-                        {% endif %}
-                    {% endfor %}
-
-                    {% if productos.has_next %}
-                        <a href="?page={{ productos.next_page_number }}{% for c in categorias_seleccionadas %}&categorias={{ c }}{% endfor %}{% if precio_min %}&precio_min={{ precio_min }}{% endif %}{% if precio_max %}&precio_max={{ precio_max }}{% endif %}{% if solo_ofertas %}&ofertas=1{% endif %}{% if orden_actual %}&orden={{ orden_actual }}{% endif %}" class="btn btn--secondary btn--sm">Siguiente</a>
-                    {% endif %}
-                </div>
-                {% endif %}
-            {% else %}
-                <div class="sin-productos">
-                    <svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" style="color: var(--color-text-muted); margin-bottom: var(--spacing-md);">
-                        <circle cx="11" cy="11" r="8"></circle>
-                        <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
+                <button type="button" class="productos-toolbar__filter-btn" id="mobileFilterToggle" aria-label="Filtros">
+                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                        <line x1="4" y1="6" x2="20" y2="6"></line>
+                        <line x1="8" y1="12" x2="20" y2="12"></line>
+                        <line x1="12" y1="18" x2="20" y2="18"></line>
+                        <circle cx="6" cy="6" r="2" fill="currentColor"></circle>
+                        <circle cx="10" cy="12" r="2" fill="currentColor"></circle>
+                        <circle cx="14" cy="18" r="2" fill="currentColor"></circle>
                     </svg>
-                    <h3>No se encontraron productos</h3>
-                    <p>Intenta ajustar tus filtros o buscar algo diferente</p>
-                    {% if categorias_seleccionadas or request.GET.q %}
-                        <a href="{% url 'lista_productos' %}" class="btn btn--primary" style="margin-top: var(--spacing-lg);">Limpiar filtros</a>
-                    {% endif %}
-                </div>
-            {% endif %}
+                </button>
+            </div>
+
+            <div id="productos-main-content">
+                {% include 'products/lista_productos_content.html' %}
+            </div>
         </main>
     </div>
 </div>
@@ -147,4 +113,163 @@
 
 {% block extra_js %}
 <script src="{% static 'js/lista_productos.js' %}"></script>
+{% endblock %}
+
+{% block extra_css %}
+<style>
+.sort-dropdown {
+    position: relative;
+    flex: 1;
+}
+
+.sort-dropdown__trigger {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    width: 100%;
+    height: 40px;
+    padding: 0 var(--spacing-md);
+    border: 1px solid var(--color-border);
+    border-radius: var(--radius-sm);
+    font-size: var(--font-size-sm);
+    color: var(--color-text);
+    background: var(--color-bg-input);
+    cursor: pointer;
+    outline: none;
+    gap: var(--spacing-sm);
+    transition: border-color 200ms ease, box-shadow 200ms ease;
+    font-family: inherit;
+}
+
+.sort-dropdown__trigger:hover {
+    border-color: var(--color-primary);
+}
+
+.sort-dropdown__trigger:focus-visible {
+    border-color: var(--color-primary);
+    box-shadow: 0 0 0 3px var(--color-primary-light);
+}
+
+.sort-dropdown__arrow {
+    flex-shrink: 0;
+    color: var(--color-text-muted);
+    transition: transform 200ms ease;
+}
+
+.sort-dropdown--open .sort-dropdown__arrow {
+    transform: rotate(180deg);
+}
+
+.sort-dropdown__menu {
+    position: absolute;
+    top: calc(100% + 4px);
+    left: 0;
+    right: 0;
+    background: var(--color-bg-card);
+    border: 1px solid var(--color-border);
+    border-radius: var(--radius-md);
+    box-shadow: var(--shadow-lg);
+    list-style: none;
+    margin: 0;
+    padding: var(--spacing-xs) 0;
+    z-index: 100;
+    opacity: 0;
+    transform: translateY(-6px) scale(0.97);
+    pointer-events: none;
+    transition: opacity 200ms ease, transform 200ms ease;
+}
+
+.sort-dropdown--open .sort-dropdown__menu {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+    pointer-events: auto;
+}
+
+.sort-dropdown__menu li {
+    padding: var(--spacing-sm) var(--spacing-md);
+    font-size: var(--font-size-sm);
+    color: var(--color-text);
+    cursor: pointer;
+    transition: background 150ms ease, color 150ms ease;
+}
+
+.sort-dropdown__menu li:hover {
+    background: var(--color-bg-page);
+}
+
+.sort-dropdown__menu li[aria-selected="true"] {
+    color: var(--color-primary);
+    font-weight: 600;
+}
+
+#form-filtro input[type="checkbox"] {
+    -webkit-appearance: none;
+    appearance: none;
+    width: 20px;
+    height: 20px;
+    border: 2px solid var(--color-border);
+    border-radius: 6px;
+    background: var(--color-bg-card);
+    cursor: pointer;
+    position: relative;
+    transition: all 200ms ease;
+    flex-shrink: 0;
+    margin: 0;
+}
+#form-filtro input[type="checkbox"]:hover {
+    border-color: var(--color-primary);
+}
+#form-filtro input[type="checkbox"]:checked {
+    background: var(--color-primary);
+    border-color: var(--color-primary);
+}
+#form-filtro input[type="checkbox"]:checked::after {
+    content: '';
+    position: absolute;
+    top: 2px;
+    left: 6px;
+    width: 5px;
+    height: 9px;
+    border: solid white;
+    border-width: 0 2px 2px 0;
+    transform: rotate(45deg);
+}
+#form-filtro input[type="checkbox"]:focus-visible {
+    outline: 2px solid var(--color-primary);
+    outline-offset: 2px;
+}
+#form-filtro input[type="checkbox"]:active {
+    transform: scale(0.92);
+}
+
+.productos-main--loading #productos-main-content {
+    opacity: 0.4;
+    transition: opacity 150ms ease;
+    pointer-events: none;
+}
+
+#clearFilters {
+    display: block;
+    margin: var(--spacing-lg) auto 0;
+    color: var(--color-error);
+    background: none;
+    border: none;
+    padding: var(--spacing-sm) var(--spacing-md);
+    font-size: var(--font-size-sm);
+    font-weight: 600;
+    cursor: pointer;
+    border-radius: var(--radius-sm);
+    transition: opacity 200ms ease, background 200ms ease;
+}
+
+#clearFilters:hover:not(:disabled) {
+    background: rgba(220, 38, 38, 0.08);
+}
+
+#clearFilters:disabled {
+    opacity: 0.35;
+    cursor: not-allowed;
+    pointer-events: none;
+}
+</style>
 {% endblock %}

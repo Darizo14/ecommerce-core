@@ -44,7 +44,7 @@ def lista_productos(request):
     except EmptyPage:
         productos_page = paginator.page(paginator.num_pages)
 
-    return render(request, 'products/lista_productos.html', {
+    context = {
         'productos': productos_page,
         'categorias': categorias,
         'categorias_seleccionadas': categorias_ids,
@@ -53,7 +53,14 @@ def lista_productos(request):
         'precio_max': precio_max,
         'solo_ofertas': solo_ofertas,
         'orden_actual': orden,
-    })
+    }
+
+    if request.headers.get('X-Requested-With') == 'XMLHttpRequest':
+        template = 'products/lista_productos_content.html'
+    else:
+        template = 'products/lista_productos.html'
+
+    return render(request, template, context)
 
 def detalle_producto(request, producto_id):
     producto = get_object_or_404(Producto, id=producto_id, activo=True)

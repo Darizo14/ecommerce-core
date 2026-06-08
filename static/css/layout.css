@@ -50,7 +50,7 @@
 
 .productos-toolbar__select {
   height: 40px;
-  padding: 0 var(--spacing-md);
+  padding: 0 36px 0 var(--spacing-md);
   border: 1px solid var(--color-border);
   border-radius: var(--radius-sm);
   font-size: var(--font-size-sm);
@@ -59,6 +59,23 @@
   cursor: pointer;
   outline: none;
   min-width: 180px;
+  -webkit-appearance: none;
+  appearance: none;
+  transition: border-color 200ms ease, box-shadow 200ms ease;
+}
+
+.productos-toolbar__select:hover {
+  border-color: var(--color-primary);
+}
+
+.productos-toolbar__select:focus {
+  border-color: var(--color-primary);
+  box-shadow: 0 0 0 3px var(--color-primary-light);
+}
+
+.productos-toolbar__select option {
+  color: var(--color-text);
+  background: var(--color-bg-card);
 }
 
 .productos-toolbar__filter-btn {
@@ -178,34 +195,38 @@
 
 /* Mobile sidebar */
 .productos-sidebar-overlay {
-  display: none;
   position: fixed;
   inset: 0;
   background: rgba(0, 0, 0, 0.5);
   z-index: 999;
+  opacity: 0;
+  visibility: hidden;
+  transition: opacity var(--transition-base), visibility var(--transition-base);
 }
 
 .productos-sidebar-overlay--visible {
-  display: block;
+  opacity: 1;
+  visibility: visible;
 }
 
 @media (max-width: 1023px) {
   .productos-sidebar {
     position: fixed;
     top: 0;
-    left: -300px;
+    left: 0;
     width: 300px;
     max-width: 85vw;
     height: 100vh;
     z-index: 1000;
     border-radius: 0;
     overflow-y: auto;
-    transition: left var(--transition-base);
+    transform: translateX(-100%);
+    transition: transform var(--transition-slow);
     box-shadow: var(--shadow-lg);
   }
 
   .productos-sidebar--open {
-    left: 0;
+    transform: translateX(0);
   }
 
   .productos-sidebar__close {
@@ -394,10 +415,6 @@
 }
 
 @media (max-width: 1023px) {
-  .productos-sidebar:not(.productos-sidebar--open) {
-    display: none;
-  }
-  
   .productos-grid {
     grid-template-columns: repeat(auto-fill, minmax(160px, 1fr));
     gap: var(--spacing-md);

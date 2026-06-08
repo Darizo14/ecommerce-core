@@ -1,0 +1,44 @@
+{% if productos %}
+<div class="productos-count">
+    <p class="texto-secundario">{{ paginator.count }} producto{{ paginator.count|pluralize }} encontrado{{ paginator.count|pluralize }}</p>
+</div>
+<div class="dawn-grid-container">
+    <div class="dawn-grid dawn-grid--medium">
+        {% for producto in productos %}
+            {% include 'components/product_card.html' with producto=producto %}
+        {% endfor %}
+    </div>
+</div>
+
+{% if paginator.num_pages > 1 %}
+<div class="pagination" style="display: flex; justify-content: center; gap: var(--spacing-sm); margin-top: var(--spacing-2xl);">
+    {% if productos.has_previous %}
+        <a href="?page={{ productos.previous_page_number }}{% for c in categorias_seleccionadas %}&categorias={{ c }}{% endfor %}{% if precio_min %}&precio_min={{ precio_min }}{% endif %}{% if precio_max %}&precio_max={{ precio_max }}{% endif %}{% if solo_ofertas %}&ofertas=1{% endif %}{% if orden_actual %}&orden={{ orden_actual }}{% endif %}{% if request.GET.q %}&q={{ request.GET.q }}{% endif %}" class="btn btn--secondary btn--sm">Anterior</a>
+    {% endif %}
+
+    {% for num in productos.paginator.page_range %}
+        {% if num == productos.number %}
+            <span style="display: inline-flex; align-items: center; justify-content: center; width: 40px; height: 40px; background: var(--color-primary); color: white; border-radius: var(--radius-sm); font-weight: 600;">{{ num }}</span>
+        {% elif num > productos.number|add:'-3' and num < productos.number|add:'3' %}
+            <a href="?page={{ num }}{% for c in categorias_seleccionadas %}&categorias={{ c }}{% endfor %}{% if precio_min %}&precio_min={{ precio_min }}{% endif %}{% if precio_max %}&precio_max={{ precio_max }}{% endif %}{% if solo_ofertas %}&ofertas=1{% endif %}{% if orden_actual %}&orden={{ orden_actual }}{% endif %}{% if request.GET.q %}&q={{ request.GET.q }}{% endif %}" style="display: inline-flex; align-items: center; justify-content: center; width: 40px; height: 40px; border: 1px solid var(--color-border); border-radius: var(--radius-sm); color: var(--color-text); text-decoration: none;">{{ num }}</a>
+        {% endif %}
+    {% endfor %}
+
+    {% if productos.has_next %}
+        <a href="?page={{ productos.next_page_number }}{% for c in categorias_seleccionadas %}&categorias={{ c }}{% endfor %}{% if precio_min %}&precio_min={{ precio_min }}{% endif %}{% if precio_max %}&precio_max={{ precio_max }}{% endif %}{% if solo_ofertas %}&ofertas=1{% endif %}{% if orden_actual %}&orden={{ orden_actual }}{% endif %}{% if request.GET.q %}&q={{ request.GET.q }}{% endif %}" class="btn btn--secondary btn--sm">Siguiente</a>
+    {% endif %}
+</div>
+{% endif %}
+{% else %}
+<div class="sin-productos">
+    <svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" style="color: var(--color-text-muted); margin-bottom: var(--spacing-md);">
+        <circle cx="11" cy="11" r="8"></circle>
+        <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
+    </svg>
+    <h3>No se encontraron productos</h3>
+    <p>Intenta ajustar tus filtros o buscar algo diferente</p>
+    {% if categorias_seleccionadas or request.GET.q %}
+        <a href="{% url 'lista_productos' %}" class="btn btn--primary" style="margin-top: var(--spacing-lg);">Limpiar filtros</a>
+    {% endif %}
+</div>
+{% endif %}

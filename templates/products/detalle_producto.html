@@ -135,23 +135,23 @@
                 </div>
             </div>
         </div>
-    </div>
 
+        {% if relacionados %}
+        <div class="product-detail__relacionados">
+            <div class="section-header" style="padding: 0;">
+                <h2>Productos Relacionados</h2>
+                <a href="{% url 'lista_productos' %}" class="section-link">Ver todos →</a>
+            </div>
+            <div class="dawn-grid dawn-grid--medium" style="margin-top: var(--spacing-lg); padding: 0;">
+                {% for relacionado in relacionados %}
+                    {% include 'components/product_card.html' with producto=relacionado %}
+                {% endfor %}
+            </div>
+        </div>
+        {% endif %}
+
+    </div>
 </div>
-
-{% if relacionados %}
-<section style="margin-top: 3rem;">
-    <div class="section-header">
-        <h2>Productos Relacionados</h2>
-        <a href="{% url 'lista_productos' %}" class="section-link">Ver todos →</a>
-    </div>
-    <div class="dawn-grid dawn-grid--medium" style="margin-top: var(--spacing-lg);">
-        {% for relacionado in relacionados %}
-            {% include 'components/product_card.html' with producto=relacionado %}
-        {% endfor %}
-    </div>
-</section>
-{% endif %}
 
 <script>
 function changeImage(src) {
@@ -421,18 +421,21 @@ function changeImage(src) {
     margin-bottom: var(--spacing-md);
 }
 
+.product-detail__relacionados {
+    margin-top: var(--spacing-2xl);
+}
+
 @media (min-width: 768px) {
     .product-detail__grid {
         grid-template-columns: 1fr 1fr;
     }
 
-    .product-detail__main-image {
-        position: sticky;
-        top: calc(var(--header-height) + var(--spacing-xl));
-    }
-
     .product-detail__name {
         font-size: 2.25rem;
+    }
+
+    .product-detail__relacionados {
+        grid-column: 1 / -1;
     }
 }
 
@@ -463,6 +466,10 @@ function changeImage(src) {
     }
 
     .product-detail__info {
+        padding: 0 var(--spacing-lg);
+    }
+
+    .product-detail__relacionados {
         padding: 0 var(--spacing-lg);
     }
 
