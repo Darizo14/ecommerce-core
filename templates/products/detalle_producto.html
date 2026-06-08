@@ -35,11 +35,18 @@
                     </div>
                 {% endif %}
             </div>
-            {% if producto.imagen %}
+            {% if producto.imagen or producto.imagenes_extra.exists %}
             <div class="product-detail__thumbs">
+                {% if producto.imagen %}
                 <button class="product-detail__thumb active" onclick="changeImage('{{ producto.imagen.url }}')">
                     <img src="{{ producto.imagen.url }}" alt="{{ producto.nombre }}">
                 </button>
+                {% endif %}
+                {% for img in producto.imagenes_extra.all %}
+                <button class="product-detail__thumb" onclick="changeImage('{{ img.imagen.url }}')">
+                    <img src="{{ img.imagen.url }}" alt="{{ producto.nombre }}">
+                </button>
+                {% endfor %}
             </div>
             {% endif %}
         </div>
@@ -53,7 +60,13 @@
             </div>
 
             <div class="product-detail__price">
-                <span class="product-detail__price-value">${{ producto.precio }}</span>
+                {% if producto.en_oferta and producto.precio_oferta %}
+                    <span class="product-detail__price-value" style="color: var(--color-error);">${{ producto.precio_oferta }}</span>
+                    <span style="font-size: 1.125rem; color: var(--color-text-muted); text-decoration: line-through; margin-left: var(--spacing-sm);">${{ producto.precio }}</span>
+                    <span style="display: inline-block; background: var(--color-error); color: white; padding: 2px 10px; border-radius: var(--radius-full); font-size: var(--font-size-xs); font-weight: 700; margin-left: var(--spacing-sm);">OFERTA</span>
+                {% else %}
+                    <span class="product-detail__price-value">${{ producto.precio }}</span>
+                {% endif %}
             </div>
 
             {% if producto.descripcion %}
@@ -125,6 +138,20 @@
     </div>
 
 </div>
+
+{% if relacionados %}
+<section style="margin-top: 3rem;">
+    <div class="section-header">
+        <h2>Productos Relacionados</h2>
+        <a href="{% url 'lista_productos' %}" class="section-link">Ver todos →</a>
+    </div>
+    <div class="dawn-grid dawn-grid--medium" style="margin-top: var(--spacing-lg);">
+        {% for relacionado in relacionados %}
+            {% include 'components/product_card.html' with producto=relacionado %}
+        {% endfor %}
+    </div>
+</section>
+{% endif %}
 
 <script>
 function changeImage(src) {

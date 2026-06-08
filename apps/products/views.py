@@ -1,27 +1,69 @@
 from django.shortcuts import render, get_object_or_404
 from django.http import JsonResponse
+from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
+from django.db.models import Q
 from .models import Producto, Categoria
 
-def lista_productos(request):                               #Muestra una lista de productos disponibles en la tienda, filtrados por su estado activo. También muestra las categorías disponibles para que los usuarios puedan filtrar los productos por categoría.
+def lista_productos(request):
     productos = Producto.objects.filter(activo=True)
     categorias = Categoria.objects.filter(activo=True, padre__isnull=True)
 
     categorias_ids = request.GET.getlist('categorias')
-    
     if categorias_ids:
         productos = productos.filter(categoria_id__in=categorias_ids)
 
-    #Filtrar los productos por categoría si se ha seleccionado una categoría específica a través de la URL (por ejemplo, /productos/?categoria=1). Si no se ha seleccionado ninguna categoría, se muestran todos los productos activos. Finalmente, se renderiza la plantilla HTML con la lista de productos y categorías disponibles.
+    precio_min = request.GET.get('precio_min', '')
+    precio_max = request.GET.get('precio_max', '')
+    if precio_min:
+        productos = productos.filter(precio__gte=precio_min)
+    if precio_max:
+        productos = productos.filter(precio__lte=precio_max)
+
+    solo_ofertas = request.GET.get('ofertas', '')
+    if solo_ofertas:
+        productos = productos.filter(en_oferta=True)
+
+    orden = request.GET.get('orden', '')
+    if orden == 'price-asc':
+        productos = productos.order_by('precio')
+    elif orden == 'price-desc':
+        productos = productos.order_by('-precio')
+    elif orden == 'name-asc':
+        productos = productos.order_by('nombre')
+    elif orden == 'name-desc':
+        productos = productos.order_by('-nombre')
+    else:
+        productos = productos.order_by('-creado_en')
+
+    page = request.GET.get('page', 1)
+    paginator = Paginator(productos, 12)
+    try:
+        productos_page = paginator.page(page)
+    except PageNotAnInteger:
+        productos_page = paginator.page(1)
+    except EmptyPage:
+        productos_page = paginator.page(paginator.num_pages)
+
     return render(request, 'products/lista_productos.html', {
-        'productos': productos,
+        'productos': productos_page,
         'categorias': categorias,
         'categorias_seleccionadas': categorias_ids,
+        'paginator': paginator,
+        'precio_min': precio_min,
+        'precio_max': precio_max,
+        'solo_ofertas': solo_ofertas,
+        'orden_actual': orden,
     })
 
 def detalle_producto(request, producto_id):
     producto = get_object_or_404(Producto, id=producto_id, activo=True)
+    relacionados = Producto.objects.filter(
+        activo=True,
+        categoria=producto.categoria
+    ).exclude(id=producto.id)[:4]
     return render(request, 'products/detalle_producto.html', {
         'producto': producto,
+        'relacionados': relacionados,
     })
 
 

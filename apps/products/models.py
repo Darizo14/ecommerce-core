@@ -16,10 +16,18 @@ class Producto(models.Model):
     slug = models.SlugField(unique=True, blank=True)
     descripcion = models.TextField(blank=True)
     precio = models.DecimalField(max_digits=10, decimal_places=2)
+    precio_oferta = models.DecimalField(max_digits=10, decimal_places=2, blank=True, null=True)
+    en_oferta = models.BooleanField(default=False)
     stock = models.PositiveIntegerField(default=0)
     activo = models.BooleanField(default=True)                          #Para desactivar productos sin borrarlos
     creado_en = models.DateTimeField(auto_now_add=True)                 #Para ordenar por fecha de creación
     actualizado_en = models.DateTimeField(auto_now=True)
+
+    @property
+    def precio_actual(self):
+        if self.en_oferta and self.precio_oferta:
+            return self.precio_oferta
+        return self.precio
 
     class Meta:
         ordering = ['-creado_en']
@@ -46,6 +54,25 @@ class Producto(models.Model):
     def __str__(self):
         return self.nombre                                              #Muestra el nombre del producto en lugar de "Producto object (1)"
 
+
+##############IMAGENES DE PRODUCTO######################
+class ProductImage(models.Model):
+    producto = models.ForeignKey(
+        Producto,
+        on_delete=models.CASCADE,
+        related_name='imagenes_extra'
+    )
+    imagen = models.ImageField(upload_to='products/gallery/')
+    orden = models.PositiveIntegerField(default=0)
+
+    class Meta:
+        ordering = ['orden']
+        verbose_name = 'Imagen de producto'
+        verbose_name_plural = 'Imágenes de producto'
+
+    def __str__(self):
+        return f"{self.producto.nombre} - Imagen {self.orden + 1}"
+
         
 
 ##############CATEGORIA######################
@@ -71,14 +98,13 @@ class Categoria(models.Model):
         ]
 
 
-    def save(self, *args, **kwargs):                                    #Genera el slug automáticamente si no se ha proporcionado
-
+    def save(self, *args, **kwargs):
         if not self.slug:
             base_slug = slugify(self.nombre)
             slug = base_slug
             counter = 1
 
-            while Producto.objects.filter(slug=slug).exists():
+            while Categoria.objects.filter(slug=slug).exists():
                 slug = f"{base_slug}-{counter}"
                 counter += 1
 
@@ -86,5 +112,5 @@ class Categoria(models.Model):
         super().save(*args, **kwargs)
 
 
-    def __str__(self):                                                  #Define cómo se representa el objeto como texto                
-        return self.nombre                                              #Muestra el nombre de la categoría en lugar de "Categoria object (1)"                
+    def __str__(self):
+        return self.nombre                

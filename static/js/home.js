@@ -120,7 +120,9 @@ document.addEventListener('DOMContentLoaded', function() {
         let offsetX = 0;
         
         function getMaxOffset() {
-            const overflow = track.scrollWidth - carousel.offsetWidth;
+            const trackWrapper = track.parentElement;
+            const visibleWidth = trackWrapper.clientWidth;
+            const overflow = track.scrollWidth - visibleWidth;
             return Math.max(0, overflow);
         }
         

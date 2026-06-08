@@ -166,6 +166,9 @@ def crear_pedido_checkout(request, productos, subtotal, checkout_data):
                     precio_unitario=item['precio'],
                     subtotal=item['subtotal'],
                 )
+                producto = item['producto']
+                producto.stock = max(0, producto.stock - item['cantidad'])
+                producto.save(update_fields=['stock'])
 
             metodo_entrega = checkout_data.get('metodo_entrega', 'tienda')
             usuario = request.user if request.user.is_authenticated else None

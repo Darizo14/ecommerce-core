@@ -7,6 +7,9 @@
 <article class="dawn-card" data-product-id="{{ producto.id }}">
     <div class="dawn-card__image-wrapper">
         <a href="{% url 'detalle_producto' producto.id %}" class="dawn-card__image-link">
+            {% if producto.en_oferta %}
+                <span style="position: absolute; top: 8px; left: 8px; z-index: 10; background: #ef4444; color: white; padding: 3px 10px; border-radius: var(--radius-full); font-size: 0.7rem; font-weight: 700; letter-spacing: 0.3px;">OFERTA</span>
+            {% endif %}
             {% if producto.imagen %}
                 <img
                     src="{{ producto.imagen.url }}"
@@ -50,9 +53,9 @@
         </h3>
 
         <div class="dawn-card__price">
-            {% if producto.precio_anterior and producto.precio_anterior > producto.precio %}
-                <span class="dawn-card__price-current">${{ producto.precio }}</span>
-                <span class="dawn-card__price-old">${{ producto.precio_anterior }}</span>
+            {% if producto.en_oferta and producto.precio_oferta %}
+                <span class="dawn-card__price-current" style="color: var(--color-error);">${{ producto.precio_oferta }}</span>
+                <span class="dawn-card__price-old">${{ producto.precio }}</span>
             {% else %}
                 <span class="dawn-card__price-current">${{ producto.precio }}</span>
             {% endif %}

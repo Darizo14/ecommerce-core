@@ -40,8 +40,19 @@ def agregar_carrito(request, producto_id):
             return JsonResponse({'success': False, 'error': 'Producto no encontrado'})
         return redirect('carrito:vista_carrito')
     
+    if producto.stock == 0:
+        if request.headers.get('X-Requested-With') == 'XMLHttpRequest':
+            return JsonResponse({'success': False, 'error': 'Producto agotado'})
+        return redirect('carrito:vista_carrito')
+    
     cantidad = int(request.GET.get('cantidad', 1))
     cantidad = max(1, cantidad)
+    
+    nueva_cantidad = carrito.get(str(producto_id), 0) + cantidad
+    if nueva_cantidad > producto.stock:
+        if request.headers.get('X-Requested-With') == 'XMLHttpRequest':
+            return JsonResponse({'success': False, 'error': f'Solo hay {producto.stock} unidades disponibles'})
+        return redirect('carrito:vista_carrito')
     
     if str(producto_id) in carrito:
         carrito[str(producto_id)] += cantidad

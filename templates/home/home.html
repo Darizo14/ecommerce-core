@@ -77,6 +77,34 @@
 </section>
 {% endif %}
 
+{% if productos_ofertas %}
+<section class="home-productos" id="productos-ofertas" style="background: linear-gradient(180deg, #fff5f5 0%, transparent 100%); padding: var(--spacing-2xl) 0;">
+    <div class="section-header">
+        <h2 style="color: var(--color-error);">🔥 Ofertas Especiales</h2>
+        <a href="{% url 'lista_productos' %}?ofertas=1" class="section-link">Ver todas →</a>
+    </div>
+    <div class="product-carousel">
+        <button class="section-arrow section-arrow--prev" data-carousel="ofertas" disabled>
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <polyline points="15 18 9 12 15 6"></polyline>
+            </svg>
+        </button>
+        <div class="product-carousel__track-wrapper">
+            <div class="product-carousel__track" data-carousel="ofertas">
+                {% for producto in productos_ofertas %}
+                    {% include 'components/product_card.html' with producto=producto %}
+                {% endfor %}
+            </div>
+        </div>
+        <button class="section-arrow section-arrow--next" data-carousel="ofertas">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <polyline points="9 18 15 12 9 6"></polyline>
+            </svg>
+        </button>
+    </div>
+</section>
+{% endif %}
+
 {% if productos_nuevos %}
 <section class="home-productos" id="productos-nuevos">
     <div class="section-header">
