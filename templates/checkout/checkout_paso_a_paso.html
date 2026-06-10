@@ -4,6 +4,12 @@
 {% block title %}Checkout - Tienda{% endblock %}
 
 {% block extra_js %}
+<script>
+window.CHECKOUT_URLS = {
+    municipios: '{% url "checkout:api_municipios" %}',
+    repartos: '{% url "checkout:api_repartos" %}',
+};
+</script>
 <script src="{% static 'js/checkout.js' %}"></script>
 {% endblock %}
 

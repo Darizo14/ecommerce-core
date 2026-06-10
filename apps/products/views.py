@@ -2,6 +2,7 @@ from django.shortcuts import render, get_object_or_404
 from django.http import JsonResponse
 from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
 from django.db.models import Q
+from django.urls import reverse
 from .models import Producto, Categoria
 
 def lista_productos(request):
@@ -87,7 +88,7 @@ def buscar_productos(request):
         'id': p['id'],
         'nombre': p['nombre'],
         'precio': str(p['precio']),
-        'url': f'/productos/{p["id"]}/',
+        'url': reverse('detalle_producto', args=[p['id']]),
     } for p in productos]
 
     return JsonResponse({'results': results})

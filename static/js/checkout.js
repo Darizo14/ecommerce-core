@@ -89,8 +89,11 @@ document.addEventListener('DOMContentLoaded', function() {
 
             document.getElementById('precio-envio').textContent = '$' + parseFloat(precioBase).toFixed(2);
 
-            fetch(`/checkout/api/municipios/?provincia_id=${provinciaId}`)
-                .then(response => response.json())
+            fetch(`${CHECKOUT_URLS.municipios}?provincia_id=${provinciaId}`)
+                .then(response => {
+                    if (!response.ok) throw new Error('Error al cargar municipios');
+                    return response.json();
+                })
                 .then(data => {
                     municipioSelect.innerHTML = '<option value="">Selecciona un municipio</option>';
                     data.municipios.forEach(mun => {
@@ -122,8 +125,11 @@ document.addEventListener('DOMContentLoaded', function() {
 
             document.getElementById('precio-envio').textContent = '$' + (precioBase + precioAdicional).toFixed(2);
 
-            fetch(`/checkout/api/repartos/?municipio_id=${municipioId}`)
-                .then(response => response.json())
+            fetch(`${CHECKOUT_URLS.repartos}?municipio_id=${municipioId}`)
+                .then(response => {
+                    if (!response.ok) throw new Error('Error al cargar repartos');
+                    return response.json();
+                })
                 .then(data => {
                     repartoSelect.innerHTML = '<option value="">Selecciona un reparto</option>';
                     data.repartos.forEach(rep => {

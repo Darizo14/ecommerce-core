@@ -32,7 +32,7 @@
                     <input type="hidden" name="q" value="{{ request.GET.q }}">
                 {% endif %}
                 <div class="categorias-filter">
-                    <h4 style="font-size: var(--font-size-sm); margin-bottom: var(--spacing-sm); color: var(--color-text-light);">Categorías</h4>
+                    <h4 class="filter-group-title">Categorías</h4>
                     {% for categoria in categorias %}
                         <div class="categoria-checkbox">
                             <input 
@@ -49,17 +49,17 @@
                     {% endfor %}
                 </div>
 
-                <div style="margin-top: var(--spacing-lg);">
-                    <h4 style="font-size: var(--font-size-sm); margin-bottom: var(--spacing-sm); color: var(--color-text-light);">Precio</h4>
-                    <div style="display: flex; gap: var(--spacing-sm); align-items: center;">
-                        <input type="number" name="precio_min" placeholder="Mín" value="{{ precio_min }}" style="width: 90px; padding: var(--spacing-sm); border: 1px solid var(--color-border); border-radius: var(--radius-sm); font-size: var(--font-size-sm);">
-                        <span style="color: var(--color-text-muted);">-</span>
-                        <input type="number" name="precio_max" placeholder="Máx" value="{{ precio_max }}" style="width: 90px; padding: var(--spacing-sm); border: 1px solid var(--color-border); border-radius: var(--radius-sm); font-size: var(--font-size-sm);">
+                <div class="filter-section">
+                    <h4 class="filter-group-title">Precio</h4>
+                    <div class="filter-price">
+                        <input type="number" name="precio_min" placeholder="Mín" value="{{ precio_min }}" class="filter-price-input">
+                        <span class="filter-price-separator">-</span>
+                        <input type="number" name="precio_max" placeholder="Máx" value="{{ precio_max }}" class="filter-price-input">
                     </div>
                 </div>
 
-                <div style="margin-top: var(--spacing-lg);">
-                    <label style="display: flex; align-items: center; gap: var(--spacing-sm); cursor: pointer; font-size: var(--font-size-sm);">
+                <div class="filter-section">
+                    <label class="filter-checkbox-label">
                         <input type="checkbox" name="ofertas" value="1" {% if solo_ofertas %}checked{% endif %}>
                         Solo ofertas
                     </label>
@@ -270,6 +270,42 @@
     opacity: 0.35;
     cursor: not-allowed;
     pointer-events: none;
+}
+
+.filter-group-title {
+    font-size: var(--font-size-sm);
+    margin-bottom: var(--spacing-sm);
+    color: var(--color-text-light);
+}
+
+.filter-section {
+    margin-top: var(--spacing-lg);
+}
+
+.filter-price {
+    display: flex;
+    gap: var(--spacing-sm);
+    align-items: center;
+}
+
+.filter-price-input {
+    width: 90px;
+    padding: var(--spacing-sm);
+    border: 1px solid var(--color-border);
+    border-radius: var(--radius-sm);
+    font-size: var(--font-size-sm);
+}
+
+.filter-price-separator {
+    color: var(--color-text-muted);
+}
+
+.filter-checkbox-label {
+    display: flex;
+    align-items: center;
+    gap: var(--spacing-sm);
+    cursor: pointer;
+    font-size: var(--font-size-sm);
 }
 </style>
 {% endblock %}

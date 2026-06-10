@@ -1,3 +1,10 @@
+function getCSRFToken() {
+    const name = 'csrftoken';
+    const value = `; ${document.cookie}`;
+    const parts = value.split(`; ${name}=`);
+    if (parts.length === 2) return parts.pop().split(';').shift();
+}
+
 const cartDrawer = {
     drawer: null,
     overlay: null,
@@ -34,7 +41,8 @@ const cartDrawer = {
 
     async loadCart() {
         try {
-            const response = await fetch('/carrito/api/obtener/');
+            const response = await fetch(APP_URLS.cartApi);
+            if (!response.ok) throw new Error('Failed to load cart');
             const data = await response.json();
             this.renderCart(data);
         } catch (error) {
@@ -61,7 +69,7 @@ const cartDrawer = {
                         <path d="M1 1h4l2.68 13.39a2 2 0 0 0 2 1.61h9.72a2 2 0 0 0 2-1.61L23 6H6"></path>
                     </svg>
                     <p>Tu carrito está vacío</p>
-                    <a href="/productos/" class="btn btn--primary">Ver productos</a>
+                    <a href="${APP_URLS.productosList}" class="btn btn--primary">Ver productos</a>
                 </div>
             `;
             footer.style.display = 'none';
@@ -88,7 +96,7 @@ const cartDrawer = {
                                     <svg width="12" height="12" viewBox="0 0 12 12" fill="none"><path d="M6 2v8M2 6h8" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg>
                                 </button>
                             </div>
-                            <a href="/carrito/eliminar/${item.id}/" class="cart-drawer__item-remove" aria-label="Eliminar ${item.nombre}">
+                            <a href="${APP_URLS.cartEliminar}${item.id}/" class="cart-drawer__item-remove" aria-label="Eliminar ${item.nombre}">
                                 <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
                                     <polyline points="3 6 5 6 21 6"></polyline>
                                     <path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"></path>
@@ -106,9 +114,13 @@ const cartDrawer = {
                     e.preventDefault();
                     const itemId = btn.dataset.itemId;
                     const action = btn.dataset.action;
-                    const endpoint = action === 'increase' ? 'sumar' : 'restar';
-                    await fetch(`/carrito/${endpoint}/${itemId}/`, {
-                        headers: { 'X-Requested-With': 'XMLHttpRequest' }
+                    const baseUrl = action === 'increase' ? APP_URLS.cartSumar : APP_URLS.cartRestar;
+                    await fetch(`${baseUrl}${itemId}/`, {
+                        method: 'POST',
+                        headers: {
+                            'X-Requested-With': 'XMLHttpRequest',
+                            'X-CSRFToken': getCSRFToken()
+                        }
                     }).then(() => this.loadCart());
                 });
             });
@@ -118,8 +130,13 @@ const cartDrawer = {
                     e.preventDefault();
                     const url = link.getAttribute('href');
                     await fetch(url, {
-                        headers: { 'X-Requested-With': 'XMLHttpRequest' }
-                    }).then(() => this.loadCart());
+                        method: 'POST',
+                        headers: {
+                            'X-Requested-With': 'XMLHttpRequest',
+                            'X-CSRFToken': getCSRFToken()
+                        }
+                    });
+                    this.loadCart();
                 });
             });
         }
@@ -182,9 +199,14 @@ function updateCartBadge(cantidad) {
 }
 
 async function initCartBadge() {
-    const response = await fetch('/carrito/api/obtener/');
-    const data = await response.json();
-    updateCartBadge(data.cantidad_total);
+    try {
+        const response = await fetch(APP_URLS.cartApi);
+        if (!response.ok) throw new Error('Badge fetch failed');
+        const data = await response.json();
+        updateCartBadge(data.cantidad_total);
+    } catch (error) {
+        console.warn('Could not load cart badge:', error);
+    }
 }
 
 document.addEventListener('DOMContentLoaded', () => {
@@ -211,8 +233,8 @@ document.addEventListener('DOMContentLoaded', () => {
 
             e.preventDefault();
             
-            const originalText = btn.textContent;
-            btn.textContent = 'Agregando...';
+            const originalHtml = btn.innerHTML;
+            btn.innerHTML = 'Agregando...';
             btn.disabled = true;
 
             try {
@@ -230,7 +252,7 @@ document.addEventListener('DOMContentLoaded', () => {
             } catch (error) {
                 toast.show('Error de conexión', 'error');
             } finally {
-            btn.innerHTML = originalHtml;
+                btn.innerHTML = originalHtml;
                 btn.disabled = false;
             }
         });
@@ -254,7 +276,7 @@ document.addEventListener('DOMContentLoaded', () => {
             btn.disabled = true;
 
             try {
-                const response = await fetch(`/carrito/agregar/${productId}/?cantidad=${cantidad}`, {
+                const response = await fetch(`${APP_URLS.cartAgregar}${productId}/?cantidad=${cantidad}`, {
                     headers: { 'X-Requested-With': 'XMLHttpRequest' }
                 });
                 const data = await response.json();
@@ -309,7 +331,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
     // Cuando agregues un producto (desde lista de productos)
     async function addToCart(productId) {
-        const response = await fetch(`/carrito/agregar/${productId}/`, {
+        const response = await fetch(`${APP_URLS.cartAgregar}${productId}/`, {
             headers: { 'X-Requested-With': 'XMLHttpRequest' }
         });
         const data = await response.json();

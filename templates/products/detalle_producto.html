@@ -38,12 +38,12 @@
             {% if producto.imagen or producto.imagenes_extra.exists %}
             <div class="product-detail__thumbs">
                 {% if producto.imagen %}
-                <button class="product-detail__thumb active" onclick="changeImage('{{ producto.imagen.url }}')">
+                <button class="product-detail__thumb active" onclick="changeImage(event, '{{ producto.imagen.url }}')">
                     <img src="{{ producto.imagen.url }}" alt="{{ producto.nombre }}">
                 </button>
                 {% endif %}
                 {% for img in producto.imagenes_extra.all %}
-                <button class="product-detail__thumb" onclick="changeImage('{{ img.imagen.url }}')">
+                <button class="product-detail__thumb" onclick="changeImage(event, '{{ img.imagen.url }}')">
                     <img src="{{ img.imagen.url }}" alt="{{ producto.nombre }}">
                 </button>
                 {% endfor %}
@@ -154,7 +154,7 @@
 </div>
 
 <script>
-function changeImage(src) {
+function changeImage(event, src) {
     document.getElementById('mainImage').src = src;
     document.querySelectorAll('.product-detail__thumb').forEach(thumb => {
         thumb.classList.remove('active');

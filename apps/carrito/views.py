@@ -78,6 +78,7 @@ def agregar_carrito(request, producto_id):
     return redirect('carrito:vista_carrito')
 
 
+@require_POST
 def sumar_1(request, producto_id):
     carrito = request.session.get('carrito', {})
     
@@ -85,9 +86,12 @@ def sumar_1(request, producto_id):
         carrito[str(producto_id)] += 1
         request.session['carrito'] = carrito
     
+    if request.headers.get('X-Requested-With') == 'XMLHttpRequest':
+        return JsonResponse({'success': True, 'cantidad_total': sum(carrito.values())})
     return redirect('carrito:vista_carrito')
 
 
+@require_POST
 def restar_1(request, producto_id):
     carrito = request.session.get('carrito', {})
     
@@ -98,9 +102,12 @@ def restar_1(request, producto_id):
             del carrito[str(producto_id)]
         request.session['carrito'] = carrito
     
+    if request.headers.get('X-Requested-With') == 'XMLHttpRequest':
+        return JsonResponse({'success': True, 'cantidad_total': sum(carrito.values())})
     return redirect('carrito:vista_carrito')
 
 
+@require_POST
 def eliminar_de_carrito(request, producto_id):
     carrito = request.session.get('carrito', {})
     
@@ -108,6 +115,8 @@ def eliminar_de_carrito(request, producto_id):
         del carrito[str(producto_id)]
         request.session['carrito'] = carrito
     
+    if request.headers.get('X-Requested-With') == 'XMLHttpRequest':
+        return JsonResponse({'success': True, 'cantidad_total': sum(carrito.values())})
     return redirect('carrito:vista_carrito')
 
 

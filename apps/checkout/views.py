@@ -1,3 +1,4 @@
+from django.http import JsonResponse
 from django.shortcuts import render, redirect, get_object_or_404
 from django.contrib import messages
 from django.db import transaction
@@ -54,7 +55,12 @@ def proceso_checkout(request):
         if accion == 'confirmar':
             return crear_pedido_checkout(request, productos, subtotal, checkout_data)
 
+        paso_esperado = request.session.get('checkout_paso_esperado', 1)
         paso_actual = int(request.POST.get('paso', 1))
+        paso_actual = max(1, min(paso_actual, 4))
+
+        if paso_actual > paso_esperado + 1 or paso_actual < paso_esperado - 1:
+            paso_actual = paso_esperado
 
         if paso_actual == 1 and accion == 'siguiente':
             checkout_data.update(
@@ -102,9 +108,11 @@ def proceso_checkout(request):
             paso = 1
 
         request.session['checkout_data'] = checkout_data
+        request.session['checkout_paso_esperado'] = paso
     else:
         checkout_data = {}
         paso = 1
+        request.session['checkout_paso_esperado'] = 1
 
     precio_envio = checkout_data.get('precio_envio', 0)
     total = subtotal + Decimal(str(precio_envio))
@@ -158,16 +166,22 @@ def crear_pedido_checkout(request, productos, subtotal, checkout_data):
                 notas=f"Teléfono: {checkout_data.get('telefono', '')}",
             )
 
+            product_ids = [item['producto'].id for item in productos]
+            locked_products = Producto.objects.filter(id__in=product_ids).select_for_update()
+            product_map = {p.id: p for p in locked_products}
+
             for item in productos:
+                producto = product_map[item['producto'].id]
                 LineaPedido.objects.create(
                     pedido=pedido,
-                    producto=item['producto'],
+                    producto=producto,
                     cantidad=item['cantidad'],
                     precio_unitario=item['precio'],
                     subtotal=item['subtotal'],
                 )
-                producto = item['producto']
-                producto.stock = max(0, producto.stock - item['cantidad'])
+                if producto.stock < item['cantidad']:
+                    raise ValueError(f'Stock insuficiente para {producto.nombre}: disponible {producto.stock}, solicitado {item["cantidad"]}')
+                producto.stock -= item['cantidad']
                 producto.save(update_fields=['stock'])
 
             metodo_entrega = checkout_data.get('metodo_entrega', 'tienda')
@@ -206,6 +220,7 @@ def crear_pedido_checkout(request, productos, subtotal, checkout_data):
 
             request.session.pop('carrito', None)
             request.session.pop('checkout_data', None)
+            request.session.pop('checkout_paso_esperado', None)
 
             messages.success(
                 request,
@@ -219,11 +234,6 @@ def crear_pedido_checkout(request, productos, subtotal, checkout_data):
 
 
 def api_municipios(request):
-    """
-    API para obtener los municipios de una provincia
-    """
-    from django.http import JsonResponse
-    
     provincia_id = request.GET.get('provincia_id')
     
     if not provincia_id:
@@ -250,11 +260,6 @@ def api_municipios(request):
 
 
 def api_repartos(request):
-    """
-    API para obtener los repartos de un municipio
-    """
-    from django.http import JsonResponse
-    
     municipio_id = request.GET.get('municipio_id')
     
     if not municipio_id:
