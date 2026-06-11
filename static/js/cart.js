@@ -239,7 +239,13 @@ document.addEventListener('DOMContentLoaded', () => {
 
             try {
                 const response = await fetch(url, {
-                    headers: { 'X-Requested-With': 'XMLHttpRequest' }
+                    method: 'POST',
+                    headers: {
+                        'X-Requested-With': 'XMLHttpRequest',
+                        'X-CSRFToken': getCSRFToken(),
+                        'Content-Type': 'application/x-www-form-urlencoded',
+                    },
+                    body: 'cantidad=1',
                 });
                 const data = await response.json();
 
@@ -269,15 +275,21 @@ document.addEventListener('DOMContentLoaded', () => {
 
             const card = btn.closest('.dawn-card');
             const qtyEl = card ? card.querySelector('.qty-selector__value, .quantity-input input') : null;
-            const cantidad = qtyEl ? (qtyEl.tagName === 'SPAN' ? parseInt(qtyEl.textContent) : qtyEl.value) : 1;
+            const cantidad = qtyEl ? (qtyEl.tagName === 'SPAN' ? parseInt(qtyEl.textContent) : parseInt(qtyEl.value) || 1) : 1;
 
             const originalHtml = btn.innerHTML;
             btn.innerHTML = 'Agregando...';
             btn.disabled = true;
 
             try {
-                const response = await fetch(`${APP_URLS.cartAgregar}${productId}/?cantidad=${cantidad}`, {
-                    headers: { 'X-Requested-With': 'XMLHttpRequest' }
+                const response = await fetch(`${APP_URLS.cartAgregar}${productId}/`, {
+                    method: 'POST',
+                    headers: {
+                        'X-Requested-With': 'XMLHttpRequest',
+                        'X-CSRFToken': getCSRFToken(),
+                        'Content-Type': 'application/x-www-form-urlencoded',
+                    },
+                    body: `cantidad=${cantidad}`,
                 });
                 const data = await response.json();
 
@@ -298,20 +310,24 @@ document.addEventListener('DOMContentLoaded', () => {
 
     document.getElementById('addToCartForm')?.addEventListener('submit', async (e) => {
         e.preventDefault();
-        
+
         const form = e.target;
         const btn = form.querySelector('.btn-add-cart');
         const cantidad = form.querySelector('[name="cantidad"]').value;
-        let url = form.action;
-        url = `${url}?cantidad=${cantidad}`;
-        
+
         const originalHtml = btn.innerHTML;
         btn.innerHTML = 'Agregando...';
         btn.disabled = true;
 
         try {
-            const response = await fetch(url, {
-                headers: { 'X-Requested-With': 'XMLHttpRequest' }
+            const response = await fetch(form.action, {
+                method: 'POST',
+                headers: {
+                    'X-Requested-With': 'XMLHttpRequest',
+                    'X-CSRFToken': getCSRFToken(),
+                    'Content-Type': 'application/x-www-form-urlencoded',
+                },
+                body: `cantidad=${cantidad}`,
             });
             const data = await response.json();
 
@@ -328,19 +344,6 @@ document.addEventListener('DOMContentLoaded', () => {
             btn.disabled = false;
         }
     });
-
-    // Cuando agregues un producto (desde lista de productos)
-    async function addToCart(productId) {
-        const response = await fetch(`${APP_URLS.cartAgregar}${productId}/`, {
-            headers: { 'X-Requested-With': 'XMLHttpRequest' }
-        });
-        const data = await response.json();
-        
-        if (data.success) {
-            updateCartBadge(data.cantidad_total);
-            toast.show(data.message);
-        }
-    }
 });
 
 function increaseQty(productId) {

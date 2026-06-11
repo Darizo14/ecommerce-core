@@ -8,5 +8,5 @@ urlpatterns = [
     path('', views.proceso_checkout, name='index'),
     path('api/municipios/', views.api_municipios, name='api_municipios'),
     path('api/repartos/', views.api_repartos, name='api_repartos'),
-    path('confirmacion/<int:pedido_id>/', views.confirmacion_pedido, name='confirmacion'),
+    path('confirmacion/<uuid:id_pedido>/', views.confirmacion_pedido, name='confirmacion'),
 ]

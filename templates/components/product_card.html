@@ -60,5 +60,10 @@
                 <span class="dawn-card__price-current">${{ producto.precio }}</span>
             {% endif %}
         </div>
+        {% if producto.stock > 0 and producto.stock <= 5 %}
+            <span style="display: inline-block; font-size: 0.65rem; color: #dc2626; font-weight: 600; margin-top: 2px;">
+                Últimas {{ producto.stock }} unidades
+            </span>
+        {% endif %}
     </div>
 </article>

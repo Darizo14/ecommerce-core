@@ -82,6 +82,9 @@
                 {% if producto.stock > 0 %}
                     <span class="product-detail__stock-badge product-detail__stock-badge--in">En stock</span>
                     <span class="product-detail__stock-text">{{ producto.stock }} unidades disponibles</span>
+                    {% if producto.stock <= 5 %}
+                        <span style="display: inline-block; background: #fef2f2; color: #dc2626; padding: 2px 10px; border-radius: var(--radius-full); font-size: 0.7rem; font-weight: 700; margin-left: var(--spacing-sm);">ÚLTIMAS UNIDADES</span>
+                    {% endif %}
                 {% else %}
                     <span class="product-detail__stock-badge product-detail__stock-badge--out">Sin stock</span>
                 {% endif %}
@@ -89,7 +92,7 @@
 
             <hr class="product-detail__divider">
 
-            <form id="addToCartForm" action="{% url 'carrito:agregar_carrito' producto.id %}" method="get" class="product-detail__form">
+            <form id="addToCartForm" action="{% url 'carrito:agregar_carrito' producto.id %}" method="post" class="product-detail__form">{% csrf_token %}
                 {% if producto.stock > 0 %}
                 <div class="product-detail__qty">
                     <label class="product-detail__qty-label" for="cantidad-{{ producto.id }}">Cantidad</label>

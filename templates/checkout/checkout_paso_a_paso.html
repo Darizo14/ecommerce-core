@@ -64,18 +64,20 @@ window.CHECKOUT_URLS = {
                         <h5>Datos del Cliente</h5>
                     </div>
                     <div class="checkout-card-body">
-                        <div class="form-group">
+                        <div class="form-group {% if errores.nombre %}has-error{% endif %}">
                             <label for="nombre">Nombre Completo *</label>
-                            <input type="text" id="nombre" name="nombre" class="form-control" required>
+                            <input type="text" id="nombre" name="nombre" class="form-control" value="{{ checkout_data.nombre }}" required>
+                            {% if errores.nombre %}<span class="form-error">{{ errores.nombre }}</span>{% endif %}
                         </div>
-                        <div class="form-group">
+                        <div class="form-group {% if errores.telefono %}has-error{% endif %}">
                             <label for="telefono">Número de Teléfono *</label>
                             <div class="telefono-input">
                                 <span class="telefono-codigo">+53</span>
                                 <input type="tel" id="telefono" name="telefono" class="form-control" 
-                                       placeholder="XXXXXXXX" maxlength="8" pattern="[0-9]{8}" required>
+                                       placeholder="XXXXXXXX" maxlength="8" pattern="[0-9]{8}" value="{{ checkout_data.telefono }}" required>
                             </div>
                             <small class="text-muted">Ingresa los 8 dígitos del número</small>
+                            {% if errores.telefono %}<span class="form-error">{{ errores.telefono }}</span>{% endif %}
                         </div>
                     </div>
                 </div>
@@ -164,9 +166,18 @@ window.CHECKOUT_URLS = {
                                           placeholder="Calle, Número, Apartamento..."></textarea>
                             </div>
 
+                            {% if errores.metodo_entrega %}<span class="form-error" style="display:block;margin-bottom:var(--spacing-md)">{{ errores.metodo_entrega }}</span>{% endif %}
+
+                            {% if checkout_data.tiempo_entrega %}
+                            <div class="precio-envio-box" style="background: #f0fdf4; border: 1px solid #bbf7d0;">
+                                <span>Tiempo estimado de entrega:</span>
+                                <span class="precio-bold" style="color: #166534;">{{ checkout_data.tiempo_entrega }}</span>
+                            </div>
+                            {% endif %}
+
                             <div class="precio-envio-box">
                                 <span>Costo de Envío:</span>
-                                <span class="precio-bold" id="precio-envio">$0.00</span>
+                                <span class="precio-bold" id="precio-envio">${{ precio_envio|floatformat:2 }}</span>
                             </div>
                         </div>
                     </div>
@@ -228,10 +239,14 @@ window.CHECKOUT_URLS = {
                                 {% if checkout_data.metodo_entrega == 'tienda' %}
                                 <p><strong>Recoger en Tienda</strong></p>
                                 <p class="text-muted">{{ tienda.direccion }}</p>
+                                <p style="margin-top: var(--spacing-sm); font-size: 0.85rem; color: #166534;"><strong>Tiempo estimado:</strong> 24-48 horas después de confirmado</p>
                                 {% else %}
                                 <p><strong>Mensajería</strong></p>
                                 <p class="text-muted">{{ checkout_data.direccion }}</p>
                                 <p class="text-muted">{{ checkout_data.reparto_nombre }}, {{ checkout_data.municipio_nombre }}, {{ checkout_data.provincia_nombre }}</p>
+                                {% if checkout_data.tiempo_entrega %}
+                                <p style="margin-top: var(--spacing-sm); font-size: 0.85rem; color: #166534;"><strong>Tiempo estimado:</strong> {{ checkout_data.tiempo_entrega }}</p>
+                                {% endif %}
                                 {% endif %}
                             </div>
                             

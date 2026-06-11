@@ -41,6 +41,9 @@
                             <a href="{% url 'detalle_producto' item.producto.id %}" class="cart-item-name">
                                 {{ item.producto.nombre }}
                             </a>
+                            {% if item.producto.stock > 0 and item.producto.stock <= 5 %}
+                                <span style="display: inline-block; background: #fef2f2; color: #dc2626; padding: 2px 8px; border-radius: 9999px; font-size: 0.65rem; font-weight: 700; white-space: nowrap; margin-left: var(--spacing-sm);">Últimas {{ item.producto.stock }} uds.</span>
+                            {% endif %}
                             <form method="POST" action="{% url 'carrito:eliminar_de_carrito' item.producto.id %}" style="display:contents">
                                 {% csrf_token %}
                                 <button type="submit" class="cart-item-remove" aria-label="Eliminar {{ item.producto.nombre }}" onclick="return confirm('¿Estás seguro de eliminar este producto?');">
