@@ -1,3 +1,4 @@
+import urllib.parse
 from django.http import JsonResponse
 from django.shortcuts import render, redirect, get_object_or_404
 from django.contrib import messages
@@ -7,6 +8,36 @@ from decimal import Decimal
 
 from .models import Pedido, LineaPedido, DireccionEnvio, Pago, Provincia, Municipio, Reparto, Tienda
 from apps.products.models import Producto
+
+VENDEDOR_WHATSAPP = '5354492437'
+
+
+def generar_mensaje_whatsapp(pedido):
+    direccion = getattr(pedido, 'direccion_envio', None)
+    lineas = pedido.lineas.all()
+
+    nombre = direccion.nombre_completo if direccion else 'N/A'
+    telefono = direccion.telefono if direccion else 'N/A'
+    if direccion and direccion.ciudad == 'Recoger en tienda':
+        direccion_texto = 'Recoger en tienda'
+    else:
+        direccion_texto = f"{direccion.direccion}, {direccion.ciudad}, {direccion.provincia}" if direccion else 'N/A'
+
+    productos_str = ''
+    for linea in lineas:
+        productos_str += f"- {linea.producto.nombre} x{linea.cantidad}\n"
+
+    mensaje = (
+        f"\U0001f6d2 Nuevo pedido:\n\n"
+        f"\U0001f464 Nombre: {nombre}\n"
+        f"\U0001f4cd Direcci\u00f3n: {direccion_texto}\n"
+        f"\U0001f4de Tel\u00e9fono: {telefono}\n\n"
+        f"\U0001f4e6 Productos:\n{productos_str}\n"
+        f"\U0001f4b0 Total: ${pedido.total} CUP\n\n"
+        "\u00bfConfirmar pedido?"
+    )
+
+    return f"https://wa.me/{VENDEDOR_WHATSAPP}?text={urllib.parse.quote(mensaje)}"
 
 
 def confirmacion_pedido(request, id_pedido):
@@ -19,6 +50,7 @@ def confirmacion_pedido(request, id_pedido):
         'lineas': pedido.lineas.all(),
         'direccion': direccion,
         'pago': pago,
+        'whatsapp_url': generar_mensaje_whatsapp(pedido),
     }
     return render(request, 'checkout/confirmacion_pedido.html', context)
 
