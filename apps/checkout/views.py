@@ -27,13 +27,14 @@ def generar_mensaje_whatsapp(pedido):
     for linea in lineas:
         productos_str += f"- {linea.producto.nombre} x{linea.cantidad}\n"
 
+    total_cup = float(pedido.total) * 680
     mensaje = (
         f"\U0001f6d2 Nuevo pedido:\n\n"
         f"\U0001f464 Nombre: {nombre}\n"
         f"\U0001f4cd Direcci\u00f3n: {direccion_texto}\n"
         f"\U0001f4de Tel\u00e9fono: {telefono}\n\n"
         f"\U0001f4e6 Productos:\n{productos_str}\n"
-        f"\U0001f4b0 Total: ${pedido.total} CUP\n\n"
+        f"\U0001f4b0 Total: ${pedido.total:.2f} USD / ${total_cup:,.2f} CUP\n\n"
         "\u00bfConfirmar pedido?"
     )
 

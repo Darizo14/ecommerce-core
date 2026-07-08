@@ -1,5 +1,6 @@
 {% extends 'base.html' %}
 {% load static %}
+{% load currency_tags %}
 
 {% block title %}Mi Carrito - Tienda{% endblock %}
 
@@ -56,7 +57,7 @@
                                 </button>
                             </form>
                         </div>
-                        <p class="cart-item-price">${{ item.precio|floatformat:2 }}</p>
+                        <p class="cart-item-price">{{ item.precio|currency_format:current_currency }}</p>
                         <div class="cart-item-actions">
                             <div class="qty-selector">
                                 <form method="POST" action="{% url 'carrito:restar_1' item.producto.id %}" style="display:contents">
@@ -73,7 +74,7 @@
                                     </button>
                                 </form>
                             </div>
-                            <span class="cart-item-total">${{ item.subtotal|floatformat:2 }}</span>
+                            <span class="cart-item-total">{{ item.subtotal|currency_format:current_currency }}</span>
                         </div>
                     </div>
                 </div>
@@ -94,7 +95,7 @@
                     <div class="cart-summary-divider"></div>
                     <div class="cart-summary-row">
                         <span>Subtotal</span>
-                        <span class="cart-summary-value">${{ total|floatformat:2 }}</span>
+                        <span class="cart-summary-value">{{ total|currency_format:current_currency }}</span>
                     </div>
                     <div class="cart-summary-row">
                         <span>Envío</span>
@@ -107,12 +108,12 @@
                         </span>
                     </div>
                     {% if total < 500 %}
-                    <p class="cart-summary-hint">Envío gratis en pedidos mayores a $500.</p>
+                    <p class="cart-summary-hint">Envío gratis en pedidos mayores a {{ 500|currency_format:current_currency }}.</p>
                     {% endif %}
                     <div class="cart-summary-divider"></div>
                     <div class="cart-summary-row cart-summary-row--total">
                         <span>Total</span>
-                        <span class="cart-summary-total">${{ total|floatformat:2 }}</span>
+                        <span class="cart-summary-total">{{ total|currency_format:current_currency }}</span>
                     </div>
                     <a href="{% url 'checkout:index' %}" class="cart-checkout-btn">
                         Proceder al Pago

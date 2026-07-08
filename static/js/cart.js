@@ -57,7 +57,7 @@ const cartDrawer = {
         const footer = this.drawer.querySelector('.cart-drawer__footer');
 
         countEl.textContent = data.cantidad_total;
-        totalEl.textContent = `$${data.total.toFixed(2)}`;
+        totalEl.textContent = formatPrice(data.total);
         updateCartBadge(data.cantidad_total);
 
         if (data.productos.length === 0) {
@@ -83,7 +83,7 @@ const cartDrawer = {
                     <div class="cart-drawer__item-info">
                         <div class="cart-drawer__item-header">
                             <span class="cart-drawer__item-name">${item.nombre}</span>
-                            <span class="cart-drawer__item-price">$${item.precio}</span>
+                            <span class="cart-drawer__item-price">${formatPrice(item.precio)}</span>
                         </div>
                         ${item.categoria ? `<span class="cart-drawer__item-category">${item.categoria}</span>` : ''}
                         <div class="cart-drawer__item-actions">

@@ -87,7 +87,7 @@ document.addEventListener('DOMContentLoaded', function() {
             const selectedOption = this.options[this.selectedIndex];
             const precioBase = selectedOption ? selectedOption.dataset.precio : 0;
 
-            document.getElementById('precio-envio').textContent = '$' + parseFloat(precioBase).toFixed(2);
+            document.getElementById('precio-envio').textContent = formatPrice(parseFloat(precioBase));
 
             fetch(`${CHECKOUT_URLS.municipios}?provincia_id=${provinciaId}`)
                 .then(response => {
@@ -100,7 +100,7 @@ document.addEventListener('DOMContentLoaded', function() {
                         const option = document.createElement('option');
                         option.value = mun.id;
                         option.dataset.precio = mun.precio_adicional;
-                        option.textContent = mun.nombre + ' (+$' + mun.precio_adicional + ')';
+                        option.textContent = mun.nombre + ' (+' + formatPrice(mun.precio_adicional) + ')';
                         municipioSelect.appendChild(option);
                     });
                     municipioSelect.disabled = false;
@@ -123,7 +123,7 @@ document.addEventListener('DOMContentLoaded', function() {
             const provinciaOption = provinciaSelect.options[provinciaSelect.selectedIndex];
             const precioBase = provinciaOption ? parseFloat(provinciaOption.dataset.precio) : 0;
 
-            document.getElementById('precio-envio').textContent = '$' + (precioBase + precioAdicional).toFixed(2);
+            document.getElementById('precio-envio').textContent = formatPrice(precioBase + precioAdicional);
 
             fetch(`${CHECKOUT_URLS.repartos}?municipio_id=${municipioId}`)
                 .then(response => {

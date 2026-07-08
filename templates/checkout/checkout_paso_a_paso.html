@@ -1,5 +1,6 @@
 {% extends 'base.html' %}
 {% load static %}
+{% load currency_tags %}
 
 {% block title %}Checkout - Tienda{% endblock %}
 
@@ -140,7 +141,7 @@ window.CHECKOUT_URLS = {
                                     <option value="">Selecciona una provincia</option>
                                     {% for provincia in provincias %}
                                     <option value="{{ provincia.id }}" data-precio="{{ provincia.precio_envio }}">
-                                        {{ provincia.nombre }} (${{ provincia.precio_envio }})
+                                        {{ provincia.nombre }} ({{ provincia.precio_envio|currency_format:current_currency }})
                                     </option>
                                     {% endfor %}
                                 </select>
@@ -177,7 +178,7 @@ window.CHECKOUT_URLS = {
 
                             <div class="precio-envio-box">
                                 <span>Costo de Envío:</span>
-                                <span class="precio-bold" id="precio-envio">${{ precio_envio|floatformat:2 }}</span>
+                                <span class="precio-bold" id="precio-envio">{{ precio_envio|currency_format:current_currency }}</span>
                             </div>
                         </div>
                     </div>
@@ -305,7 +306,7 @@ window.CHECKOUT_URLS = {
                                 <span class="cart-item-name">{{ item.producto.nombre }}</span>
                                 <span class="cart-item-qty">x{{ item.cantidad }}</span>
                             </div>
-                            <span class="cart-item-price">${{ item.subtotal|floatformat:2 }}</span>
+                            <span class="cart-item-price">{{ item.subtotal|currency_format:current_currency }}</span>
                         </div>
                         {% endfor %}
                         
@@ -314,17 +315,17 @@ window.CHECKOUT_URLS = {
                         <div class="summary-totals">
                             <div class="summary-row">
                                 <span>Subtotal:</span>
-                                <span>${{ subtotal|floatformat:2 }}</span>
+                                <span>{{ subtotal|currency_format:current_currency }}</span>
                             </div>
                             {% if paso >= 2 and checkout_data.metodo_entrega == 'mensajeria' %}
                             <div class="summary-row">
                                 <span>Envío:</span>
-                                <span>${{ precio_envio|floatformat:2 }}</span>
+                                <span>{{ precio_envio|currency_format:current_currency }}</span>
                             </div>
                             {% endif %}
                             <div class="summary-row total">
                                 <span>Total:</span>
-                                <span>${{ total|floatformat:2 }}</span>
+                                <span>{{ total|currency_format:current_currency }}</span>
                             </div>
                         </div>
                     </div>

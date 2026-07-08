@@ -7,30 +7,22 @@
 
 <div class="hero-carousel">
     <div class="hero-carousel__slides" id="heroSlides">
+        {% for banner in banners %}
         <div class="hero-carousel__slide">
-            <img src="/media/banner/banner-1.jpg" alt="Samsung Galaxy S26 Ultra">
+            <img src="{{ banner.imagen.url }}" alt="{{ banner.titulo|default:'Banner' }}">
+            {% if banner.titulo %}
             <div class="hero-carousel__content">
-                <h1 class="hero-carousel__title">¡LLEGA EL FUTURO A TUS MANOS!</h1>
-                <p class="hero-carousel__text">El smartphone más avanzado de la historia</p>
-                <a href="#" class="hero-carousel__btn">Ver Detalles</a>
+                <h1 class="hero-carousel__title">{{ banner.titulo }}</h1>
+                {% if banner.subtitulo %}
+                <p class="hero-carousel__text">{{ banner.subtitulo }}</p>
+                {% endif %}
+                {% if banner.texto_boton or banner.link %}
+                <a href="{% if banner.link %}{{ banner.link }}{% else %}#{% endif %}" class="hero-carousel__btn">{{ banner.texto_boton|default:'Ver más' }}</a>
+                {% endif %}
             </div>
+            {% endif %}
         </div>
-        <div class="hero-carousel__slide">
-            <img src="/media/banner/banner-2.jpg" alt="Samsung Galaxy S24 Ultra">
-            <div class="hero-carousel__content">
-                <h1 class="hero-carousel__title">¡DESBLOQUEA TU POTENCIAL MÁXIMO!</h1>
-                <p class="hero-carousel__text">Rendimiento que redefine los límites</p>
-                <a href="#" class="hero-carousel__btn">Explorar</a>
-            </div>
-        </div>
-        <div class="hero-carousel__slide">
-            <img src="/media/banner/banner-3.jpg" alt="Samsung Galaxy S23 Ultra">
-            <div class="hero-carousel__content">
-                <h1 class="hero-carousel__title">¡CAPTURA MOMENTOS ÉPICOS!</h1>
-                <p class="hero-carousel__text">Cámara profesional en tu bolsillo</p>
-                <a href="#" class="hero-carousel__btn">Comprar Ahora</a>
-            </div>
-        </div>
+        {% endfor %}
     </div>
     <button class="hero-carousel__arrow hero-carousel__arrow--prev" onclick="moveSlide(-1)">
         <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
@@ -43,9 +35,9 @@
         </svg>
     </button>
     <div class="hero-carousel__nav">
-        <button class="hero-carousel__dot active" onclick="goToSlide(0)"></button>
-        <button class="hero-carousel__dot" onclick="goToSlide(1)"></button>
-        <button class="hero-carousel__dot" onclick="goToSlide(2)"></button>
+        {% for banner in banners %}
+        <button class="hero-carousel__dot{% if forloop.first %} active{% endif %}" onclick="goToSlide({{ forloop.counter0 }})"></button>
+        {% endfor %}
     </div>
 </div>
 
