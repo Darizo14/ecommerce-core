@@ -9,7 +9,14 @@
     <div class="hero-carousel__slides" id="heroSlides">
         {% for banner in banners %}
         <div class="hero-carousel__slide">
+            {% if banner.imagen_movil %}
+            <picture>
+                <source media="(max-width: 768px)" srcset="{{ banner.imagen_movil.url }}">
+                <img src="{{ banner.imagen.url }}" alt="{{ banner.titulo|default:'Banner' }}">
+            </picture>
+            {% else %}
             <img src="{{ banner.imagen.url }}" alt="{{ banner.titulo|default:'Banner' }}">
+            {% endif %}
             {% if banner.titulo %}
             <div class="hero-carousel__content">
                 <h1 class="hero-carousel__title">{{ banner.titulo }}</h1>

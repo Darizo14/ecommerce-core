@@ -3,7 +3,8 @@ from django.db import models
 class Banner(models.Model):
     titulo = models.CharField(max_length=200, verbose_name='Título', blank=True)
     subtitulo = models.CharField(max_length=300, verbose_name='Subtítulo', blank=True)
-    imagen = models.ImageField(upload_to='banner/', verbose_name='Imagen')
+    imagen = models.ImageField(upload_to='banner/', verbose_name='Imagen (Escritorio)')
+    imagen_movil = models.ImageField(upload_to='banner/', verbose_name='Imagen (Móvil)', blank=True, null=True, help_text='Versión del banner para dispositivos móviles. Si se deja vacía, se usará la imagen de escritorio.')
     link = models.CharField(max_length=500, verbose_name='Enlace', blank=True, help_text='URL a la que apunta el botón')
     texto_boton = models.CharField(max_length=100, verbose_name='Texto del botón', blank=True, default='Ver más')
     orden = models.PositiveIntegerField(default=0, verbose_name='Orden')
