@@ -18,6 +18,8 @@ class Producto(models.Model):
     precio = models.DecimalField(max_digits=10, decimal_places=2)
     precio_oferta = models.DecimalField(max_digits=10, decimal_places=2, blank=True, null=True)
     en_oferta = models.BooleanField(default=False)
+    destacado = models.BooleanField(default=False, verbose_name='Destacado')   #Para mostrar en la sección de destacados del Home
+    total_vendido = models.PositiveIntegerField(default=0, verbose_name='Total vendido')  #Denormalizado para "Más vendidos"
     stock = models.PositiveIntegerField(default=0)
     activo = models.BooleanField(default=True)                          #Para desactivar productos sin borrarlos
     creado_en = models.DateTimeField(auto_now_add=True)                 #Para ordenar por fecha de creación
@@ -79,6 +81,7 @@ class ProductImage(models.Model):
 class Categoria(models.Model):
     nombre = models.CharField(max_length=255)                           #Campos para la tabla categoria
     slug = models.SlugField(unique=True, blank=True)
+    imagen = models.ImageField(upload_to='categorias/', blank=True, null=True, verbose_name='Imagen')
 
     padre = models.ForeignKey(   
         'self',                                                         #Apunta a la misma clase (Categoria)

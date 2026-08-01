@@ -3,14 +3,22 @@
 {% comment %}
     Product Card - Shopify Dawn Style
     Minimal, clean, premium aesthetic with hover "Add to cart"
+    Opcional: pasar `etiqueta` ('nuevo' | 'vendido') para mostrar badges contextuales.
 {% endcomment %}
 
 <article class="dawn-card" data-product-id="{{ producto.id }}">
     <div class="dawn-card__image-wrapper">
         <a href="{% url 'detalle_producto' producto.id %}" class="dawn-card__image-link">
-            {% if producto.en_oferta %}
-                <span style="position: absolute; top: 8px; left: 8px; z-index: 10; background: #ef4444; color: white; padding: 3px 10px; border-radius: var(--radius-full); font-size: 0.7rem; font-weight: 700; letter-spacing: 0.3px;">OFERTA</span>
-            {% endif %}
+            <span class="dawn-card__badges">
+                {% if producto.en_oferta %}
+                    <span class="dawn-card__badge dawn-card__badge--oferta">OFERTA</span>
+                {% endif %}
+                {% if etiqueta == 'nuevo' %}
+                    <span class="dawn-card__badge dawn-card__badge--nuevo">Nuevo</span>
+                {% elif etiqueta == 'vendido' %}
+                    <span class="dawn-card__badge dawn-card__badge--vendido">Más vendido</span>
+                {% endif %}
+            </span>
             {% if producto.imagen %}
                 <img
                     src="{{ producto.imagen.url }}"

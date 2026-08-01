@@ -48,89 +48,17 @@
     </div>
 </div>
 
-{% if productos_destacados %}
-<section class="home-productos" id="productos-destacados">
-    <div class="section-header">
-        <h2>Productos Destacados</h2>
-        <a href="{% url 'lista_productos' %}" class="section-link">Ver todos →</a>
-    </div>
-    <div class="product-carousel">
-        <button class="section-arrow section-arrow--prev" data-carousel="destacados" disabled>
-            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                <polyline points="15 18 9 12 15 6"></polyline>
-            </svg>
-        </button>
-        <div class="product-carousel__track-wrapper">
-            <div class="product-carousel__track" data-carousel="destacados">
-                {% for producto in productos_destacados %}
-                    {% include 'components/product_card.html' with producto=producto %}
-                {% endfor %}
-            </div>
-        </div>
-        <button class="section-arrow section-arrow--next" data-carousel="destacados">
-            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                <polyline points="9 18 15 12 9 6"></polyline>
-            </svg>
-        </button>
-    </div>
-</section>
-{% endif %}
-
-{% if productos_ofertas %}
-<section class="home-productos" id="productos-ofertas" style="background: linear-gradient(180deg, #fff5f5 0%, transparent 100%); padding: var(--spacing-2xl) 0;">
-    <div class="section-header">
-        <h2 style="color: var(--color-error);">🔥 Ofertas Especiales</h2>
-        <a href="{% url 'lista_productos' %}?ofertas=1" class="section-link">Ver todas →</a>
-    </div>
-    <div class="product-carousel">
-        <button class="section-arrow section-arrow--prev" data-carousel="ofertas" disabled>
-            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                <polyline points="15 18 9 12 15 6"></polyline>
-            </svg>
-        </button>
-        <div class="product-carousel__track-wrapper">
-            <div class="product-carousel__track" data-carousel="ofertas">
-                {% for producto in productos_ofertas %}
-                    {% include 'components/product_card.html' with producto=producto %}
-                {% endfor %}
-            </div>
-        </div>
-        <button class="section-arrow section-arrow--next" data-carousel="ofertas">
-            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                <polyline points="9 18 15 12 9 6"></polyline>
-            </svg>
-        </button>
-    </div>
-</section>
-{% endif %}
-
-{% if productos_nuevos %}
-<section class="home-productos" id="productos-nuevos">
-    <div class="section-header">
-        <h2>Nuevos Productos</h2>
-        <a href="{% url 'lista_productos' %}" class="section-link">Ver todos →</a>
-    </div>
-    <div class="product-carousel">
-        <button class="section-arrow section-arrow--prev" data-carousel="nuevos" disabled>
-            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                <polyline points="15 18 9 12 15 6"></polyline>
-            </svg>
-        </button>
-        <div class="product-carousel__track-wrapper">
-            <div class="product-carousel__track" data-carousel="nuevos">
-                {% for producto in productos_nuevos %}
-                    {% include 'components/product_card.html' with producto=producto %}
-                {% endfor %}
-            </div>
-        </div>
-        <button class="section-arrow section-arrow--next" data-carousel="nuevos">
-            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                <polyline points="9 18 15 12 9 6"></polyline>
-            </svg>
-        </button>
-    </div>
-</section>
-{% endif %}
+{% for item in secciones %}
+    {% with s=item.seccion %}
+    {% if s.tipo == 'categorias' %}
+        {% include 'home/sections/categorias_destacadas.html' with seccion=s categorias=item.categorias link_ver_todos=item.link_ver_todos %}
+    {% elif s.tipo == 'beneficios' %}
+        {% include 'home/sections/beneficios.html' with seccion=s %}
+    {% else %}
+        {% include 'components/product_carousel.html' with id='seccion-'|add:s.tipo titulo=s.titulo data_carousel=s.tipo productos=item.productos etiqueta=item.etiqueta link_ver_todos=item.link_ver_todos %}
+    {% endif %}
+    {% endwith %}
+{% endfor %}
 
 {% endblock %}
 

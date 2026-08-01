@@ -1,0 +1,304 @@
+/* ===================================
+   HOME SECTIONS - Categorías, Más Vendidos, Beneficios
+   Consistente con la estética del proyecto (variables, radios, sombras)
+   =================================== */
+
+.home-section {
+  padding: var(--spacing-2xl) 0;
+  position: relative;
+}
+
+/* ===================================
+   CATEGORÍAS DESTACADAS
+   =================================== */
+
+.category-grid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: var(--spacing-xl);
+  padding: 0 var(--spacing-lg);
+}
+
+@media (min-width: 769px) {
+  .category-grid {
+    padding: 0 var(--spacing-2xl);
+  }
+}
+
+@media (max-width: 1100px) {
+  .category-grid {
+    grid-template-columns: repeat(3, 1fr);
+  }
+}
+
+@media (max-width: 768px) {
+  .category-grid {
+    grid-template-columns: repeat(2, 1fr);
+    gap: var(--spacing-md);
+    padding: 0 var(--spacing-lg);
+  }
+}
+
+@media (max-width: 480px) {
+  .category-grid {
+    gap: var(--spacing-sm);
+    padding: 0 var(--spacing-sm);
+  }
+}
+
+@media (max-width: 360px) {
+  .category-grid {
+    grid-template-columns: 1fr;
+  }
+}
+
+.category-card {
+  position: relative;
+  display: block;
+  border-radius: var(--radius-md);
+  overflow: hidden;
+  background: var(--color-bg-card);
+  box-shadow: var(--shadow-card);
+  transition: transform var(--transition-base), box-shadow var(--transition-base);
+  isolation: isolate;
+}
+
+.category-card:hover {
+  transform: translateY(-4px);
+  box-shadow: var(--shadow-lg);
+}
+
+.category-card__media {
+  position: relative;
+  width: 100%;
+  aspect-ratio: 4 / 3;
+  overflow: hidden;
+  background-color: #f0f0f0;
+}
+
+.category-card__image {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  transition: transform 350ms cubic-bezier(0.25, 0.1, 0.25, 1);
+}
+
+.category-card:hover .category-card__image {
+  transform: scale(1.08);
+}
+
+.category-card__placeholder {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: linear-gradient(135deg, #f0f0f0 0%, #e8e8e8 100%);
+  color: #bbb;
+}
+
+.category-card__placeholder svg {
+  width: 40px;
+  height: 40px;
+  opacity: 0.5;
+}
+
+.category-card__overlay {
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(180deg, rgba(0, 0, 0, 0) 40%, rgba(0, 0, 0, 0.55) 100%);
+  z-index: 1;
+  transition: background-color var(--transition-base);
+}
+
+.category-card__content {
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  z-index: 2;
+  padding: var(--spacing-md) var(--spacing-lg);
+  color: #fff;
+}
+
+.category-card__name {
+  font-family: var(--font-heading);
+  font-size: 1rem;
+  font-weight: 600;
+  color: #fff;
+  margin: 0;
+  line-height: 1.3;
+}
+
+.category-card__count {
+  display: inline-block;
+  margin-top: 2px;
+  font-size: 0.75rem;
+  font-weight: 500;
+  color: rgba(255, 255, 255, 0.85);
+}
+
+/* ===================================
+   BADGES EN TARJETAS DE PRODUCTO
+   =================================== */
+
+.dawn-card__badges {
+  position: absolute;
+  top: 8px;
+  left: 8px;
+  z-index: 10;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 4px;
+}
+
+.dawn-card__badge {
+  display: inline-block;
+  padding: 3px 10px;
+  border-radius: var(--radius-full);
+  font-size: 0.7rem;
+  font-weight: 700;
+  letter-spacing: 0.3px;
+  color: #fff;
+  text-transform: uppercase;
+  white-space: nowrap;
+  box-shadow: var(--shadow-sm);
+}
+
+.dawn-card__badge--oferta {
+  background: var(--color-error);
+}
+
+.dawn-card__badge--nuevo {
+  background: var(--color-success);
+}
+
+.dawn-card__badge--vendido {
+  background: var(--color-primary);
+}
+
+/* ===================================
+   BENEFICIOS DE LA TIENDA
+   =================================== */
+
+.section-header--center {
+  justify-content: center;
+  text-align: center;
+}
+
+.section-header--center .section-link {
+  display: none;
+}
+
+.benefits-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: var(--spacing-xl);
+  padding: 0 var(--spacing-lg);
+}
+
+@media (min-width: 769px) {
+  .benefits-grid {
+    padding: 0 var(--spacing-2xl);
+  }
+}
+
+@media (max-width: 900px) {
+  .benefits-grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
+@media (max-width: 600px) {
+  .benefits-grid {
+    grid-template-columns: 1fr;
+    gap: var(--spacing-md);
+    padding: 0 var(--spacing-lg);
+  }
+}
+
+@media (max-width: 480px) {
+  .benefits-grid {
+    padding: 0 var(--spacing-sm);
+  }
+}
+
+.benefit-card {
+  display: flex;
+  align-items: flex-start;
+  gap: var(--spacing-md);
+  padding: var(--spacing-xl);
+  background: var(--color-bg-card);
+  border: 1px solid var(--color-border-light);
+  border-radius: var(--radius-md);
+  box-shadow: var(--shadow-card);
+  transition: transform var(--transition-base), box-shadow var(--transition-base);
+}
+
+.benefit-card:hover {
+  transform: translateY(-3px);
+  box-shadow: var(--shadow-md);
+}
+
+.benefit-card__icon {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  width: 52px;
+  height: 52px;
+  border-radius: var(--radius-full);
+  background: var(--color-primary-light);
+  color: var(--color-primary);
+  transition: background-color var(--transition-base), color var(--transition-base);
+}
+
+.benefit-card:hover .benefit-card__icon {
+  background: var(--color-primary);
+  color: #fff;
+}
+
+.benefit-card__body {
+  min-width: 0;
+}
+
+.benefit-card__title {
+  font-family: var(--font-heading);
+  font-size: 1rem;
+  font-weight: 600;
+  color: var(--color-text);
+  margin: 0 0 var(--spacing-xs);
+}
+
+.benefit-card__text {
+  font-size: 0.875rem;
+  color: var(--color-text-light);
+  margin: 0;
+  line-height: 1.5;
+}
+
+/* ===================================
+   ANIMACIONES DE APARICIÓN (reveal)
+   Progresivo: solo se oculta si JS está activo.
+   =================================== */
+
+html.js .reveal {
+  opacity: 0;
+  transform: translateY(24px);
+  transition: opacity 0.6s ease, transform 0.6s ease;
+  will-change: opacity, transform;
+}
+
+html.js .reveal--visible {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+/* Escalonado suave para las tarjetas de beneficios */
+html.js .benefits-grid .benefit-card:nth-child(1) { transition-delay: 0.05s; }
+html.js .benefits-grid .benefit-card:nth-child(2) { transition-delay: 0.1s; }
+html.js .benefits-grid .benefit-card:nth-child(3) { transition-delay: 0.15s; }
+html.js .benefits-grid .benefit-card:nth-child(4) { transition-delay: 0.2s; }
+html.js .benefits-grid .benefit-card:nth-child(5) { transition-delay: 0.25s; }
+html.js .benefits-grid .benefit-card:nth-child(6) { transition-delay: 0.3s; }

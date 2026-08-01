@@ -1,0 +1,26 @@
+{% load iconos_tags %}
+{% comment %}
+    Sección: Beneficios de la Tienda (configurable desde el admin)
+    Recibe: `seccion` (HomeSeccion tipo beneficios).
+{% endcomment %}
+
+{% if seccion.beneficios_activos %}
+<section class="home-section home-section--benefits" id="beneficios" aria-label="{{ seccion.titulo }}">
+    <div class="section-header section-header--center">
+        <h2>{{ seccion.titulo }}</h2>
+    </div>
+    <ul class="benefits-grid">
+        {% for beneficio in seccion.beneficios_activos %}
+        <li class="benefit-card reveal">
+            <span class="benefit-card__icon" aria-hidden="true">{{ beneficio.icono|render_icono }}</span>
+            <div class="benefit-card__body">
+                <h3 class="benefit-card__title">{{ beneficio.titulo }}</h3>
+                {% if beneficio.texto %}
+                <p class="benefit-card__text">{{ beneficio.texto }}</p>
+                {% endif %}
+            </div>
+        </li>
+        {% endfor %}
+    </ul>
+</section>
+{% endif %}

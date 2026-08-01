@@ -1,0 +1,32 @@
+{% comment %}
+    Category Card - tarjeta visual de categoría destacada.
+    Se espera una variable `categoria` con los atributos: nombre, slug, imagen, num_productos.
+{% endcomment %}
+
+<a href="{% url 'lista_productos' %}?categorias={{ categoria.id }}" class="category-card" aria-label="Ver productos de {{ categoria.nombre }}">
+    <div class="category-card__media">
+        {% if categoria.imagen %}
+            <img
+                src="{{ categoria.imagen.url }}"
+                alt="{{ categoria.nombre }}"
+                class="category-card__image"
+                loading="lazy"
+            >
+        {% else %}
+            <div class="category-card__placeholder">
+                <svg xmlns="http://www.w3.org/2000/svg" width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+                    <path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z"></path>
+                    <polyline points="3.27 6.96 12 12.01 20.73 6.96"></polyline>
+                    <line x1="12" y1="22.08" x2="12" y2="12"></line>
+                </svg>
+            </div>
+        {% endif %}
+        <div class="category-card__overlay"></div>
+    </div>
+    <div class="category-card__content">
+        <h3 class="category-card__name">{{ categoria.nombre }}</h3>
+        {% if categoria.num_productos %}
+            <span class="category-card__count">{{ categoria.num_productos }} producto{{ categoria.num_productos|pluralize }}</span>
+        {% endif %}
+    </div>
+</a>

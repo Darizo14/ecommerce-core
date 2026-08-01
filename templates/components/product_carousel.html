@@ -1,0 +1,43 @@
+{% comment %}
+    Product Carousel - sección reutilizable para el Home.
+    Parámetros:
+      - titulo         : texto del encabezado (obligatorio)
+      - productos      : queryset/lista de productos
+      - data_carousel  : nombre único del carrusel (obligatorio)
+      - id             : id del <section> (opcional)
+      - link_ver_todos : URL del enlace "Ver todos" (opcional)
+      - etiqueta       : 'nuevo' | 'vendido' | '' para badges de producto (opcional)
+      - titulo_style   : estilo inline para el h2 (opcional)
+      - extra_class    : clases extra para la sección (opcional)
+      - inline_style   : estilo inline para la sección (opcional)
+{% endcomment %}
+
+{% if productos %}
+<section class="home-productos{% if extra_class %} {{ extra_class }}{% endif %}"{% if id %} id="{{ id }}"{% endif %}{% if inline_style %} style="{{ inline_style }}"{% endif %}>
+    <div class="section-header">
+        <h2{% if titulo_style %} style="{{ titulo_style }}"{% endif %}>{{ titulo }}</h2>
+        {% if link_ver_todos %}
+        <a href="{{ link_ver_todos }}" class="section-link">Ver todos →</a>
+        {% endif %}
+    </div>
+    <div class="product-carousel">
+        <button class="section-arrow section-arrow--prev" data-carousel="{{ data_carousel }}" disabled aria-label="Anterior">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <polyline points="15 18 9 12 15 6"></polyline>
+            </svg>
+        </button>
+        <div class="product-carousel__track-wrapper">
+            <div class="product-carousel__track" data-carousel="{{ data_carousel }}">
+                {% for producto in productos %}
+                    {% include 'components/product_card.html' with producto=producto etiqueta=etiqueta %}
+                {% endfor %}
+            </div>
+        </div>
+        <button class="section-arrow section-arrow--next" data-carousel="{{ data_carousel }}" aria-label="Siguiente">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <polyline points="9 18 15 12 9 6"></polyline>
+            </svg>
+        </button>
+    </div>
+</section>
+{% endif %}

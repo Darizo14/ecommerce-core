@@ -3,6 +3,7 @@ from django.http import JsonResponse
 from django.shortcuts import render, redirect, get_object_or_404
 from django.contrib import messages
 from django.db import transaction
+from django.db.models import F
 from django.views.decorators.http import require_POST
 from decimal import Decimal
 
@@ -347,6 +348,9 @@ def crear_pedido_checkout(request, productos, subtotal, checkout_data):
                 )
                 producto.stock -= item['cantidad']
                 producto.save(update_fields=['stock'])
+                Producto.objects.filter(pk=producto.pk).update(
+                    total_vendido=F('total_vendido') + item['cantidad']
+                )
 
             metodo_entrega = checkout_data.get('metodo_entrega', 'tienda')
             usuario = request.user if request.user.is_authenticated else None
