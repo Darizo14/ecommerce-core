@@ -62,9 +62,9 @@
 
             <div class="product-detail__price">
                 {% if producto.en_oferta and producto.precio_oferta %}
-                    <span class="product-detail__price-value" style="color: var(--color-error);">{{ producto.precio_oferta|currency_format:current_currency }}</span>
-                    <span style="font-size: 1.125rem; color: var(--color-text-muted); text-decoration: line-through; margin-left: var(--spacing-sm);">{{ producto.precio|currency_format:current_currency }}</span>
-                    <span style="display: inline-block; background: var(--color-error); color: white; padding: 2px 10px; border-radius: var(--radius-full); font-size: var(--font-size-xs); font-weight: 700; margin-left: var(--spacing-sm);">OFERTA</span>
+                    <span class="product-detail__price-old">{{ producto.precio|currency_format:current_currency }}</span>
+                    <span class="product-detail__price-value">{{ producto.precio_oferta|currency_format:current_currency }}</span>
+                    <span class="product-detail__price-badge">OFERTA</span>
                 {% else %}
                     <span class="product-detail__price-value">{{ producto.precio|currency_format:current_currency }}</span>
                 {% endif %}
@@ -82,10 +82,7 @@
             <div class="product-detail__stock">
                 {% if producto.stock > 0 %}
                     <span class="product-detail__stock-badge product-detail__stock-badge--in">En stock</span>
-                    <span class="product-detail__stock-text">{{ producto.stock }} unidades disponibles</span>
-                    {% if producto.stock <= 5 %}
-                        <span style="display: inline-block; background: #fef2f2; color: #dc2626; padding: 2px 10px; border-radius: var(--radius-full); font-size: 0.7rem; font-weight: 700; margin-left: var(--spacing-sm);">ÚLTIMAS UNIDADES</span>
-                    {% endif %}
+                    <span class="product-detail__stock-text {% if producto.stock <= 3 %}product-detail__stock-text--low{% endif %}">{{ producto.stock }} unidades disponibles</span>
                 {% else %}
                     <span class="product-detail__stock-badge product-detail__stock-badge--out">Sin stock</span>
                 {% endif %}
@@ -284,6 +281,24 @@ function changeImage(event, src) {
     color: var(--color-text);
 }
 
+.product-detail__price-old {
+    font-size: 1.125rem;
+    color: var(--color-text-muted);
+    text-decoration: line-through;
+    line-height: 1;
+}
+
+.product-detail__price-badge {
+    display: inline-block;
+    background: var(--color-error);
+    color: white;
+    padding: 2px 10px;
+    border-radius: var(--radius-full);
+    font-size: var(--font-size-xs);
+    font-weight: 700;
+    align-self: center;
+}
+
 .product-detail__stock {
     display: flex;
     align-items: center;
@@ -312,6 +327,11 @@ function changeImage(event, src) {
 .product-detail__stock-text {
     font-size: var(--font-size-sm);
     color: var(--color-text-light);
+}
+
+.product-detail__stock-text--low {
+    color: #dc2626;
+    font-weight: 700;
 }
 
 .product-detail__divider {
@@ -482,7 +502,16 @@ function changeImage(event, src) {
     }
 
     .product-detail__price-value {
-        font-size: 1.625rem;
+        font-size: 1.375rem;
+    }
+
+    .product-detail__price-old {
+        font-size: 1rem;
+    }
+
+    .product-detail__price-badge {
+        font-size: var(--font-size-xs);
+        padding: 1px 8px;
     }
 
     .product-detail__add-btn {

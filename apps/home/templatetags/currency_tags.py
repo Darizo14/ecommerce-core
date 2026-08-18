@@ -15,6 +15,6 @@ def currency_format(value, currency_code='USD'):
 
     if currency_code == 'CUP':
         converted = value * rate
-        return f'${converted:,.2f} CUP'
+        return f'{converted:,.2f} CUP'
 
     return f'${value:,.2f}'
