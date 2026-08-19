@@ -356,6 +356,8 @@ function increaseQty(productId) {
         span.textContent = next;
         const hidden = document.getElementById('hidden-cantidad-' + productId);
         if (hidden) hidden.value = next;
+        const buyHidden = document.getElementById('buy-now-cantidad-' + productId);
+        if (buyHidden) buyHidden.value = next;
     }
 }
 
@@ -368,5 +370,7 @@ function decreaseQty(productId) {
         span.textContent = next;
         const hidden = document.getElementById('hidden-cantidad-' + productId);
         if (hidden) hidden.value = next;
+        const buyHidden = document.getElementById('buy-now-cantidad-' + productId);
+        if (buyHidden) buyHidden.value = next;
     }
 }

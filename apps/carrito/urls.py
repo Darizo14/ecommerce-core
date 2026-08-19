@@ -1,5 +1,5 @@
 from django.urls import path
-from .views import vista_carrito, agregar_carrito, sumar_1, restar_1, eliminar_de_carrito, obtener_carrito
+from .views import vista_carrito, agregar_carrito, sumar_1, restar_1, eliminar_de_carrito, obtener_carrito, comprar_ahora
 
 app_name = 'carrito'
 
@@ -10,4 +10,5 @@ urlpatterns = [
     path('restar/<int:producto_id>/', restar_1, name='restar_1'),
     path('eliminar/<int:producto_id>/', eliminar_de_carrito, name='eliminar_de_carrito'),
     path('api/obtener/', obtener_carrito, name='obtener_carrito'),
+    path('comprar/<int:producto_id>/', comprar_ahora, name='comprar_ahora'),
 ]

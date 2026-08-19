@@ -2,6 +2,7 @@ from django.http import JsonResponse
 from django.shortcuts import render, redirect, get_object_or_404
 from django.views.decorators.http import require_POST
 from django.views.decorators.csrf import csrf_exempt
+from django.contrib import messages
 from decimal import Decimal
 
 from apps.products.models import Producto
@@ -195,3 +196,29 @@ def obtener_carrito(request):
         'total': float(total),
         'cantidad_total': sum(carrito.values()),
     })
+
+
+@require_POST
+def comprar_ahora(request, producto_id):
+    carrito = request.session.get('carrito', {})
+
+    try:
+        producto = Producto.objects.get(id=producto_id)
+    except Producto.DoesNotExist:
+        messages.error(request, 'Producto no encontrado.')
+        return redirect('lista_productos')
+
+    if producto.stock == 0:
+        messages.error(request, 'Producto agotado.')
+        return redirect('detalle_producto', producto_id=producto_id)
+
+    try:
+        cantidad = int(request.POST.get('cantidad', 1))
+    except (ValueError, TypeError):
+        cantidad = 1
+    cantidad = max(1, min(cantidad, MAX_CANTIDAD, producto.stock))
+
+    carrito[str(producto_id)] = cantidad
+    request.session['carrito'] = carrito
+
+    return redirect('checkout:index')
