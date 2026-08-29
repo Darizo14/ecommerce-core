@@ -1,0 +1,11 @@
+{% comment %}
+    Sección: Ofertas - bloque promocional + carrusel de productos en oferta.
+    Recibe: `titulo`, `subtitulo`, `productos`, `etiqueta`, `link_ver_todos`, `max_descuento`.
+{% endcomment %}
+
+{% if productos %}
+<section class="home-section home-section--ofertas" id="ofertas" aria-label="{{ titulo }}">
+    {% include 'components/promo_banner.html' with titulo=titulo subtitulo=subtitulo max_descuento=max_descuento enlace=link_ver_todos texto_boton='Ver ofertas' %}
+    {% include 'components/product_carousel.html' with id='ofertas-carousel' data_carousel='ofertas' productos=productos etiqueta=etiqueta %}
+</section>
+{% endif %}

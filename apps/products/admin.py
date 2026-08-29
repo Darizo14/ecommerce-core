@@ -10,7 +10,8 @@ class ProductImageInline(admin.TabularInline):
 
 @admin.register(Producto)
 class ProductoAdmin(admin.ModelAdmin):
-    list_display = ('nombre', 'categoria', 'precio', 'precio_oferta', 'en_oferta', 'destacado', 'stock', 'total_vendido', 'activo', 'creado_en')
+    list_display = ('nombre', 'categoria', 'precio', 'precio_oferta', 'en_oferta', 'destacado', 'orden_destacado', 'stock', 'total_vendido', 'activo', 'creado_en')
+    list_editable = ('destacado', 'orden_destacado')
     search_fields = ('nombre',)
     list_filter = ('activo', 'en_oferta', 'destacado', 'categoria')
     prepopulated_fields = {'slug': ('nombre',)}

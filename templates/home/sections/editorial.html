@@ -1,0 +1,41 @@
+{% comment %}
+    Sección: Bloque Editorial - composición tipo revista a pantalla completa.
+    Recibe: `seccion` (HomeSeccion tipo editorial) con `editoriales_activas`.
+{% endcomment %}
+
+{% if seccion.editoriales_activas %}
+    {% with editorial=seccion.editoriales_activas|first %}
+    <section class="home-section home-section--editorial reveal" id="editorial" aria-label="{{ editorial.titulo }}">
+        <div class="editorial">
+            {% if editorial.enlace %}<a href="{{ editorial.enlace }}" class="editorial__link" aria-label="{{ editorial.titulo }}">{% endif %}
+            <div class="editorial__media">
+                {% if editorial.imagen %}
+                {% if editorial.imagen_movil %}
+                <picture>
+                    <source media="(max-width: 768px)" srcset="{{ editorial.imagen_movil.url }}">
+                    <img src="{{ editorial.imagen.url }}" alt="{{ editorial.titulo }}" class="editorial__image" loading="lazy">
+                </picture>
+                {% else %}
+                <img src="{{ editorial.imagen.url }}" alt="{{ editorial.titulo }}" class="editorial__image" loading="lazy">
+                {% endif %}
+                {% else %}
+                <div class="editorial__placeholder"></div>
+                {% endif %}
+            </div>
+            <div class="editorial__content">
+                {% if seccion.titulo %}
+                <span class="editorial__eyebrow">{{ seccion.titulo }}</span>
+                {% endif %}
+                <h2 class="editorial__title">{{ editorial.titulo }}</h2>
+                {% if editorial.subtitulo %}
+                <p class="editorial__text">{{ editorial.subtitulo }}</p>
+                {% endif %}
+                {% if editorial.enlace and editorial.texto_boton %}
+                <span class="editorial__btn">{{ editorial.texto_boton }}</span>
+                {% endif %}
+            </div>
+            {% if editorial.enlace %}</a>{% endif %}
+        </div>
+    </section>
+    {% endwith %}
+{% endif %}

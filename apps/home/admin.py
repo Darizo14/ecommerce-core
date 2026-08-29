@@ -1,5 +1,6 @@
 from django.contrib import admin
-from .models import Banner, HomeSeccion, Beneficio
+from .models import Banner, HomeSeccion, Beneficio, HomeEditorial, HomeColeccion
+
 
 @admin.register(Banner)
 class BannerAdmin(admin.ModelAdmin):
@@ -28,12 +29,38 @@ class BeneficioInline(admin.TabularInline):
     fields = ('icono', 'titulo', 'texto', 'orden', 'activo')
 
 
+class HomeEditorialInline(admin.TabularInline):
+    model = HomeEditorial
+    extra = 0
+    fields = ('titulo', 'subtitulo', 'imagen', 'imagen_movil', 'texto_boton', 'enlace', 'orden', 'activo')
+
+
+class HomeColeccionInline(admin.TabularInline):
+    model = HomeColeccion
+    extra = 0
+    fields = ('titulo', 'descripcion', 'imagen', 'enlace', 'texto_boton', 'orden', 'activo')
+
+
 @admin.register(HomeSeccion)
 class HomeSeccionAdmin(admin.ModelAdmin):
-    list_display = ('tipo', 'titulo', 'orden', 'limite', 'activo')
-    list_editable = ('titulo', 'orden', 'limite', 'activo')
+    list_display = ('tipo', 'titulo', 'layout', 'orden', 'limite', 'activo')
+    list_editable = ('titulo', 'layout', 'orden', 'limite', 'activo')
     list_display_links = ('tipo',)
-    inlines = [BeneficioInline]
+    list_filter = ('activo', 'tipo')
+    inlines = [BeneficioInline, HomeEditorialInline, HomeColeccionInline]
+
+    fieldsets = (
+        ('Contenido', {
+            'fields': ('tipo', 'titulo', 'subtitulo', 'limite')
+        }),
+        ('Presentación visual', {
+            'fields': ('layout',),
+            'description': 'El layout determina cómo se muestra la sección. Si se deja vacío, se usa el layout por defecto del tipo (p. ej. destacados → carrusel, más vendidos → ranking, nuevos → editorial, ofertas → promo).'
+        }),
+        ('Configuración', {
+            'fields': ('orden', 'activo')
+        }),
+    )
 
 
 @admin.register(Beneficio)
@@ -42,3 +69,19 @@ class BeneficioAdmin(admin.ModelAdmin):
     list_editable = ('titulo', 'icono', 'orden', 'activo')
     list_filter = ('seccion', 'activo')
     search_fields = ('titulo', 'texto')
+
+
+@admin.register(HomeEditorial)
+class HomeEditorialAdmin(admin.ModelAdmin):
+    list_display = ('seccion', 'titulo', 'orden', 'activo')
+    list_editable = ('titulo', 'orden', 'activo')
+    list_filter = ('seccion', 'activo')
+    search_fields = ('titulo', 'subtitulo')
+
+
+@admin.register(HomeColeccion)
+class HomeColeccionAdmin(admin.ModelAdmin):
+    list_display = ('seccion', 'titulo', 'orden', 'activo')
+    list_editable = ('titulo', 'orden', 'activo')
+    list_filter = ('seccion', 'activo')
+    search_fields = ('titulo', 'descripcion')

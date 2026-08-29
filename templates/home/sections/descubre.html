@@ -1,0 +1,45 @@
+{% comment %}
+    Sección: Descubre / Inspiración.
+    Bloques configurados desde el Admin (modelo HomeColeccion).
+    Recibe: `seccion` (HomeSeccion tipo colecciones) con `colecciones_activas`.
+{% endcomment %}
+
+{% if seccion.colecciones_activas %}
+<section class="home-section home-section--descubre reveal" id="descubre" aria-label="{{ seccion.titulo }}">
+    <div class="section-header">
+        <div class="section-header__heading">
+            <h2>{{ seccion.titulo }}</h2>
+            {% if seccion.subtitulo %}
+            <p class="section-subtitle">{{ seccion.subtitulo }}</p>
+            {% endif %}
+        </div>
+    </div>
+    <div class="descubre-grid" data-hscroll>
+        {% for coleccion in seccion.colecciones_activas %}
+        <a href="{% if coleccion.enlace %}{{ coleccion.enlace }}{% else %}{% url 'lista_productos' %}{% endif %}" class="descubre-card" aria-label="{{ coleccion.titulo }}">
+            <div class="descubre-card__media">
+                {% if coleccion.imagen %}
+                <img
+                    src="{{ coleccion.imagen.url }}"
+                    alt="{{ coleccion.titulo }}"
+                    class="descubre-card__image"
+                    loading="lazy"
+                >
+                {% else %}
+                <div class="descubre-card__placeholder"></div>
+                {% endif %}
+            </div>
+            <div class="descubre-card__content">
+                <h3 class="descubre-card__title">{{ coleccion.titulo }}</h3>
+                {% if coleccion.descripcion %}
+                <p class="descubre-card__text">{{ coleccion.descripcion }}</p>
+                {% endif %}
+                {% if coleccion.texto_boton %}
+                <span class="descubre-card__btn">{{ coleccion.texto_boton }}</span>
+                {% endif %}
+            </div>
+        </a>
+        {% endfor %}
+    </div>
+</section>
+{% endif %}

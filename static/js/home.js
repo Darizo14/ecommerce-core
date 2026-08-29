@@ -275,3 +275,53 @@ document.addEventListener('DOMContentLoaded', function() {
 
     revealEls.forEach(el => observer.observe(el));
 });
+
+// --- Reusable horizontal drag/smooth scroll for [data-hscroll] containers ---
+document.addEventListener('DOMContentLoaded', function() {
+    document.querySelectorAll('[data-hscroll]').forEach(scroller => {
+        let isDown = false, startX = 0, startScrollLeft = 0;
+
+        // Only enable drag when the element actually scrolls horizontally.
+        function canScroll() {
+            return scroller.scrollWidth > scroller.clientWidth;
+        }
+
+        // Mouse wheel horizontal smooth scroll (desktop, when overflowing).
+        scroller.addEventListener('wheel', function(e) {
+            if (!canScroll()) return;
+            if (Math.abs(e.deltaY) > Math.abs(e.deltaX)) {
+                e.preventDefault();
+                scroller.scrollLeft += e.deltaY;
+            }
+        }, { passive: false });
+
+        scroller.addEventListener('mousedown', function(e) {
+            if (!canScroll()) return;
+            isDown = true;
+            startX = e.pageX - scroller.offsetLeft;
+            startScrollLeft = scroller.scrollLeft;
+            scroller.classList.add('is-dragging');
+        });
+
+        document.addEventListener('mouseup', function() {
+            if (!isDown) return;
+            isDown = false;
+            scroller.classList.remove('is-dragging');
+        });
+
+        document.addEventListener('mousemove', function(e) {
+            if (!isDown) return;
+            e.preventDefault();
+            const x = e.pageX - scroller.offsetLeft;
+            scroller.scrollLeft = startScrollLeft - (x - startX);
+        });
+
+        // Touch: let native scroll-snap do the work, but keep grab cursor feedback.
+        scroller.addEventListener('touchstart', function() {
+            scroller.classList.add('is-dragging');
+        }, { passive: true });
+        scroller.addEventListener('touchend', function() {
+            scroller.classList.remove('is-dragging');
+        }, { passive: true });
+    });
+});

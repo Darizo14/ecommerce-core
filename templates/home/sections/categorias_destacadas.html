@@ -1,16 +1,11 @@
 {% comment %}
     Sección: Categorías Destacadas (configurable desde el admin)
+    Presentación circular, con desplazamiento horizontal en móvil.
     Recibe: `seccion`, `categorias`, `link_ver_todos`.
 {% endcomment %}
 
 {% if categorias %}
 <section class="home-section home-section--categories reveal" id="categorias-destacadas" aria-label="{{ seccion.titulo }}">
-    <div class="section-header">
-        <h2>{{ seccion.titulo }}</h2>
-        {% if link_ver_todos %}
-        <a href="{{ link_ver_todos }}" class="section-link">Ver todas →</a>
-        {% endif %}
-    </div>
     <div class="category-grid">
         {% for categoria in categorias %}
             {% include 'components/category_card.html' with categoria=categoria %}

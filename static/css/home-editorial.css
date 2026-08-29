@@ -1,0 +1,548 @@
+/* ===================================
+   HOME EDITORIAL / PREMIUM SECTIONS
+   Categorías circulares, ranking, editorial, promo, descubre.
+   Diseño minimalista y editorial sobre las variables del proyecto.
+   =================================== */
+
+/* ---------- Encabezado de sección con subtítulo ---------- */
+.section-header {
+  align-items: center;
+  flex-wrap: wrap;
+  gap: var(--spacing-sm) var(--spacing-lg);
+}
+
+.section-header__heading {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 4px;
+  margin-right: auto;
+}
+
+.section-header .section-subtitle {
+  margin: 0;
+  font-size: var(--font-size-sm);
+  color: var(--color-text-light);
+  max-width: 52ch;
+  line-height: 1.5;
+}
+
+/* ===================================
+   1. CATEGORÍAS
+   Las categorías usan las tarjetas rectangulares con texto en la imagen
+   (.category-grid + .category-card) definidas en home-sections.css.
+   =================================== */
+
+/* ===================================
+   2. RANKING (Más Vendidos)
+   =================================== */
+
+.ranking-grid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: var(--spacing-2xl);
+  padding: 0 var(--spacing-lg);
+}
+
+@media (min-width: 769px) {
+  .ranking-grid {
+    padding: 0 var(--spacing-2xl);
+  }
+}
+
+@media (max-width: 1100px) {
+  .ranking-grid {
+    grid-template-columns: repeat(3, 1fr);
+  }
+}
+
+@media (max-width: 768px) {
+  .ranking-grid {
+    display: flex;
+    gap: var(--spacing-sm);
+    overflow-x: auto;
+    scroll-snap-type: x mandatory;
+    -webkit-overflow-scrolling: touch;
+    scrollbar-width: none;
+    padding: 0 var(--spacing-lg);
+  }
+  .ranking-grid::-webkit-scrollbar {
+    display: none;
+  }
+  .ranking-grid .ranking-grid__item {
+    flex: 0 0 68%;
+    scroll-snap-align: start;
+    min-width: 0;
+  }
+}
+
+.ranking-grid__item {
+  position: relative;
+}
+
+/* ===================================
+   COMPONENTE editorial-card (común)
+   =================================== */
+
+.editorial-card {
+  position: relative;
+}
+
+.editorial-card__index {
+  position: absolute;
+  top: 8px;
+  right: 10px;
+  z-index: 12;
+  font-family: var(--font-heading);
+  font-size: 2rem;
+  font-weight: 700;
+  line-height: 1;
+  color: rgba(0, 0, 0, 0.14);
+  pointer-events: none;
+  letter-spacing: -0.02em;
+}
+
+/* ===================================
+   3. NUEVOS - GRID 3x2 EDITORIAL
+   =================================== */
+
+.editorial-mosaic {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: var(--spacing-xl);
+  padding: 0 var(--spacing-lg);
+  align-items: stretch;
+}
+
+@media (min-width: 769px) {
+  .editorial-mosaic {
+    padding: 0 var(--spacing-2xl);
+  }
+}
+
+.editorial-mosaic .dawn-card__image-wrapper {
+  aspect-ratio: 1 / 1;
+}
+
+/* Sin botones en hover: se oculta el overlay de las product cards. */
+.home-section--nuevos-editorial .dawn-card__overlay {
+  opacity: 0 !important;
+  visibility: hidden !important;
+  pointer-events: none;
+}
+
+/* En el mosaico editorial solo se muestra la imagen: sin nombre, precio ni badges. */
+.home-section--nuevos-editorial .dawn-card__info {
+  display: none;
+}
+
+.home-section--nuevos-editorial .dawn-card__badges {
+  display: none;
+}
+
+/* Título de nuevos productos: centrado y más grande. */
+.home-section--nuevos-editorial .section-header {
+  justify-content: center;
+  text-align: center;
+  flex-direction: column;
+  align-items: center;
+  gap: var(--spacing-sm);
+  margin-bottom: var(--spacing-2xl);
+}
+
+.home-section--nuevos-editorial .section-header__heading {
+  align-items: center;
+  margin-right: 0;
+}
+
+.home-section--nuevos-editorial .section-header h2 {
+  font-size: 2.5rem;
+  font-weight: 700;
+  line-height: 1.15;
+  letter-spacing: -0.01em;
+}
+
+.home-section--nuevos-editorial .section-subtitle {
+  font-size: var(--font-size-base);
+}
+
+/* Ocultar el enlace "Ver todos" cuando el título está centrado. */
+.home-section--nuevos-editorial .section-link {
+  display: none;
+}
+
+@media (max-width: 480px) {
+  .home-section--nuevos-editorial .section-header h2 {
+    font-size: 1.75rem;
+  }
+}
+
+@media (max-width: 900px) {
+  .editorial-mosaic {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
+@media (max-width: 480px) {
+  .editorial-mosaic {
+    grid-template-columns: repeat(2, 1fr);
+    gap: var(--spacing-md);
+    padding: 0 var(--spacing-lg);
+  }
+}
+
+/* ===================================
+   4. BLOQUE EDITORIAL (revista)
+   =================================== */
+
+.home-section--editorial {
+  padding: var(--spacing-2xl) var(--spacing-lg);
+}
+
+@media (min-width: 769px) {
+  .home-section--editorial {
+    padding: var(--spacing-2xl) var(--spacing-2xl);
+  }
+}
+
+.editorial {
+  position: relative;
+  border-radius: var(--radius-lg);
+  overflow: hidden;
+  isolation: isolate;
+}
+
+.editorial__link {
+  display: block;
+  color: inherit;
+}
+
+.editorial__media {
+  width: 100%;
+  aspect-ratio: 16 / 6;
+  overflow: hidden;
+}
+
+.editorial__placeholder {
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(135deg, #ececec 0%, #f5f5f5 100%);
+}
+
+.editorial__image {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  transition: transform 600ms cubic-bezier(0.25, 0.1, 0.25, 1);
+}
+
+.editorial:hover .editorial__image {
+  transform: scale(1.03);
+}
+
+.editorial__content {
+  position: absolute;
+  inset: auto 0 0 0;
+  padding: var(--spacing-2xl);
+  color: #fff;
+  background: linear-gradient(180deg, rgba(0, 0, 0, 0) 0%, rgba(0, 0, 0, 0.65) 100%);
+  max-width: 60%;
+}
+
+.editorial__eyebrow {
+  display: inline-block;
+  margin-bottom: var(--spacing-sm);
+  font-size: 0.8rem;
+  font-weight: 700;
+  letter-spacing: 2px;
+  text-transform: uppercase;
+  color: rgba(255, 255, 255, 0.85);
+}
+
+.editorial__title {
+  font-family: var(--font-heading);
+  font-size: var(--font-size-3xl);
+  font-weight: 700;
+  color: #fff;
+  margin: 0 0 var(--spacing-sm);
+  line-height: 1.15;
+}
+
+.editorial__text {
+  font-size: var(--font-size-base);
+  color: rgba(255, 255, 255, 0.9);
+  margin: 0 0 var(--spacing-lg);
+  max-width: 48ch;
+}
+
+.editorial__btn {
+  display: inline-block;
+  padding: var(--spacing-sm) var(--spacing-xl);
+  border-radius: var(--radius-full);
+  background: #fff;
+  color: var(--color-text);
+  font-weight: 600;
+  font-size: var(--font-size-sm);
+  transition: background-color var(--transition-base), color var(--transition-base);
+}
+
+.editorial:hover .editorial__btn {
+  background: var(--color-primary);
+  color: #fff;
+}
+
+@media (max-width: 768px) {
+  .editorial__media {
+    aspect-ratio: 4 / 5;
+  }
+  .editorial__content {
+    max-width: 100%;
+    padding: var(--spacing-xl);
+  }
+  .editorial__title {
+    font-size: var(--font-size-2xl);
+  }
+}
+
+@media (max-width: 480px) {
+  .editorial__content {
+    padding: var(--spacing-lg);
+  }
+  .editorial__title {
+    font-size: var(--font-size-xl);
+  }
+}
+
+/* ===================================
+   5. PROMO (Ofertas)
+   =================================== */
+
+.home-section--ofertas {
+  padding: var(--spacing-2xl) var(--spacing-lg);
+}
+
+@media (min-width: 769px) {
+  .home-section--ofertas {
+    padding: var(--spacing-2xl) var(--spacing-2xl);
+  }
+}
+
+.promo-banner {
+  display: flex;
+  align-items: center;
+  padding: var(--spacing-2xl);
+  border-radius: var(--radius-lg);
+  background: var(--color-primary);
+  color: #fff;
+  margin-bottom: var(--spacing-2xl);
+  text-align: center;
+}
+
+.promo-banner__content {
+  max-width: 640px;
+  margin: 0 auto;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: var(--spacing-sm);
+}
+
+.promo-banner__eyebrow {
+  font-size: 0.8rem;
+  font-weight: 700;
+  letter-spacing: 2px;
+  text-transform: uppercase;
+  color: rgba(255, 255, 255, 0.85);
+}
+
+.promo-banner__title {
+  font-family: var(--font-heading);
+  font-size: var(--font-size-3xl);
+  font-weight: 700;
+  color: #fff;
+  margin: 0;
+}
+
+.promo-banner__text {
+  font-size: var(--font-size-base);
+  color: rgba(255, 255, 255, 0.9);
+  margin: 0;
+}
+
+.promo-banner__btn {
+  margin-top: var(--spacing-sm);
+  padding: var(--spacing-sm) var(--spacing-xl);
+  border-radius: var(--radius-full);
+  background: #fff;
+  color: var(--color-text);
+  font-weight: 600;
+  font-size: var(--font-size-sm);
+  text-decoration: none;
+  transition: background-color var(--transition-base);
+}
+
+.promo-banner__btn:hover {
+  background: #ececec;
+}
+
+@media (max-width: 600px) {
+  .promo-banner {
+    padding: var(--spacing-xl);
+  }
+  .promo-banner__title {
+    font-size: var(--font-size-2xl);
+  }
+}
+
+/* ===================================
+   6. DESCUBRE / INSPIRACIÓN
+   =================================== */
+
+.descubre-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: var(--spacing-xl);
+  padding: 0 var(--spacing-lg);
+}
+
+@media (min-width: 769px) {
+  .descubre-grid {
+    padding: 0 var(--spacing-2xl);
+  }
+}
+
+@media (max-width: 900px) {
+  .descubre-grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
+@media (max-width: 600px) {
+  .descubre-grid {
+    display: flex;
+    gap: var(--spacing-sm);
+    overflow-x: auto;
+    scroll-snap-type: x mandatory;
+    -webkit-overflow-scrolling: touch;
+    scrollbar-width: none;
+    padding: 0 var(--spacing-lg);
+  }
+  .descubre-grid::-webkit-scrollbar {
+    display: none;
+  }
+  .descubre-grid .descubre-card {
+    flex: 0 0 78%;
+    scroll-snap-align: start;
+    min-width: 0;
+  }
+}
+
+.descubre-grid {
+  cursor: grab;
+}
+
+.descubre-grid.is-dragging {
+  cursor: grabbing;
+  scroll-snap-type: none;
+  user-select: none;
+}
+
+.descubre-card {
+  position: relative;
+  display: block;
+  border-radius: var(--radius-md);
+  overflow: hidden;
+  isolation: isolate;
+  color: inherit;
+}
+
+.descubre-card__media {
+  width: 100%;
+  aspect-ratio: 4 / 5;
+  overflow: hidden;
+  background-color: #f0f0f0;
+}
+
+.descubre-card__placeholder {
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(135deg, #f0f0f0 0%, #e8e8e8 100%);
+}
+
+.descubre-card__image {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  transition: transform 450ms cubic-bezier(0.25, 0.1, 0.25, 1);
+}
+
+.descubre-card:hover .descubre-card__image {
+  transform: scale(1.06);
+}
+
+.descubre-card__content {
+  position: absolute;
+  inset: auto 0 0 0;
+  padding: var(--spacing-lg);
+  color: #fff;
+  background: linear-gradient(180deg, rgba(0, 0, 0, 0) 0%, rgba(0, 0, 0, 0.6) 100%);
+}
+
+.descubre-card__title {
+  font-family: var(--font-heading);
+  font-size: var(--font-size-lg);
+  font-weight: 700;
+  color: #fff;
+  margin: 0 0 4px;
+}
+
+.descubre-card__text {
+  font-size: var(--font-size-sm);
+  color: rgba(255, 255, 255, 0.9);
+  margin: 0 0 var(--spacing-sm);
+}
+
+.descubre-card__btn {
+  display: inline-block;
+  font-size: var(--font-size-sm);
+  font-weight: 600;
+  border-bottom: 2px solid #fff;
+  padding-bottom: 2px;
+}
+
+/* ===================================
+   BENEFICIOS - más ligero
+   =================================== */
+
+.home-section--benefits {
+  padding-top: var(--spacing-lg);
+}
+
+.home-section--benefits .benefit-card {
+  background: transparent;
+  border: none;
+  border-top: 1px solid var(--color-border-light);
+  border-radius: 0;
+  box-shadow: none;
+  padding: var(--spacing-lg) var(--spacing-md);
+}
+
+.home-section--benefits .benefit-card:hover {
+  transform: none;
+  box-shadow: none;
+}
+
+.home-section--benefits .benefit-card__icon {
+  width: 44px;
+  height: 44px;
+  background: var(--color-primary-light);
+  color: var(--color-primary);
+}
+
+.home-section--benefits .benefit-card__title {
+  font-size: 0.9375rem;
+}
+
+.home-section--benefits .benefit-card__text {
+  font-size: 0.8125rem;
+}

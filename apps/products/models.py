@@ -19,6 +19,7 @@ class Producto(models.Model):
     precio_oferta = models.DecimalField(max_digits=10, decimal_places=2, blank=True, null=True)
     en_oferta = models.BooleanField(default=False)
     destacado = models.BooleanField(default=False, verbose_name='Destacado')   #Para mostrar en la sección de destacados del Home
+    orden_destacado = models.PositiveIntegerField(default=0, verbose_name='Orden destacado', help_text='Controla el orden exacto de los productos destacados en el Home (menor = primero). Se usa cuando "Destacado" está activo.')  #Orden editorial de destacados
     total_vendido = models.PositiveIntegerField(default=0, verbose_name='Total vendido')  #Denormalizado para "Más vendidos"
     stock = models.PositiveIntegerField(default=0)
     activo = models.BooleanField(default=True)                          #Para desactivar productos sin borrarlos

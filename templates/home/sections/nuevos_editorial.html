@@ -1,0 +1,27 @@
+{% comment %}
+    Sección: Nuevos Productos - layout 3x2 uniforme de tamaño igual.
+    Recibe: `titulo`, `subtitulo`, `productos`, `etiqueta`, `link_ver_todos`.
+{% endcomment %}
+
+{% if productos %}
+<section class="home-section home-section--nuevos-editorial reveal" id="productos-nuevos" aria-label="{{ titulo }}">
+    <div class="section-header">
+        <div class="section-header__heading">
+            <h2>{{ titulo }}</h2>
+            {% if subtitulo %}
+            <p class="section-subtitle">{{ subtitulo }}</p>
+            {% endif %}
+        </div>
+        {% if link_ver_todos %}
+        <a href="{{ link_ver_todos }}" class="section-link">Ver todos →</a>
+        {% endif %}
+    </div>
+    <div class="editorial-mosaic">
+        {% for producto in productos %}
+            <div class="editorial-mosaic__item">
+                {% include 'components/product_editorial.html' with producto=producto etiqueta=etiqueta %}
+            </div>
+        {% endfor %}
+    </div>
+</section>
+{% endif %}

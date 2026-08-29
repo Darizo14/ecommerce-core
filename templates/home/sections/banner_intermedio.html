@@ -1,0 +1,30 @@
+{% comment %}
+    Banner Intermedio - Banner promocional entre secciones del Home.
+    Recibe: `banner` (objeto BannerIntermedio).
+{% endcomment %}
+
+<div class="mid-banner reveal">
+    {% if banner.link %}<a href="{{ banner.link }}" class="mid-banner__link">{% endif %}
+        {% if banner.imagen_movil %}
+        <picture>
+            <source media="(max-width: 768px)" srcset="{{ banner.imagen_movil.url }}">
+            <img src="{{ banner.imagen.url }}" alt="{{ banner.titulo|default:'Promoción' }}" class="mid-banner__image">
+        </picture>
+        {% else %}
+        <img src="{{ banner.imagen.url }}" alt="{{ banner.titulo|default:'Promoción' }}" class="mid-banner__image">
+        {% endif %}
+        {% if banner.titulo or banner.texto_boton %}
+        <div class="mid-banner__overlay">
+            {% if banner.titulo %}
+            <h3 class="mid-banner__title">{{ banner.titulo }}</h3>
+            {% endif %}
+            {% if banner.subtitulo %}
+            <p class="mid-banner__text">{{ banner.subtitulo }}</p>
+            {% endif %}
+            {% if banner.texto_boton %}
+            <span class="mid-banner__btn">{{ banner.texto_boton }}</span>
+            {% endif %}
+        </div>
+        {% endif %}
+    {% if banner.link %}</a>{% endif %}
+</div>

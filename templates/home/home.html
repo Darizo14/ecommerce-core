@@ -50,12 +50,24 @@
 
 {% for item in secciones %}
     {% with s=item.seccion %}
-    {% if s.tipo == 'categorias' %}
+    {% if item.layout == 'categories' %}
         {% include 'home/sections/categorias_destacadas.html' with seccion=s categorias=item.categorias link_ver_todos=item.link_ver_todos %}
-    {% elif s.tipo == 'beneficios' %}
+    {% elif item.layout == 'benefits' %}
         {% include 'home/sections/beneficios.html' with seccion=s %}
+    {% elif item.layout == 'editorial' %}
+        {% if item.productos %}
+            {% include 'home/sections/nuevos_editorial.html' with titulo=s.titulo subtitulo=s.subtitulo productos=item.productos etiqueta=item.etiqueta link_ver_todos=item.link_ver_todos %}
+        {% elif item.editoriales %}
+            {% include 'home/sections/editorial.html' with seccion=s %}
+        {% endif %}
+    {% elif item.layout == 'ranking' %}
+        {% include 'home/sections/mas_vendidos.html' with titulo=s.titulo subtitulo=s.subtitulo productos=item.productos etiqueta=item.etiqueta link_ver_todos=item.link_ver_todos %}
+    {% elif item.layout == 'promo' %}
+        {% include 'home/sections/ofertas.html' with titulo=s.titulo subtitulo=s.subtitulo productos=item.productos etiqueta=item.etiqueta link_ver_todos=item.link_ver_todos max_descuento=item.max_descuento %}
+    {% elif item.layout == 'grid' and item.colecciones %}
+        {% include 'home/sections/descubre.html' with seccion=s %}
     {% else %}
-        {% include 'components/product_carousel.html' with id='seccion-'|add:s.tipo titulo=s.titulo data_carousel=s.tipo productos=item.productos etiqueta=item.etiqueta link_ver_todos=item.link_ver_todos %}
+        {% include 'components/product_carousel.html' with id='seccion-'|add:s.tipo titulo=s.titulo subtitulo=s.subtitulo data_carousel=s.tipo productos=item.productos etiqueta=item.etiqueta link_ver_todos=item.link_ver_todos %}
     {% endif %}
     {% endwith %}
 {% endfor %}

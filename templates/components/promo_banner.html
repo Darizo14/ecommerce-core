@@ -1,0 +1,26 @@
+{% comment %}
+    Promo Banner - bloque promocional reutilizable.
+    Parámetros:
+      - titulo       : texto principal (obligatorio)
+      - subtitulo    : texto secundario (opcional)
+      - texto_boton  : texto del botón (opcional, por defecto "Ver ofertas")
+      - enlace       : URL del botón (opcional)
+      - max_descuento: número para mostrar "Hasta XX% OFF" (opcional)
+{% endcomment %}
+
+<div class="promo-banner reveal">
+    <div class="promo-banner__content">
+        {% if max_descuento %}
+        <span class="promo-banner__eyebrow">Hasta {{ max_descuento }}% de descuento</span>
+        {% endif %}
+        {% if titulo %}
+        <h2 class="promo-banner__title">{{ titulo }}</h2>
+        {% endif %}
+        {% if subtitulo %}
+        <p class="promo-banner__text">{{ subtitulo }}</p>
+        {% endif %}
+        {% if enlace %}
+        <a href="{{ enlace }}" class="promo-banner__btn">{{ texto_boton|default:'Ver ofertas' }}</a>
+        {% endif %}
+    </div>
+</div>

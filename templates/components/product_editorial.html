@@ -1,0 +1,15 @@
+{% comment %}
+    Product Editorial - tarjeta reutilizable para layouts editoriales/asimétricos.
+    Reutiliza product_card.html (misma lógica de carrito, precio, oferta, stock).
+    Parámetros:
+      - producto   : objeto Producto (obligatorio)
+      - etiqueta   : 'nuevo' | 'vendido' | '' para badges (opcional)
+      - indice     : número de ranking (opcional, se muestra en grande)
+{% endcomment %}
+
+<div class="editorial-card{% if variante %} editorial-card--{{ variante }}{% endif %}" data-product-id="{{ producto.id }}">
+    {% if indice %}
+    <span class="editorial-card__index" aria-hidden="true">#{{ indice|stringformat:"02d" }}</span>
+    {% endif %}
+    {% include 'components/product_card.html' with producto=producto etiqueta=etiqueta %}
+</div>

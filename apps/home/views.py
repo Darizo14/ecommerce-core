@@ -30,11 +30,22 @@ def _categorias_destacadas(limite=LIMITE_CATEGORIAS):
     )
 
 
+def _max_descuento(productos):
+    """Mayor porcentaje de descuento aplicado entre los productos en oferta."""
+    max_pct = 0
+    for p in productos:
+        if p.en_oferta and p.precio_oferta and p.precio:
+            pct = int(round((1 - p.precio_oferta / p.precio) * 100))
+            if pct > max_pct:
+                max_pct = pct
+    return max_pct
+
+
 def _productos_tipo(tipo, limite):
     """Productos según el tipo de sección."""
     qs = _base_productos()
     if tipo == HomeSeccion.TIPO_DESTACADOS:
-        return qs.filter(destacado=True)[:limite]
+        return qs.filter(destacado=True).order_by('orden_destacado', 'id')[:limite]
     if tipo == HomeSeccion.TIPO_MAS_VENDIDOS:
         return qs.filter(total_vendido__gt=0).order_by('-total_vendido')[:limite]
     if tipo == HomeSeccion.TIPO_OFERTAS:
@@ -43,15 +54,17 @@ def _productos_tipo(tipo, limite):
 
 
 def _secciones_home():
-    """Construye el contexto de cada sección activa según su tipo."""
+    """Construye el contexto de cada sección activa según su tipo y layout."""
     secciones = []
     for seccion in HomeSeccion.objects.filter(activo=True).order_by('orden'):
         item = {
             'seccion': seccion,
+            'layout': seccion.layout_efectivo,
             'categorias': None,
             'productos': None,
             'etiqueta': ETIQUETAS_SECCION.get(seccion.tipo, ''),
             'link_ver_todos': None,
+            'max_descuento': None,
         }
 
         if seccion.tipo == HomeSeccion.TIPO_CATEGORIAS:
@@ -59,11 +72,16 @@ def _secciones_home():
             item['link_ver_todos'] = reverse('lista_productos')
         elif seccion.tipo == HomeSeccion.TIPO_BENEFICIOS:
             pass
+        elif seccion.tipo == HomeSeccion.TIPO_EDITORIAL:
+            item['editoriales'] = seccion.editoriales_activas
+        elif seccion.tipo == HomeSeccion.TIPO_COLECCIONES:
+            item['colecciones'] = seccion.colecciones_activas
         else:
             item['productos'] = _productos_tipo(seccion.tipo, seccion.limite)
             item['link_ver_todos'] = reverse('lista_productos')
             if seccion.tipo == HomeSeccion.TIPO_OFERTAS:
                 item['link_ver_todos'] += '?ofertas=1'
+                item['max_descuento'] = _max_descuento(item['productos'])
 
         secciones.append(item)
 

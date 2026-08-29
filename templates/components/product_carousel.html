@@ -2,6 +2,7 @@
     Product Carousel - sección reutilizable para el Home.
     Parámetros:
       - titulo         : texto del encabezado (obligatorio)
+      - subtitulo      : texto secundario bajo el título (opcional)
       - productos      : queryset/lista de productos
       - data_carousel  : nombre único del carrusel (obligatorio)
       - id             : id del <section> (opcional)
@@ -15,7 +16,12 @@
 {% if productos %}
 <section class="home-productos{% if extra_class %} {{ extra_class }}{% endif %}"{% if id %} id="{{ id }}"{% endif %}{% if inline_style %} style="{{ inline_style }}"{% endif %}>
     <div class="section-header">
-        <h2{% if titulo_style %} style="{{ titulo_style }}"{% endif %}>{{ titulo }}</h2>
+        <div class="section-header__heading">
+            <h2{% if titulo_style %} style="{{ titulo_style }}"{% endif %}>{{ titulo }}</h2>
+            {% if subtitulo %}
+            <p class="section-subtitle">{{ subtitulo }}</p>
+            {% endif %}
+        </div>
         {% if link_ver_todos %}
         <a href="{{ link_ver_todos }}" class="section-link">Ver todos →</a>
         {% endif %}

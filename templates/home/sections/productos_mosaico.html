@@ -1,0 +1,36 @@
+{% comment %}
+    Productos Mosaico - Layout asimétrico tipo mosaico para destacar productos nuevos.
+    Parámetros:
+      - titulo         : texto del encabezado
+      - productos      : queryset/lista de productos
+      - etiqueta       : badge de producto ('nuevo', etc.)
+      - link_ver_todos : URL del enlace "Ver todos"
+{% endcomment %}
+
+{% if productos %}
+<section class="home-productos home-productos--mosaic reveal" id="productos-mosaico">
+    <div class="section-header">
+        <h2>{{ titulo }}</h2>
+        {% if link_ver_todos %}
+        <a href="{{ link_ver_todos }}" class="section-link">Ver todos →</a>
+        {% endif %}
+    </div>
+    <div class="mosaic-grid">
+        {% for producto in productos %}
+            {% if forloop.counter == 1 %}
+                <div class="mosaic-grid__item mosaic-grid__item--featured">
+                    {% include 'components/product_card.html' with producto=producto etiqueta=etiqueta %}
+                </div>
+            {% elif forloop.counter == 2 or forloop.counter == 3 %}
+                <div class="mosaic-grid__item mosaic-grid__item--tall">
+                    {% include 'components/product_card.html' with producto=producto etiqueta=etiqueta %}
+                </div>
+            {% else %}
+                <div class="mosaic-grid__item">
+                    {% include 'components/product_card.html' with producto=producto etiqueta=etiqueta %}
+                </div>
+            {% endif %}
+        {% endfor %}
+    </div>
+</section>
+{% endif %}

@@ -1,0 +1,27 @@
+{% comment %}
+    Sección: Más Vendidos - presentación tipo ranking numerado.
+    Recibe: `titulo`, `subtitulo`, `productos`, `etiqueta`, `link_ver_todos`.
+{% endcomment %}
+
+{% if productos %}
+<section class="home-section home-section--ranking reveal" id="mas-vendidos" aria-label="{{ titulo }}">
+    <div class="section-header">
+        <div class="section-header__heading">
+            <h2>{{ titulo }}</h2>
+            {% if subtitulo %}
+            <p class="section-subtitle">{{ subtitulo }}</p>
+            {% endif %}
+        </div>
+        {% if link_ver_todos %}
+        <a href="{{ link_ver_todos }}" class="section-link">Ver todos →</a>
+        {% endif %}
+    </div>
+    <div class="ranking-grid">
+        {% for producto in productos %}
+            <div class="ranking-grid__item ranking-grid__item--pos-{{ forloop.counter }}">
+                {% include 'components/product_editorial.html' with producto=producto etiqueta='' %}
+            </div>
+        {% endfor %}
+    </div>
+</section>
+{% endif %}
